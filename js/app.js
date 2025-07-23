@@ -74,7 +74,6 @@ function updateFailuresList() {
         
         // Clear previous selections when changing standards
         selectedFailuresList = [];
-        updateSelectedFailures();
         updateDropdownText();
         
         standardFailures[standard].forEach((failureObj, index) => {
@@ -89,7 +88,6 @@ function updateFailuresList() {
     } else {
         container.classList.add('hidden');
         selectedFailuresList = [];
-        updateSelectedFailures();
     }
 }
 
