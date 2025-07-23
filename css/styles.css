@@ -237,23 +237,7 @@ button:hover {
     margin-bottom: 5px;
 }
 
-@media print {
-    .container {
-        box-shadow: none;
-        max-width: none;
-        margin: 0;
-        padding: 10px;
-    }
-    
-    button {
-        display: none;
-    }
-    
-    .reference-section {
-        display: none;
-    }
-
-    /* Hidden input files */
+/* Hidden file input styling */
 .hidden-file-input {
     display: none;
 }
@@ -282,10 +266,6 @@ button:hover {
 .other-field-input {
     margin-top: 5px;
 }
-
-/* Add these classes to the END of your existing css/styles.css file */
-
-    /* Add these styles to the END of your existing css/styles.css file */
 
 /* Custom dropdown styling */
 .custom-dropdown {
@@ -383,6 +363,13 @@ button:hover {
     background-color: #bbdefb;
 }
 
+/* Selected failures counter */
+.failures-selected-count {
+    font-size: 12px;
+    color: #007bff;
+    font-weight: bold;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .dropdown-list {
@@ -406,23 +393,19 @@ button:hover {
     }
 }
 
-/* Selected failures counter */
-.failures-selected-count {
-    font-size: 12px;
-    color: #007bff;
-    font-weight: bold;
-}
-
-    .dropdown-item {
-    padding: 8px 10px;
-    border: 1px solid #f1f3f4;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    transition: all 0.2s;
-    background: white;
-    min-height: 50px;
-}
+@media print {
+    .container {
+        box-shadow: none;
+        max-width: none;
+        margin: 0;
+        padding: 10px;
+    }
+    
+    button {
+        display: none;
+    }
+    
+    .reference-section {
+        display: none;
+    }
 }
