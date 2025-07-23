@@ -161,9 +161,31 @@
 
         <!-- Selected Failures -->
         <div class="section">
-            <h2>⚠️ Selected Failures & Comments</h2>
-            <div id="selectedFailures"></div>
+    <h2>📖 Standard Selection & Failures</h2>
+    <div class="form-group standards-dropdown">
+        <label for="standard">Select Standard:</label>
+        <select id="standard" title="Select lightning protection standard" onchange="updateFailuresList()">
+            <option value="">Select a standard...</option>
+            <option value="BS EN 62305">BS EN 62305 (Current Standard)</option>
+            <option value="BS 6651">BS 6651 (Legacy Standard)</option>
+            <option value="CP 326">CP 326 (Historical Standard)</option>
+            <option value="NF C 17-102">NF C 17-102:2011 (ESE Systems)</option>
+        </select>
+    </div>
+    
+    <div id="failuresContainer" class="hidden">
+        <label for="failuresDropdown">Select Failures Found:</label>
+        <div class="custom-dropdown">
+            <div class="dropdown-header" onclick="toggleFailuresDropdown()">
+                <span id="dropdownText">Select failures...</span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+            <div id="failuresDropdownList" class="dropdown-list hidden">
+                <!-- Failure options will be populated here by JavaScript -->
+            </div>
         </div>
+    </div>
+</div>
 
         <!-- General Comments Section -->
         <div class="section">
