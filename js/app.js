@@ -8,6 +8,14 @@ let systemDetails = {};
 document.addEventListener('DOMContentLoaded', function() {
     // Set today's date as default
     document.getElementById('testDate').valueAsDate = new Date();
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.querySelector('.custom-dropdown');
+        if (dropdown && !dropdown.contains(event.target)) {
+            closeFailuresDropdown();
+        }
+    });
 });
 
 // Collapsible functionality
@@ -58,30 +66,60 @@ function updateOtherValue(category, value) {
 function updateFailuresList() {
     const standard = document.getElementById('standard').value;
     const container = document.getElementById('failuresContainer');
-    const failuresList = document.getElementById('failuresList');
+    const dropdownList = document.getElementById('failuresDropdownList');
     
     if (standard && standardFailures[standard]) {
         container.classList.remove('hidden');
-        failuresList.innerHTML = '';
+        dropdownList.innerHTML = '';
+        
+        // Clear previous selections when changing standards
+        selectedFailuresList = [];
+        updateSelectedFailures();
+        updateDropdownText();
         
         standardFailures[standard].forEach((failureObj, index) => {
-            const failureDiv = document.createElement('div');
-            failureDiv.className = 'failure-option';
-            failureDiv.textContent = failureObj.failure;
-            failureDiv.onclick = () => selectFailure(failureObj, failureDiv);
-            failuresList.appendChild(failureDiv);
+            const dropdownItem = document.createElement('div');
+            dropdownItem.className = 'dropdown-item';
+            dropdownItem.innerHTML = `
+                <input type="checkbox" class="dropdown-checkbox" id="failure-${index}" onchange="toggleFailureSelection(${index}, this.checked)">
+                <label for="failure-${index}" class="dropdown-item-text">${failureObj.failure}</label>
+            `;
+            dropdownList.appendChild(dropdownItem);
         });
     } else {
         container.classList.add('hidden');
+        selectedFailuresList = [];
+        updateSelectedFailures();
     }
 }
 
-function selectFailure(failureObj, element) {
-    if (element.classList.contains('selected')) {
-        element.classList.remove('selected');
-        selectedFailuresList = selectedFailuresList.filter(f => f.failure !== failureObj.failure);
+function toggleFailuresDropdown() {
+    const dropdownList = document.getElementById('failuresDropdownList');
+    const dropdownHeader = document.querySelector('.dropdown-header');
+    
+    if (dropdownList.classList.contains('hidden')) {
+        dropdownList.classList.remove('hidden');
+        dropdownHeader.classList.add('open');
     } else {
-        element.classList.add('selected');
+        dropdownList.classList.add('hidden');
+        dropdownHeader.classList.remove('open');
+    }
+}
+
+function closeFailuresDropdown() {
+    const dropdownList = document.getElementById('failuresDropdownList');
+    const dropdownHeader = document.querySelector('.dropdown-header');
+    
+    dropdownList.classList.add('hidden');
+    dropdownHeader.classList.remove('open');
+}
+
+function toggleFailureSelection(index, isChecked) {
+    const standard = document.getElementById('standard').value;
+    const failureObj = standardFailures[standard][index];
+    
+    if (isChecked) {
+        // Add failure to selected list
         selectedFailuresList.push({
             failure: failureObj.failure,
             reference: failureObj.ref,
@@ -89,8 +127,26 @@ function selectFailure(failureObj, element) {
             comment: '',
             image: null
         });
+    } else {
+        // Remove failure from selected list
+        selectedFailuresList = selectedFailuresList.filter(f => f.failure !== failureObj.failure);
     }
+    
     updateSelectedFailures();
+    updateDropdownText();
+}
+
+function updateDropdownText() {
+    const dropdownText = document.getElementById('dropdownText');
+    const count = selectedFailuresList.length;
+    
+    if (count === 0) {
+        dropdownText.innerHTML = 'Select failures...';
+    } else if (count === 1) {
+        dropdownText.innerHTML = `<span class="failures-selected-count">1 failure selected</span>`;
+    } else {
+        dropdownText.innerHTML = `<span class="failures-selected-count">${count} failures selected</span>`;
+    }
 }
 
 function updateSelectedFailures() {
