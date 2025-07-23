@@ -314,4 +314,93 @@ button:hover {
 .other-field-input {
     margin-top: 5px;
 }
+
+    /* Add these styles to the END of your existing css/styles.css file */
+
+/* Custom dropdown styling */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown-header {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.3s;
+}
+
+.dropdown-header:hover {
+    border-color: #007bff;
+}
+
+.dropdown-arrow {
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+.dropdown-header.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.dropdown-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f8f9fa;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-checkbox {
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.dropdown-item-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.dropdown-item.selected {
+    background-color: #e3f2fd;
+}
+
+/* Selected failures counter */
+.failures-selected-count {
+    font-size: 12px;
+    color: #007bff;
+    font-weight: bold;
+}
 }
