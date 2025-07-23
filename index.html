@@ -117,8 +117,8 @@
             </div>
         </div>
 
-        <!-- Standards Selection -->
-        <div class="section">
+      <!-- Standards Selection -->
+<div class="section">
     <h2>📖 Standard Selection & Failures</h2>
     <div class="form-group standards-dropdown">
         <label for="standard">Select Standard:</label>
@@ -133,11 +133,12 @@
     
     <div id="failuresContainer" class="hidden">
         <label for="failuresDropdown">Select Failures Found:</label>
-        <div class="dropdown-header">
-    <span id="dropdownText" onclick="toggleFailuresDropdown()">Select failures...</span>
-    <span class="dropdown-arrow" onclick="toggleFailuresDropdown()">▼</span>
-    <button type="button" onclick="closeFailuresDropdown()" style="background: none; border: none; font-size: 12px; margin-left: 10px;">✕</button>
-</div>
+        <div class="custom-dropdown">
+            <div class="dropdown-header">
+                <span id="dropdownText" onclick="toggleFailuresDropdown()">Select failures...</span>
+                <span class="dropdown-arrow" onclick="toggleFailuresDropdown()">▼</span>
+                <button type="button" onclick="closeFailuresDropdown()" style="background: none; border: none; font-size: 12px; margin-left: 10px;">✕</button>
+            </div>
             <div id="failuresDropdownList" class="dropdown-list hidden">
                 <!-- Failure options will be populated here by JavaScript -->
             </div>
