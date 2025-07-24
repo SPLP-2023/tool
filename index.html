@@ -132,16 +132,12 @@
     </div>
     
     <div id="failuresContainer" class="hidden">
-        <label for="failuresDropdown">Select Failures Found:</label>
-        <div class="custom-dropdown">
-            <div class="dropdown-header">
-                <span id="dropdownText" onclick="toggleFailuresDropdown()">Select failures...</span>
-                <span class="dropdown-arrow" onclick="toggleFailuresDropdown()">▼</span>
-                <button type="button" onclick="closeFailuresDropdown()" style="background: none; border: none; font-size: 12px; margin-left: 10px;">✕</button>
-            </div>
-            <div id="failuresDropdownList" class="dropdown-list hidden">
-                <!-- Failure options will be populated here by JavaScript -->
-            </div>
+        <label for="failuresSelect">Select Failures Found:</label>
+        <p class="multiselect-help">Hold Ctrl (PC) or Cmd (Mac) to select multiple failures</p>
+        <select id="failuresSelect" multiple size="8" title="Select multiple failures found during inspection" onchange="handleFailureSelection()">
+        <!-- Failure options will be populated here by JavaScript -->
+    </select>
+    </div>
         </div>
     </div>
 </div>
