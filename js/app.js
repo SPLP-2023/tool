@@ -4,32 +4,12 @@ let earthResistances = [];
 let uploadedImages = {};
 let systemDetails = {};
 
-// Initialize the application
+/ Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     // Set today's date as default
     document.getElementById('testDate').valueAsDate = new Date();
 });
 
-// Enhanced click outside handler
-document.addEventListener('click', function(event) {
-    const dropdown = document.querySelector('.custom-dropdown');
-    const dropdownList = document.getElementById('failuresDropdownList');
-    const dropdownHeader = document.querySelector('.dropdown-header');
-    
-    // If clicking outside the dropdown, close it
-    if (dropdown && !dropdown.contains(event.target)) {
-        if (dropdownList && !dropdownList.classList.contains('hidden')) {
-            dropdownList.classList.add('hidden');
-            dropdownHeader.classList.remove('open');
-        }
-    }
-    
-    // If clicking on the arrow specifically, toggle
-    if (event.target.classList.contains('dropdown-arrow')) {
-        event.stopPropagation();
-        toggleFailuresDropdown();
-    }
-});
 
 // Collapsible functionality
 function toggleCollapsible(id) {
