@@ -520,13 +520,6 @@ function generatePDF() {
         });
     }
     
-    // Add footer to all pages except cover page
-    const totalPages = pdf.internal.getNumberOfPages();
-    for (let i = 2; i <= totalPages; i++) {
-        pdf.setPage(i);
-        addFooterToPage(pdf, footer);
-    }
-    
     // Generate filename
     const date = new Date().toISOString().split('T')[0];
     const filename = 'Lightning_Protection_Report_' + date + '.pdf';
