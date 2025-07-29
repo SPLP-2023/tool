@@ -4,12 +4,11 @@ let earthResistances = [];
 let uploadedImages = {};
 let systemDetails = {};
 
-/ Initialize the application
+// Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     // Set today's date as default
     document.getElementById('testDate').valueAsDate = new Date();
 });
-
 
 // Collapsible functionality
 function toggleCollapsible(id) {
@@ -98,19 +97,6 @@ function selectFailure(failureObj, element) {
         });
     }
     updateSelectedFailures();
-}
-
-function updateDropdownText() {
-    const dropdownText = document.getElementById('dropdownText');
-    const count = selectedFailuresList.length;
-    
-    if (count === 0) {
-        dropdownText.innerHTML = 'Select failures...';
-    } else if (count === 1) {
-        dropdownText.innerHTML = `<span class="failures-selected-count">1 failure selected</span>`;
-    } else {
-        dropdownText.innerHTML = `<span class="failures-selected-count">${count} failures selected</span>`;
-    }
 }
 
 function updateSelectedFailures() {
