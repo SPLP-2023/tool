@@ -56,6 +56,29 @@
             </div>
 
             <div class="collapsible-container">
+                <button class="collapsible-header" onclick="toggleCollapsible('bs6651')">
+                    📋 BS 6651 Structure (Legacy Standard)
+                </button>
+                <div id="bs6651" class="collapsible-content">
+                    <div class="reference-list">
+                        <ul>
+                            <li>Section 1: Scope and definitions</li>
+                            <li>Section 2: Risk factor analysis</li>
+                            <li>Section 3: Air termination</li>
+                            <li>Section 4: Down conductors</li>
+                            <li>Section 5: Earth termination</li>
+                            <li>Section 6: Bonding and surge protection</li>
+                            <li>Section 7: Materials and construction</li>
+                            <li>Section 8: Installation requirements</li>
+                            <li>Section 9: Inspection and testing</li>
+                            <li>Section 10: Maintenance</li>
+                            <li>Annexes A-F: Additional guidance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-container">
                 <button class="collapsible-header" onclick="toggleCollapsible('failures')">
                     📋 Common System Failures & Test Requirements
                 </button>
@@ -84,7 +107,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Basic Information Section -->
         <div class="section">
             <h2>📝 Site Information</h2>
@@ -117,36 +140,23 @@
             </div>
         </div>
 
-      <!-- Standards Selection -->
-<div class="section">
-    <h2>📖 Standard Selection & Failures</h2>
-    <div class="form-group standards-dropdown">
-        <label for="standard">Select Standard:</label>
-        <select id="standard" title="Select lightning protection standard" onchange="updateFailuresList()">
-            <option value="">Select a standard...</option>
-            <option value="BS EN 62305">BS EN 62305 (Current Standard)</option>
-            <option value="BS 6651">BS 6651 (Legacy Standard)</option>
-            <option value="CP 326">CP 326 (Historical Standard)</option>
-            <option value="NF C 17-102">NF C 17-102:2011 (ESE Systems)</option>
-        </select>
-    </div>
-    
-            <div id="failuresContainer" class="hidden">
-                <label for="failuresSelect">Select Failures Found:</label>
-                <p class="multiselect-help">Hold Ctrl (PC) or Cmd (Mac) to select multiple failures</p>
-                <select id="failuresSelect" multiple size="8" title="Select multiple failures found during inspection" onchange="handleFailureSelection()">
-                    <!-- Failure options will be populated here by JavaScript -->
+              <!-- Replace your entire Standards Selection & Failures section with this -->
+        <div class="section">
+            <h2>📖 Standard Selection & Failures</h2>
+            <div class="form-group standards-dropdown">
+                <label for="standard">Select Standard:</label>
+                <select id="standard" title="Select lightning protection standard" onchange="updateFailuresList()">
+                    <option value="">Select a standard...</option>
+                    <option value="BS EN 62305">BS EN 62305 (Current Standard)</option>
+                    <option value="BS 6651">BS 6651 (Legacy Standard)</option>
+                    <option value="CP 326">CP 326 (Historical Standard)</option>
+                    <option value="NF C 17-102">NF C 17-102:2011 (ESE Systems)</option>
                 </select>
             </div>
-        </div>
-    </div>
-</div>
-
-        <!-- Add this section AFTER your Standards Selection & Failures section -->
-        <!-- Selected Failures -->
-        <div class="section">
-            <h2>⚠️ Selected Failures & Comments</h2>
-            <div id="selectedFailures"></div>
+            <div id="failuresContainer" class="hidden">
+                <label>Available Failures for Selected Standard:</label>
+                <div id="failuresList" class="failures-list"></div>
+            </div>
         </div>
 
         <!-- General Comments Section -->
