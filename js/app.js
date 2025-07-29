@@ -79,58 +79,36 @@ function updateOtherValue(category, value) {
 function updateFailuresList() {
     const standard = document.getElementById('standard').value;
     const container = document.getElementById('failuresContainer');
-    const dropdownList = document.getElementById('failuresDropdownList');
+    const failuresList = document.getElementById('failuresList');
     
     if (standard && standardFailures[standard]) {
         container.classList.remove('hidden');
-        dropdownList.innerHTML = '';
+        failuresList.innerHTML = '';
         
         // Clear previous selections when changing standards
         selectedFailuresList = [];
-        updateDropdownText();
+        updateSelectedFailures();
         
         standardFailures[standard].forEach((failureObj, index) => {
-            const dropdownItem = document.createElement('div');
-            dropdownItem.className = 'dropdown-item';
-            dropdownItem.innerHTML = `
-                <input type="checkbox" class="dropdown-checkbox" id="failure-${index}" onchange="toggleFailureSelection(${index}, this.checked)">
-                <label for="failure-${index}" class="dropdown-item-text">${failureObj.failure}</label>
-            `;
-            dropdownList.appendChild(dropdownItem);
+            const failureDiv = document.createElement('div');
+            failureDiv.className = 'failure-option';
+            failureDiv.textContent = failureObj.failure;
+            failureDiv.onclick = () => selectFailure(failureObj, failureDiv);
+            failuresList.appendChild(failureDiv);
         });
     } else {
         container.classList.add('hidden');
         selectedFailuresList = [];
+        updateSelectedFailures();
     }
 }
 
-function toggleFailuresDropdown() {
-    const dropdownList = document.getElementById('failuresDropdownList');
-    const dropdownHeader = document.querySelector('.dropdown-header');
-    
-    if (dropdownList.classList.contains('hidden')) {
-        dropdownList.classList.remove('hidden');
-        dropdownHeader.classList.add('open');
+function selectFailure(failureObj, element) {
+    if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        selectedFailuresList = selectedFailuresList.filter(f => f.failure !== failureObj.failure);
     } else {
-        dropdownList.classList.add('hidden');
-        dropdownHeader.classList.remove('open');
-    }
-}
-
-function closeFailuresDropdown() {
-    const dropdownList = document.getElementById('failuresDropdownList');
-    const dropdownHeader = document.querySelector('.dropdown-header');
-    
-    dropdownList.classList.add('hidden');
-    dropdownHeader.classList.remove('open');
-}
-
-function toggleFailureSelection(index, isChecked) {
-    const standard = document.getElementById('standard').value;
-    const failureObj = standardFailures[standard][index];
-    
-    if (isChecked) {
-        // Add failure to selected list
+        element.classList.add('selected');
         selectedFailuresList.push({
             failure: failureObj.failure,
             reference: failureObj.ref,
@@ -138,13 +116,8 @@ function toggleFailureSelection(index, isChecked) {
             comment: '',
             image: null
         });
-    } else {
-        // Remove failure from selected list
-        selectedFailuresList = selectedFailuresList.filter(f => f.failure !== failureObj.failure);
     }
-    
     updateSelectedFailures();
-    updateDropdownText();
 }
 
 function updateDropdownText() {
