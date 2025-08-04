@@ -10,21 +10,51 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('testDate').valueAsDate = new Date();
 });
 
-// Function to detect EXIF orientation (TESTING - no rotation applied)
+// Function to fix EXIF orientation (targeted fix for landscape only)
 function fixImageOrientation(file) {
     return new Promise((resolve) => {
         EXIF.getData(file, function() {
             const orientation = EXIF.getTag(this, "Orientation") || 1;
             
-            // LOG the orientation value for debugging
-            console.log(`EXIF Orientation detected: ${orientation}`);
-            console.log('Orientation meanings: 1=Normal, 3=180°, 6=90°CW, 8=90°CCW');
-            
             const reader = new FileReader();
             reader.onload = function(e) {
-                // For now, just return the original image without any rotation
-                console.log('Returning original image without rotation for testing');
-                resolve(e.target.result);
+                // If orientation is 1 (normal/portrait), no rotation needed
+                if (orientation === 1) {
+                    resolve(e.target.result);
+                    return;
+                }
+                
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Only handle landscape orientations that need fixing
+                    if (orientation === 6) {
+                        // Rotate 90° clockwise (for landscape left)
+                        canvas.width = img.height;
+                        canvas.height = img.width;
+                        ctx.rotate(90 * Math.PI / 180);
+                        ctx.translate(0, -canvas.width);
+                    } else if (orientation === 8) {
+                        // Rotate 90° counter-clockwise (for landscape right)
+                        canvas.width = img.height;
+                        canvas.height = img.width;
+                        ctx.rotate(-90 * Math.PI / 180);
+                        ctx.translate(-canvas.height, 0);
+                    } else {
+                        // For any other orientation, keep original
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                    }
+                    
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Convert back with compression
+                    const correctedImageData = canvas.toDataURL('image/jpeg', 0.8);
+                    resolve(correctedImageData);
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         });
@@ -291,3 +321,4 @@ function handleMultipleImageUpload(input, previewId) {
         });
     }
 }
+
