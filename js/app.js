@@ -10,6 +10,77 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('testDate').valueAsDate = new Date();
 });
 
+// Function to fix image orientation based on EXIF data
+function fixImageOrientation(file) {
+    return new Promise((resolve) => {
+        EXIF.getData(file, function() {
+            const orientation = EXIF.getTag(this, "Orientation") || 1;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas dimensions based on orientation
+                    if (orientation > 4) {
+                        canvas.width = img.height;
+                        canvas.height = img.width;
+                    } else {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                    }
+                    
+                    // Apply rotation based on EXIF orientation
+                    switch (orientation) {
+                        case 2:
+                            // Flip horizontal
+                            ctx.transform(-1, 0, 0, 1, canvas.width, 0);
+                            break;
+                        case 3:
+                            // Rotate 180°
+                            ctx.transform(-1, 0, 0, -1, canvas.width, canvas.height);
+                            break;
+                        case 4:
+                            // Flip vertical
+                            ctx.transform(1, 0, 0, -1, 0, canvas.height);
+                            break;
+                        case 5:
+                            // Rotate 90° and flip horizontal
+                            ctx.transform(0, 1, 1, 0, 0, 0);
+                            break;
+                        case 6:
+                            // Rotate 90° clockwise
+                            ctx.transform(0, 1, -1, 0, canvas.width, 0);
+                            break;
+                        case 7:
+                            // Rotate 90° counter-clockwise and flip horizontal
+                            ctx.transform(0, -1, -1, 0, canvas.width, canvas.height);
+                            break;
+                        case 8:
+                            // Rotate 90° counter-clockwise
+                            ctx.transform(0, -1, 1, 0, 0, canvas.height);
+                            break;
+                        default:
+                            // No rotation needed
+                            break;
+                    }
+                    
+                    // Draw the image
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Convert back to base64 with compression
+                    const correctedImageData = canvas.toDataURL('image/jpeg', 0.8); // 80% quality for compression
+                    resolve(correctedImageData);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+}
+
 // Collapsible functionality
 function toggleCollapsible(id) {
     const content = document.getElementById(id);
@@ -132,18 +203,29 @@ function updateFailureComment(index, comment) {
     selectedFailuresList[index].comment = comment;
 }
 
+// UPDATED: handleFailureImage with EXIF rotation fix
 function handleFailureImage(index, input) {
     if (input.files[0]) {
         const file = input.files[0];
-        selectedFailuresList[index].image = file;
         
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            selectedFailuresList[index].imageData = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        // Show processing message
+        document.getElementById(`failureImagePreview${index}`).textContent = 'Processing image...';
         
-        document.getElementById(`failureImagePreview${index}`).textContent = 'Image uploaded';
+        fixImageOrientation(file).then(correctedImageData => {
+            selectedFailuresList[index].image = file;
+            selectedFailuresList[index].imageData = correctedImageData;
+            document.getElementById(`failureImagePreview${index}`).textContent = 'Image uploaded';
+        }).catch(error => {
+            console.error('Error processing failure image:', error);
+            // Fallback
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFailuresList[index].imageData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            selectedFailuresList[index].image = file;
+            document.getElementById(`failureImagePreview${index}`).textContent = 'Image uploaded (may need rotation)';
+        });
     }
 }
 
@@ -194,37 +276,68 @@ function calculateOverallResistance() {
     }
 }
 
-// Image upload functionality
+// UPDATED: handleImageUpload with EXIF rotation fix
 function handleImageUpload(input, previewId) {
     if (input.files[0]) {
         const file = input.files[0];
-        uploadedImages[previewId] = file;
         
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            uploadedImages[previewId + '_data'] = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        // Show loading message
+        document.getElementById(previewId).textContent = 'Processing image...';
         
-        document.getElementById(previewId).textContent = 'Image uploaded successfully';
+        // Fix orientation and compress
+        fixImageOrientation(file).then(correctedImageData => {
+            uploadedImages[previewId] = file;
+            uploadedImages[previewId + '_data'] = correctedImageData;
+            document.getElementById(previewId).textContent = 'Image uploaded successfully';
+        }).catch(error => {
+            console.error('Error processing image:', error);
+            // Fallback to original method
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImages[previewId + '_data'] = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            uploadedImages[previewId] = file;
+            document.getElementById(previewId).textContent = 'Image uploaded (orientation may need manual correction)';
+        });
     }
 }
 
+// UPDATED: handleMultipleImageUpload with EXIF rotation fix
 function handleMultipleImageUpload(input, previewId) {
     if (input.files.length > 0) {
         const files = Array.from(input.files);
         uploadedImages[previewId] = files;
         uploadedImages[previewId + '_data'] = [];
         
-        files.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedImages[previewId + '_data'][index] = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
+        // Show processing message
+        document.getElementById(previewId).textContent = 'Processing images...';
         
-        document.getElementById(previewId).textContent = `${input.files.length} image(s) uploaded`;
+        let processedCount = 0;
+        
+        files.forEach((file, index) => {
+            fixImageOrientation(file).then(correctedImageData => {
+                uploadedImages[previewId + '_data'][index] = correctedImageData;
+                processedCount++;
+                
+                // Update preview when all images are processed
+                if (processedCount === files.length) {
+                    document.getElementById(previewId).textContent = `${files.length} image(s) uploaded`;
+                }
+            }).catch(error => {
+                console.error('Error processing image:', error);
+                // Fallback for this image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages[previewId + '_data'][index] = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                processedCount++;
+                
+                if (processedCount === files.length) {
+                    document.getElementById(previewId).textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
+                }
+            });
+        });
     }
 }
-
