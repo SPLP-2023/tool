@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Report - Strike Tools</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="nav-header">
+            <button class="nav-button back-button" onclick="location.href='reports.html'">
+                ← Back to Reports
+            </button>
+            <h1 class="page-title">Survey Report</h1>
+            <button class="nav-button" onclick="location.href='tools.html'">
+                Tools
+            </button>
+        </div>
+
+        <!-- Basic Information Section -->
+        <div class="section">
+            <h2>Site Information</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="siteAddress">Site Address:</label>
+                    <textarea id="siteAddress" rows="3" placeholder="Enter full site address..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="surveyDate">Survey Date:</label>
+                    <input type="date" id="surveyDate">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="surveyorName">Surveyor Name:</label>
+                    <input type="text" id="surveyorName" placeholder="Enter surveyor name...">
+                </div>
+                <div class="form-group">
+                    <label for="clientRepName">Client Representative Name:</label>
+                    <input type="text" id="clientRepName" placeholder="Enter client representative name...">
+                </div>
+            </div>
+            
+            <!-- Touch Signature Section -->
+            <div class="form-group">
+                <label for="clientSignature">Client Representative Signature:</label>
+                <div class="signature-container">
+                    <canvas id="signatureCanvas" width="400" height="200"></canvas>
+                    <div class="signature-controls">
+                        <button type="button" id="clearSignature" class="signature-btn clear-btn">Clear Signature</button>
+                        <button type="button" id="saveSignature" class="signature-btn save-btn">Save Signature</button>
+                    </div>
+                    <div id="signatureStatus" class="signature-status">Please sign above</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Building Image Section -->
+        <div class="section">
+            <h2>Site Photos</h2>
+            <div class="form-group">
+                <label for="buildingImage">Building Overview Photo:</label>
+                <div class="image-upload" onclick="document.getElementById('buildingImageFile').click()">
+                    <input type="file" id="buildingImageFile" accept="image/*" class="hidden-file-input" aria-label="Upload building image" onchange="handleImageUpload(this, 'buildingImagePreview')">
+                    <div id="buildingImagePreview">Click to upload building photo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Structure Assessment Section -->
+        <div class="section">
+            <h2>Structure Assessment</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="structureType">Structure Type:</label>
+                    <select id="structureType">
+                        <option value="">Select structure type...</option>
+                        <option value="Residential">Residential</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="Industrial">Industrial</option>
+                        <option value="Agricultural">Agricultural</option>
+                        <option value="Educational">Educational</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Heritage">Heritage</option>
+                        <option value="Telecommunications">Telecommunications</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="structureHeight">Approximate Structure Height (m):</label>
+                    <input type="number" id="structureHeight" step="0.5" min="0" placeholder="0.0">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="roofType">Roof Type:</label>
+                    <select id="roofType">
+                        <option value="">Select roof type...</option>
+                        <option value="Flat">Flat</option>
+                        <option value="Pitched">Pitched</option>
+                        <option value="Complex">Complex</option>
+                        <option value="Dome">Dome</option>
+                        <option value="Metal">Metal</option>
+                        <option value="Membrane">Membrane</option>
+                        <option value="Tiles">Tiles</option>
+                        <option value="Thatch">Thatch</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="roofAccess">Roof Access Available:</label>
+                    <select id="roofAccess">
+                        <option value="">Select...</option>
+                        <option value="Full Access">Full Access</option>
+                        <option value="Limited Access">Limited Access</option>
+                        <option value="No Access">No Access</option>
+                        <option value="Requires Special Equipment">Requires Special Equipment</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Protection Assessment -->
+        <div class="section">
+            <h2>Existing Lightning Protection Assessment</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="existingSystem">Existing Lightning Protection System:</label>
+                    <select id="existingSystem">
+                        <option value="None">None Visible</option>
+                        <option value="Complete">Complete System Present</option>
+                        <option value="Partial">Partial System Present</option>
+                        <option value="Damaged">Damaged System Present</option>
+                        <option value="Unknown">System Present - Condition Unknown</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="systemCondition">Overall System Condition:</label>
+                    <select id="systemCondition">
+                        <option value="">Select condition...</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                        <option value="Dangerous">Dangerous</option>
+                        <option value="N/A">N/A - No System</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Factors Section -->
+        <div class="section">
+            <h2>Identified Risk Factors</h2>
+            <div class="risk-factors-grid">
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="heightRisk" class="risk-checkbox">
+                    <label for="heightRisk">Structure Height (>20m)</label>
+                </div>
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="isolationRisk" class="risk-checkbox">
+                    <label for="isolationRisk">Isolated Location</label>
+                </div>
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="hilltopRisk" class="risk-checkbox">
+                    <label for="hilltopRisk">Hilltop Location</label>
+                </div>
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="metalRoof" class="risk-checkbox">
+                    <label for="metalRoof">Metal Roof/Structure</label>
+                </div>
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="flammableRisk" class="risk-checkbox">
+                    <label for="flammableRisk">Flammable Materials</label>
+                </div>
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="occupancyRisk" class="risk-checkbox">
+                    <label for="occupancyRisk">High Occupancy</label>
+                </div>
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="electronicRisk" class="risk-checkbox">
+                    <label for="electronicRisk">Sensitive Electronics</label>
+                </div>
+                <div class="risk-factor-item">
+                    <input type="checkbox" id="historicRisk" class="risk-checkbox">
+                    <label for="historicRisk">Historic/Heritage Building</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Survey Findings Section -->
+        <div class="section">
+            <h2>Survey Findings & Observations</h2>
+            <div class="form-group">
+                <label for="surveyFindings">Detailed Findings:</label>
+                <textarea id="surveyFindings" rows="6" placeholder="Document detailed observations, measurements, existing conditions, access limitations, and any other relevant findings..."></textarea>
+            </div>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="section">
+            <h2>Initial Recommendations</h2>
+            <div class="form-group">
+                <label for="recommendations">Recommendations:</label>
+                <textarea id="recommendations" rows="6" placeholder="Provide initial recommendations for lightning protection requirements, further investigations needed, priority actions, etc..."></textarea>
+            </div>
+        </div>
+
+        <!-- Additional Photos Section -->
+        <div class="section">
+            <h2>Additional Survey Photos</h2>
+            <div class="form-group">
+                <label for="additionalPhotos">Survey Photos:</label>
+                <div class="image-upload" onclick="document.getElementById('additionalPhotosFile').click()">
+                    <input type="file" id="additionalPhotosFile" accept="image/*" multiple class="hidden-file-input" aria-label="Upload additional survey photos" onchange="handleMultipleImageUpload(this, 'additionalPhotosPreview')">
+                    <div id="additionalPhotosPreview">Click to upload additional photos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Report Buttons -->
+        <button id="generateSurveyReport" onclick="generateSurveyPDF()">Generate Survey Report PDF</button>
+        <button id="newSurveyReport" onclick="clearSurveyData()" class="new-report-button">New Survey Report</button>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- JavaScript Files -->
+    <script src="js/exif.js"></script>
+    <script src="js/pdf-generator-shared.js"></script>
+    <script src="js/pdf-generator-survey.js"></script>
+    <script src="js/survey-report.js"></script>
+
+    <style>
+        /* Navigation styles */
+        .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .nav-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+        .back-button {
+            background-color: #95a5a6;
+        }
+
+        .back-button:hover {
+            background-color: #7f8c8d;
+        }
+
+        .page-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        /* Touch Signature Styles */
+        .signature-container {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+
+        #signatureCanvas {
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background: white;
+            cursor: crosshair;
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            display: block;
+            margin: 0 auto;
+            touch-action: none; /* Prevents scrolling while signing */
+        }
+
+        .signature-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .signature-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background-color: #c82333;
+        }
+
+        .save-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #218838;
+        }
+
+        .signature-status {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .signature-status.saved {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* Risk Factors Grid */
+        .risk-factors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .risk-factor-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+
+        .risk-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .risk-factor-item label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .new-report-button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .new-report-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+
+            #signatureCanvas {
+                width: 100%;
+                height: 150px;
+            }
+
+            .risk-factors-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .signature-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .signature-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</body>
+</html>
