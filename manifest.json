@@ -9,7 +9,7 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "./assets/Color logo - no background (px reduction).png",
+  "src": "./assets/Color%20logo%20-%20no%20background%20(px%20reduction).png",
       "sizes": "400x265",
       "type": "image/png"
     }
