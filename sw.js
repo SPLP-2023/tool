@@ -1,4 +1,4 @@
-const CACHE_NAME = 'splp-tool-v1';
+const CACHE_NAME = 'splp-tool-v2';
 const urlsToCache = [
   './',
   './index.html',
