@@ -282,4 +282,20 @@ button:hover {
     .reference-section {
         display: none;
     }
+
+    .new-report-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    }
+
+    .new-report-button:hover {
+    background-color: #c0392b;
+    }
 }
