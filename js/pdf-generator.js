@@ -539,10 +539,6 @@ function generatePDF() {
     
     // Save the PDF
     pdf.save(filename);
-
-    // At the end of generatePDF() 
-    function, add:
-    clearAutoSaveAfterPDF();
 }
 
 
