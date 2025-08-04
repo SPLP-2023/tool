@@ -2,14 +2,14 @@
 const standardFailures = {
     "BS EN 62305": [
         { 
-            failure: "Earth resistance exceeds 10Ω overall maximum requirement", 
+            failure: "Earth resistance exceeds 10ohms overall requirement", 
             ref: "BS EN 62305-3, Section 5.4.2",
-            req: "The earth termination overall resistance should be reduced below 10Ω"
+            req: "The earth termination overall resistance should be reduced below 10ohms"
         },
         { 
             failure: "Poor continuity between air terminals and down conductors", 
             ref: "BS EN 62305-3, Section 5.2.1",
-            req: "All connections should be cleaned, tightened, and tested to ensure continuity below 0.2Ω"
+            req: "All connections should be cleaned, tightened, and tested to ensure continuity below 0.2ohms"
         },
         { 
             failure: "Air terminals not meeting LPL requirements", 
@@ -104,9 +104,9 @@ const standardFailures = {
     ],
     "BS 6651": [
         { 
-            failure: "Earth electrode resistance above 10Ω", 
+            failure: "Earth electrode resistance above 10ohms", 
             ref: "BS 6651, Section 13.2",
-            req: "Additional earth electrodes must be installed to achieve resistance below 10Ω"
+            req: "Additional earth electrodes must be installed to achieve resistance below 10ohms"
         },
         { 
             failure: "Continuity failure in conductor network", 
@@ -360,3 +360,4 @@ const standardFailures = {
     ]
 
 };
+
