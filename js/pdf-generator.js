@@ -49,7 +49,7 @@ function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = 
 
 function addPageHeader(pdf, title) {
     // Company logo in header
-    addImageToPDF(pdf, COMPANY_LOGO_URL, 160, 8, 40, 20, true);
+    addImageToPDF(pdf, FOOTER_IMAGE_URL, 160, 8, 40, 20, true);
     
     // Add section title spanning full width
     pdf.setFontSize(16);
@@ -504,7 +504,7 @@ function generatePDF() {
         const imageWidth = 80;
         const imageHeight = 60;
         const imagesPerRow = 2;
-        const maxImagesFirstImagePage = 4;
+        const maxImagesFirstImagePage = 6;
         const maxImagesSubsequentImagePage = 6;
         
         images.forEach((imageData, index) => {
@@ -539,6 +539,7 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
 
 
 
