@@ -1,10 +1,44 @@
 // PDF Generation Functions with Two-Column Layout
-function addImageToPDF(pdf, imageData, x, y, width, height) {
+function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight) {
     if (imageData) {
         try {
+            // Create a temporary image to get original dimensions
+            const img = new Image();
+            img.src = imageData;
+            
+            // Calculate aspect ratio preserving dimensions
+            const originalWidth = img.width || maxWidth;
+            const originalHeight = img.height || maxHeight;
+            const aspectRatio = originalWidth / originalHeight;
+            
+            let finalWidth, finalHeight;
+            
+            // Scale to fit within max boundaries while preserving aspect ratio
+            if (aspectRatio > 1) {
+                // Landscape image
+                finalWidth = Math.min(maxWidth, originalWidth);
+                finalHeight = finalWidth / aspectRatio;
+                
+                // If height exceeds max, scale down further
+                if (finalHeight > maxHeight) {
+                    finalHeight = maxHeight;
+                    finalWidth = finalHeight * aspectRatio;
+                }
+            } else {
+                // Portrait or square image
+                finalHeight = Math.min(maxHeight, originalHeight);
+                finalWidth = finalHeight * aspectRatio;
+                
+                // If width exceeds max, scale down further
+                if (finalWidth > maxWidth) {
+                    finalWidth = maxWidth;
+                    finalHeight = finalWidth / aspectRatio;
+                }
+            }
+            
             const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
-            pdf.addImage(imageData, format, x, y, width, height);
-            return height + 5; // Return height plus small margin
+            pdf.addImage(imageData, format, x, y, finalWidth, finalHeight);
+            return finalHeight + 5; // Return actual height used plus small margin
         } catch (error) {
             console.error('Error adding image to PDF:', error);
             return 0;
@@ -505,5 +539,6 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
 
 
