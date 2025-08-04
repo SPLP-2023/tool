@@ -1,1 +1,208 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Strike Tools</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="nav-header">
+            <button class="nav-button back-button" onclick="location.href='index.html'">
+                ← Back
+            </button>
+            <h1 class="page-title">Reports</h1>
+            <button class="nav-button" onclick="location.href='tools.html'">
+                Tools
+            </button>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="reports-grid">
+            <!-- T&I Report - Active -->
+            <div class="report-card active" onclick="location.href='t&i-report.html'">
+                <div class="report-icon">⚡</div>
+                <h3>Test & Inspection Report</h3>
+                <p>Complete lightning protection system testing and inspection reporting</p>
+                <div class="status-badge active">Available</div>
+            </div>
+
+            <!-- Remedial Repairs Report - Coming Soon -->
+            <div class="report-card coming-soon">
+                <div class="report-icon">🔧</div>
+                <h3>Remedial Repairs Report</h3>
+                <p>Document repairs and modifications to lightning protection systems</p>
+                <div class="status-badge coming-soon">Coming Soon</div>
+            </div>
+
+            <!-- Survey Report - Coming Soon -->
+            <div class="report-card coming-soon">
+                <div class="report-icon">📊</div>
+                <h3>Survey Report</h3>
+                <p>Initial lightning protection system surveys and assessments</p>
+                <div class="status-badge coming-soon">Coming Soon</div>
+            </div>
+
+            <!-- Risk Assessment Report - Coming Soon -->
+            <div class="report-card coming-soon">
+                <div class="report-icon">⚠️</div>
+                <h3>Risk Assessment Report</h3>
+                <p>Lightning strike risk analysis and protection level recommendations</p>
+                <div class="status-badge coming-soon">Coming Soon</div>
+            </div>
+
+            <!-- General Image Report - Coming Soon -->
+            <div class="report-card coming-soon">
+                <div class="report-icon">📸</div>
+                <h3>General Image Report</h3>
+                <p>Photo documentation and visual reporting tools</p>
+                <div class="status-badge coming-soon">Coming Soon</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            <p>Select a report type to begin</p>
+        </div>
+    </div>
+
+    <style>
+        .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .nav-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+        .back-button {
+            background-color: #95a5a6;
+        }
+
+        .back-button:hover {
+            background-color: #7f8c8d;
+        }
+
+        .page-title {
+            font-size: 32px;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .report-card {
+            background: #fff;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .report-card.active {
+            border-color: #27ae60;
+            cursor: pointer;
+        }
+
+        .report-card.active:hover {
+            border-color: #2ecc71;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .report-card.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .report-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .report-card h3 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin: 15px 0 10px 0;
+        }
+
+        .report-card p {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-badge.active {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .status-badge.coming-soon {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .footer-info {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</body>
+</html>
