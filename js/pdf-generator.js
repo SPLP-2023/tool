@@ -1,3 +1,6 @@
+// Company logo URL (hosted on GitHub)
+const COMPANY_LOGO_URL = "https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/Color%20logo%20-%20no%20background.png";
+
 // PDF Generation Functions with Two-Column Layout
 function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
     if (imageData) {
@@ -44,10 +47,8 @@ function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = 
 }
 
 function addPageHeader(pdf, title) {
-    // Add header logo if available
-    if (uploadedImages['headerLogoPreview_data']) {
-        addImageToPDF(pdf, uploadedImages['headerLogoPreview_data'], 170, 10, 30, 15);
-    }
+    // Company logo in header
+    addImageToPDF(pdf, COMPANY_LOGO_URL, 160, 8, 40, 20, true);
     
     // Add section title spanning full width
     pdf.setFontSize(16);
@@ -104,13 +105,11 @@ function generatePDF() {
     
     let yPosition = 20;
     
+
     // ==================== COVER PAGE ====================
-    if (uploadedImages['coverLogoPreview_data']) {
-        const logoHeight = addImageToPDF(pdf, uploadedImages['coverLogoPreview_data'], 60, 20, 90, 40);
-        yPosition = 70;
-    } else {
-        yPosition = 30;
-    }
+    // Company logo centered at top
+    const logoHeight = addImageToPDF(pdf, COMPANY_LOGO_URL, 30, 20, 150, 60, true);
+    yPosition = 20 + logoHeight + 10;
     
     pdf.setFontSize(24);
     pdf.setFont(undefined, 'bold');
@@ -535,3 +534,4 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
