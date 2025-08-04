@@ -1,13 +1,37 @@
-// PDF Generation Functions with Two-Column Layout
-function addImageToPDF(pdf, imageData, x, y, width, height) {
+ // PDF Generation Functions with Two-Column Layout
+function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight) {
     if (imageData) {
         try {
             const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
-            pdf.addImage(imageData, format, x, y, width, height);
-            return height + 5; // Return height plus small margin
+            
+            // Get image properties using jsPDF's built-in method
+            const imgProps = pdf.getImageProperties(imageData);
+            const imgWidth = imgProps.width;
+            const imgHeight = imgProps.height;
+            const aspectRatio = imgWidth / imgHeight;
+            
+            // Calculate final dimensions to fit within maxWidth x maxHeight
+            let finalWidth, finalHeight;
+            
+            if (aspectRatio > (maxWidth / maxHeight)) {
+                // Image is wider - constrain by width
+                finalWidth = maxWidth;
+                finalHeight = maxWidth / aspectRatio;
+            } else {
+                // Image is taller - constrain by height
+                finalHeight = maxHeight;
+                finalWidth = maxHeight * aspectRatio;
+            }
+            
+            pdf.addImage(imageData, format, x, y, finalWidth, finalHeight);
+            return finalHeight + 5; // Return actual height used plus margin
+            
         } catch (error) {
             console.error('Error adding image to PDF:', error);
-            return 0;
+            // Fallback to original method if aspect ratio calculation fails
+            const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
+            pdf.addImage(imageData, format, x, y, maxWidth, maxHeight);
+            return maxHeight + 5;
         }
     }
     return 0;
