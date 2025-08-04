@@ -1,5 +1,5 @@
- // PDF Generation Functions with Two-Column Layout
-function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight) {
+// PDF Generation Functions with Two-Column Layout
+function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
     if (imageData) {
         try {
             const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
@@ -23,7 +23,13 @@ function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight) {
                 finalWidth = maxHeight * aspectRatio;
             }
             
-            pdf.addImage(imageData, format, x, y, finalWidth, finalHeight);
+            // Center align if requested
+            let finalX = x;
+            if (centerAlign) {
+                finalX = x + (maxWidth - finalWidth) / 2;
+            }
+            
+            pdf.addImage(imageData, format, finalX, y, finalWidth, finalHeight);
             return finalHeight + 5; // Return actual height used plus margin
             
         } catch (error) {
