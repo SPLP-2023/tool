@@ -298,4 +298,53 @@ button:hover {
     .new-report-button:hover {
     background-color: #c0392b;
     }
+    .nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.nav-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: #2980b9;
+}
+
+.back-button {
+    background-color: #95a5a6;
+}
+
+.back-button:hover {
+    background-color: #7f8c8d;
+}
+
+.page-title {
+    font-size: 28px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .nav-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .page-title {
+        font-size: 24px;
+    }
 }
