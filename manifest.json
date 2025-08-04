@@ -8,22 +8,22 @@
   "theme_color": "#2980b9",
   "orientation": "portrait-primary",
   "icons": [
-  {
-    "src": "./assets/Color%20logo%20-%20no%20background%20(px%20reduction).png",
-    "sizes": "400x265",
-    "type": "image/png"
-  },
-  {
-    "src": "./assets/Color%20logo%20-%20no%20background%20(px%20reduction).png",
-    "sizes": "192x192",
-    "type": "image/png",
-    "purpose": "any maskable"
-  },
-  {
-    "src": "./assets/Color%20logo%20-%20no%20background%20(px%20reduction).png",
-    "sizes": "512x512",
-    "type": "image/png",
-    "purpose": "any maskable"
-  }
-]
+    {
+      "src": "./assets/SP%20Bolt%20400x400.png",
+      "sizes": "400x400",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/SP%20Bolt%20400x400.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/SP%20Bolt%20400x400.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
