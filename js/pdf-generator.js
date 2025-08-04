@@ -61,7 +61,7 @@ function addPageHeader(pdf, title) {
 
 function addFooterToPage(pdf, footer) {
     // Add footer image - larger, centered, above text
-    addImageToPDF(pdf, FOOTER_IMAGE_URL, 60, 270, 90, 30, true);
+    addImageToPDF(pdf, FOOTER_IMAGE_URL, 60, 260, 90, 30, true);
     
     // Add footer text below the image
     pdf.setFontSize(8);
@@ -539,6 +539,7 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
 
 
 
