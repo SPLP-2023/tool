@@ -8,8 +8,8 @@ const urlsToCache = [
   './js/data.js',
   './js/exif.js',
   './assets/Color%20logo%20-%20no%20background%20(px%20reduction).png',
+  './assets/SP Bolt 400x400.png',
   './assets/es12.png'
-  './assets/SP Bolt 400x400.png'
 ];
 
 self.addEventListener('install', event => {
