@@ -1,5 +1,5 @@
 // Company logo URL (hosted on GitHub)
-const COMPANY_LOGO_URL = "https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/Color%20logo%20-%20no%20background.png";
+const COMPANY_LOGO_URL = "https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/Color%20logo%20-%20no%20background%20(px%20reduction).png";
 
 // PDF Generation Functions with Two-Column Layout
 function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
@@ -534,4 +534,5 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
 
