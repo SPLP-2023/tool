@@ -1,6 +1,7 @@
 // Company logo URL (hosted on GitHub)
 const COMPANY_LOGO_URL = "https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/Color%20logo%20-%20no%20background%20(px%20reduction).png";
 const FOOTER_IMAGE_URL = "https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/es12.png";
+const HEADER_IMAGE_URL = "https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/SP%20Bolt%20400x400.png";
 
 // PDF Generation Functions with Two-Column Layout
 function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
@@ -49,7 +50,7 @@ function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = 
 
 function addPageHeader(pdf, title) {
     // Company logo in header
-    addImageToPDF(pdf, FOOTER_IMAGE_URL, 125, 8, 80, 30, true);
+    addImageToPDF(pdf, HEADER_IMAGE_URL, 160, 8, 80, 30, true);
     
     // Add section title spanning full width
     pdf.setFontSize(16);
@@ -539,6 +540,7 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
 
 
 
