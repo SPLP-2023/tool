@@ -1,0 +1,17 @@
+{
+  "name": "Lightning Protection Engineers Reporting Tool",
+  "short_name": "SPLP Tool",
+  "description": "Professional lightning protection inspection and reporting tool",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2980b9",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./assets/Color logo - no background (px reduction).png",
+      "sizes": "400x265",
+      "type": "image/png"
+    }
+  ]
+}
