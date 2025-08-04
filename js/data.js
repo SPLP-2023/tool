@@ -2,14 +2,14 @@
 const standardFailures = {
     "BS EN 62305": [
         { 
-            failure: "Earth resistance exceeds 10 Ohm requirement", 
+            failure: "Earth resistance exceeds 10Ω overall maximum requirement", 
             ref: "BS EN 62305-3, Section 5.4.2",
-            req: "The earth termination overall resistance should be reduced below 10 ohms"
+            req: "The earth termination overall resistance should be reduced below 10Ω"
         },
         { 
             failure: "Poor continuity between air terminals and down conductors", 
             ref: "BS EN 62305-3, Section 5.2.1",
-            req: "All connections must be cleaned, tightened, and tested to ensure continuity below 0.05 ohms"
+            req: "All connections should be cleaned, tightened, and tested to ensure continuity below 0.2Ω"
         },
         { 
             failure: "Air terminals not meeting LPL requirements", 
@@ -22,14 +22,14 @@ const standardFailures = {
             req: "Down conductors must be re-routed to follow the most direct path to earth termination"
         },
         { 
-            failure: "Inadequate separation distance from metalwork", 
+            failure: "Inadequate separation distance from metalwork/plant", 
             ref: "BS EN 62305-3, Section 6.3",
             req: "Increase separation distance or install equipotential bonding as per calculated requirements"
         },
         { 
             failure: "Missing equipotential bonding connections", 
             ref: "BS EN 62305-3, Section 6.2",
-            req: "Install equipotential bonding conductors to all metallic services and structural elements"
+            req: "Install equipotential bonding conductors to all metallic services and structural elements or install air finial rods if separation can be achieved"
         },
         { 
             failure: "Non-compliant conductor materials or dimensions", 
@@ -44,7 +44,7 @@ const standardFailures = {
         { 
             failure: "Missing or inadequate surge protection devices", 
             ref: "BS EN 62305-4, Section 6",
-            req: "Install coordinated SPD protection at main and sub-distribution boards as required"
+            req: "Install a minimum Type-1 SPD at main distribution boards as required"
         },
         { 
             failure: "SPD coordination issues between protection levels", 
@@ -104,9 +104,9 @@ const standardFailures = {
     ],
     "BS 6651": [
         { 
-            failure: "Earth electrode resistance above 10 Ohm", 
+            failure: "Earth electrode resistance above 10Ω", 
             ref: "BS 6651, Section 13.2",
-            req: "Additional earth electrodes must be installed to achieve overall resistance below 10 ohms"
+            req: "Additional earth electrodes must be installed to achieve resistance below 10Ω"
         },
         { 
             failure: "Continuity failure in conductor network", 
@@ -358,4 +358,5 @@ const standardFailures = {
             req: "Complete full system commissioning including ESE device functional testing"
         }
     ]
+
 };
