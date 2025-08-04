@@ -60,13 +60,13 @@ function addPageHeader(pdf, title) {
 }
 
 function addFooterToPage(pdf, footer) {
-    // Add footer image
-    addImageToPDF(pdf, FOOTER_IMAGE_URL, 20, 285, 30, 10, false);
+    // Add footer image - larger, centered, above text
+    addImageToPDF(pdf, FOOTER_IMAGE_URL, 60, 270, 90, 30, true);
     
-    // Add footer text
+    // Add footer text below the image
     pdf.setFontSize(8);
     const footerLines = pdf.splitTextToSize(footer, 190);
-    pdf.text(footerLines, 105, 275, { align: 'center' });
+    pdf.text(footerLines, 105, 285, { align: 'center' });
 }
 
 function startNewSection(pdf, title, footer) {
@@ -539,6 +539,7 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
 
 
 
