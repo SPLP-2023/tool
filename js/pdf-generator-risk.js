@@ -1,5 +1,5 @@
-// Risk Assessment PDF Generator - COMPLETED
-// Generates professional PDF reports for lightning protection risk assessments
+// COMPLETE pdf-generator-risk.js
+// Risk Assessment PDF Generator - COMPLETED VERSION
 
 function generateRiskAssessmentPDF() {
     const { jsPDF } = window.jspdf;
@@ -127,9 +127,14 @@ function generateRiskAssessmentPDF() {
         'Type: ' + structureType,
         'Height: ' + structureHeight + ' m',
         'Length: ' + structureLength + ' m', 
-        'Width: ' + structureWidth + ' m',
-        'Footprint Area: ' + (parseFloat(structureLength || 0) * parseFloat(structureWidth || 0)).toFixed(1) + ' m²'
+        'Width: ' + structureWidth + ' m'
     ];
+    
+    // Add calculated area if dimensions exist
+    if (structureLength && structureWidth) {
+        const area = (parseFloat(structureLength) * parseFloat(structureWidth)).toFixed(1);
+        structureInfo.push('Footprint Area: ' + area + ' m²');
+    }
     
     structureInfo.forEach((info, index) => {
         if (info.split(': ')[1] !== '') {
