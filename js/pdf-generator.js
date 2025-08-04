@@ -234,25 +234,10 @@ function generatePDF() {
             yPosition = maxY + 15;
         }
         
-        pdf.setFontSize(12);
-        pdf.setFont(undefined, 'bold');
-        pdf.text('GENERAL COMMENTS:', 105, yPosition, { align: 'center' });
-        yPosition += 10;
-        
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(10);
-        const leftCommentLines = pdf.splitTextToSize(generalComments, columnWidth);
-        const rightCommentLines = [];
-        
-        // Split comments between columns
-        const midPoint = Math.ceil(leftCommentLines.length / 2);
-        const leftPart = leftCommentLines.slice(0, midPoint);
-        const rightPart = leftCommentLines.slice(midPoint);
-        
-        pdf.text(leftPart, leftColumnX, yPosition);
-        if (rightPart.length > 0) {
-            pdf.text(rightPart, rightColumnX, yPosition);
-        }
+        const commentLines = pdf.splitTextToSize(generalComments, 170); // Full width
+        pdf.text(commentLines, leftColumnX, yPosition);
     }
     
     // ==================== STRUCTURE AND SYSTEM DETAILS SECTION ====================
@@ -464,15 +449,8 @@ function generatePDF() {
             
             pdf.setFont(undefined, 'normal');
             pdf.setFontSize(10);
-            const finalLines = pdf.splitTextToSize(finalComments, columnWidth);
-            const midPoint = Math.ceil(finalLines.length / 2);
-            const leftPart = finalLines.slice(0, midPoint);
-            const rightPart = finalLines.slice(midPoint);
-            
-            pdf.text(leftPart, leftColumnX, yPosition);
-            if (rightPart.length > 0) {
-                pdf.text(rightPart, rightColumnX, yPosition);
-            }
+            const finalLines = pdf.splitTextToSize(finalComments, 170); // Full width
+            pdf.text(finalLines, leftColumnX, yPosition);
         }
     } else {
         pdf.setFontSize(12);
@@ -527,3 +505,4 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
