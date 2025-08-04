@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>⚡ Lightning Protection Engineers Reporting Tool</h1>
+        <h1>Inspection Report</h1>
         
         <!-- Collapsible Reference Sections -->
         <div class="section">
@@ -110,7 +110,7 @@
         
         <!-- Basic Information Section -->
         <div class="section">
-            <h2>📝 Site Information</h2>
+            <h2>Site Information</h2>
             <div class="form-row">
                 <div class="form-group">
                     <label for="siteAddress">Site Address:</label>
@@ -142,7 +142,7 @@
 
               <!-- Replace your entire Standards Selection & Failures section with this -->
         <div class="section">
-            <h2>📖 Standard Selection & Failures</h2>
+            <h2>Standard Selection & Failures</h2>
             <div class="form-group standards-dropdown">
                 <label for="standard">Select Standard:</label>
                 <select id="standard" title="Select lightning protection standard" onchange="updateFailuresList()">
@@ -160,13 +160,13 @@
         </div>
 
         <div class="section">
-            <h2>⚠️ Selected Failures & Comments</h2>
+            <h2>⚠Selected Failures & Comments</h2>
             <div id="selectedFailures"></div>
         </div>
 
         <!-- General Comments Section -->
         <div class="section">
-            <h2>💬 General Comments</h2>
+            <h2>General Comments</h2>
             <div class="form-group">
                 <label for="generalComments">Additional Comments:</label>
                 <textarea id="generalComments" rows="4" placeholder="Enter any additional observations, recommendations, or general comments about the lightning protection system..."></textarea>
@@ -175,7 +175,7 @@
 
         <!-- Structure Details Section -->
         <div class="section">
-            <h2>🏢 Structure Details</h2>
+            <h2>Structure Details</h2>
             
             <div class="form-row">
                 <div class="form-group">
@@ -372,7 +372,7 @@
 
         <!-- Earth Resistance Testing -->
         <div class="section">
-            <h2>🌍 Earth Resistance Testing</h2>
+            <h2>Earth Resistance Test</h2>
             <div class="form-group">
                 <label for="numEarths">Number of Earths Tested:</label>
                 <input type="number" id="numEarths" min="0" max="20" onchange="generateEarthInputs()">
@@ -393,7 +393,7 @@
 
         <!-- Logo Upload Section -->
         <div class="section">
-            <h2>🏢 Company Branding</h2>
+            <h2>Company Branding</h2>
             <div class="form-row">
                 <div class="form-group">
                     <label for="coverLogo">Cover Page Logo (Large):</label>
@@ -414,7 +414,7 @@
 
         <!-- Final Comments Section -->
         <div class="section">
-            <h2>📝 Final Summary Comments</h2>
+            <h2>Final Summary Comments</h2>
             <div class="form-group">
                 <label for="finalComments">Summary & Recommendations:</label>
                 <textarea id="finalComments" rows="4" placeholder="Enter final summary, conclusions, and recommendations for the lightning protection system..."></textarea>
@@ -422,7 +422,7 @@
         </div>
 
         <!-- Generate Report Button -->
-        <button id="generateReport" onclick="generatePDF()">🎯 Generate Professional PDF Report</button>
+        <button id="generateReport" onclick="generatePDF()">Generate PDF Report</button>
     </div>
 
     <!-- External Libraries -->
