@@ -160,7 +160,7 @@ function generateEarthInputs() {
             const inputGroup = document.createElement('div');
             inputGroup.className = 'earth-input-group';
             inputGroup.innerHTML = `
-                <label>Earth ${i}:</label>
+                <label>E ${i}:</label>
                 <input type="number" step="0.01" min="0" onchange="updateEarthResistance(${i-1}, this.value)" placeholder="0.00">
                 <span>Ohm</span>
             `;
@@ -227,3 +227,4 @@ function handleMultipleImageUpload(input, previewId) {
         document.getElementById(previewId).textContent = `${input.files.length} image(s) uploaded`;
     }
 }
+
