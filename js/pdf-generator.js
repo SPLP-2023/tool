@@ -49,7 +49,7 @@ function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = 
 
 function addPageHeader(pdf, title) {
     // Company logo in header
-    addImageToPDF(pdf, FOOTER_IMAGE_URL, 100, 8, 90, 30, true);
+    addImageToPDF(pdf, FOOTER_IMAGE_URL, 115, 8, 80, 30, true);
     
     // Add section title spanning full width
     pdf.setFontSize(16);
@@ -539,6 +539,7 @@ function generatePDF() {
     // Save the PDF
     pdf.save(filename);
 }
+
 
 
 
