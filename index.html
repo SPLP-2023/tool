@@ -3,418 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lightning Protection Engineers Reporting Tool</title>
+    <title>Strike Tools - Lightning Protection Solutions</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/SP%20Bolt%20400x400.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/SP%20Bolt%20400x400.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/SP%20Bolt%20400x400.png">
+    <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
 </head>
 <body>
     <div class="container">
-        <h1>Test & Inspection Report</h1>
-        
-        <!-- Collapsible Reference Sections -->
-        <div class="section">
-            <h2>Standard Sections Quick Reference Guide</h2>
-            
-            <div class="collapsible-container">
-                <button class="collapsible-header" onclick="toggleCollapsible('bs62305')">
-                    📋 BS EN 62305 Structure & Requirements
-                </button>
-                <div id="bs62305" class="collapsible-content">
-                    <div class="reference-list">
-                        <strong>BS EN 62305-1: General Principles</strong>
-                        <ul>
-                            <li>Lightning Protection Levels (LPL I-IV)</li>
-                            <li>Current division principles</li>
-                            <li>Lightning Protection Zones (LPZ 0A, 0B, 1, 2)</li>
-                            <li>Protection methods and concepts</li>
-                        </ul>
-                        <strong>BS EN 62305-2: Risk Management</strong>
-                        <ul>
-                            <li>Risk assessment procedures</li>
-                            <li>R1: Risk of loss of human life</li>
-                            <li>R2: Risk of loss of service to public</li>
-                            <li>R3: Risk of loss of cultural heritage</li>
-                            <li>R4: Risk of economic loss</li>
-                        </ul>
-                        <strong>BS EN 62305-3: Physical Damage to Structures</strong>
-                        <ul>
-                            <li>Air termination systems</li>
-                            <li>Down conductor systems</li>
-                            <li>Earth termination systems (Type A & B)</li>
-                            <li>Equipotential bonding</li>
-                            <li>Separation distances</li>
-                            <li>Material specifications</li>
-                        </ul>
-                        <strong>BS EN 62305-4: Electrical and Electronic Systems</strong>
-                        <ul>
-                            <li>Surge Protection Devices (SPDs)</li>
-                            <li>Lightning current arresters</li>
-                            <li>Overvoltage surge arresters</li>
-                            <li>Coordinated SPD protection</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="collapsible-container">
-                <button class="collapsible-header" onclick="toggleCollapsible('bs6651')">
-                    📋 BS 6651 Structure (Legacy Standard)
-                </button>
-                <div id="bs6651" class="collapsible-content">
-                    <div class="reference-list">
-                        <ul>
-                            <li>Section 1: Scope and definitions</li>
-                            <li>Section 2: Risk factor analysis</li>
-                            <li>Section 3: Air termination</li>
-                            <li>Section 4: Down conductors</li>
-                            <li>Section 5: Earth termination</li>
-                            <li>Section 6: Bonding and surge protection</li>
-                            <li>Section 7: Materials and construction</li>
-                            <li>Section 8: Installation requirements</li>
-                            <li>Section 9: Inspection and testing</li>
-                            <li>Section 10: Maintenance</li>
-                            <li>Annexes A-F: Additional guidance</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="collapsible-container">
-                <button class="collapsible-header" onclick="toggleCollapsible('failures')">
-                    📋 Common System Failures & Test Requirements
-                </button>
-                <div id="failures" class="collapsible-content">
-                    <div class="reference-list">
-                        <strong>Typical Failures:</strong>
-                        <ul>
-                            <li>Earth resistance above acceptable limits (>10Ω typically)</li>
-                            <li>Poor continuity between components</li>
-                            <li>Corrosion of conductors/connections</li>
-                            <li>Missing or damaged air terminals</li>
-                            <li>Inadequate equipotential bonding</li>
-                            <li>Non-compliant materials used</li>
-                            <li>Insufficient separation distances</li>
-                            <li>SPD failures or missing devices</li>
-                        </ul>
-                        <strong>Test Requirements:</strong>
-                        <ul>
-                            <li>Visual inspection (annual minimum)</li>
-                            <li>Earth resistance testing</li>
-                            <li>Continuity testing</li>
-                            <li>SPD functional testing</li>
-                            <li>Documentation verification</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <!-- Header with Logo -->
+        <div class="header-section">
+            <img src="./assets/SP%20Bolt%20400x400.png" alt="Strike Point Logo" class="header-logo">
+            <h1 class="app-title">Strike Tools</h1>
+            <p class="app-subtitle">Lightning Protection Engineering Solutions</p>
         </div>
-        
-        <!-- Basic Information Section -->
-        <div class="section">
-            <h2>Site Information</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="siteAddress">Site Address:</label>
-                    <textarea id="siteAddress" rows="3" placeholder="Enter full site address..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="testDate">Date:</label>
-                    <input type="date" id="testDate">
-                </div>
+
+        <!-- Main Navigation -->
+        <div class="main-navigation">
+            <div class="nav-card" onclick="location.href='reports.html'">
+                <div class="nav-icon">📋</div>
+                <h2>Reports</h2>
+                <p>Generate professional lightning protection reports</p>
+                <ul>
+                    <li>Test & Inspection Reports</li>
+                    <li>Remedial Repairs Reports</li>
+                    <li>Survey Reports</li>
+                    <li>Risk Assessment Reports</li>
+                    <li>General Image Reports</li>
+                </ul>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="engineerName">Engineer Name:</label>
-                    <input type="text" id="engineerName" placeholder="Enter engineer name...">
-                </div>
-                <div class="form-group">
-                    <label for="testKitRef">Test Kit Reference:</label>
-                    <input type="text" id="testKitRef" placeholder="Enter test kit reference...">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="buildingImage">Building Image (Cover Page):</label>
-                <div class="image-upload" onclick="document.getElementById('buildingImageFile').click()">
-                    <input type="file" id="buildingImageFile" accept="image/*" class="hidden-file-input" aria-label="Upload building image for cover page" onchange="handleImageUpload(this, 'buildingImagePreview')">
-                    <div id="buildingImagePreview">Click to upload building image</div>
-                </div>
+
+            <div class="nav-card" onclick="location.href='tools.html'">
+                <div class="nav-icon">🧮</div>
+                <h2>Tools</h2>
+                <p>Lightning protection calculation tools</p>
+                <ul>
+                    <li>Separation Distance Calculator</li>
+                    <li>Overall Resistance Calculator</li>
+                    <li>Risk Assessment Calculator</li>
+                </ul>
             </div>
         </div>
 
-              <!-- Replace your entire Standards Selection & Failures section with this -->
-        <div class="section">
-            <h2>Standard Selection & Failures</h2>
-            <div class="form-group standards-dropdown">
-                <label for="standard">Select Standard:</label>
-                <select id="standard" title="Select lightning protection standard" onchange="updateFailuresList()">
-                    <option value="">Select a standard...</option>
-                    <option value="BS EN 62305">BS EN 62305 (Current Standard)</option>
-                    <option value="BS 6651">BS 6651 (Legacy Standard)</option>
-                    <option value="CP 326">CP 326 (Historical Standard)</option>
-                    <option value="NF C 17-102">NF C 17-102:2011 (ESE Systems)</option>
-                </select>
-            </div>
-            <div id="failuresContainer" class="hidden">
-                <label>Available Failures for Selected Standard:</label>
-                <div id="failuresList" class="failures-list"></div>
-            </div>
+        <!-- Footer -->
+        <div class="footer-section">
+            <p>Strike Point Lightning Protection Ltd</p>
+            <p>Professional Lightning Protection Solutions</p>
         </div>
-
-        <div class="section">
-            <h2>⚠ Selected Failures & Comments</h2>
-            <div id="selectedFailures"></div>
-        </div>
-
-        <!-- General Comments Section -->
-        <div class="section">
-            <h2>General Comments</h2>
-            <div class="form-group">
-                <label for="generalComments">Additional Comments:</label>
-                <textarea id="generalComments" rows="4" placeholder="Enter any additional observations, recommendations, or general comments about the lightning protection system..."></textarea>
-            </div>
-        </div>
-
-        <!-- Structure Details Section -->
-        <div class="section">
-            <h2>Structure Details</h2>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="structureHeight">Structure Height (m):</label>
-                    <input type="number" id="structureHeight" step="0.1" min="0" placeholder="0.0">
-                </div>
-                <div class="form-group">
-                    <label for="structurePerimeter">Structure Perimeter (m):</label>
-                    <input type="number" id="structurePerimeter" step="0.1" min="0" placeholder="0.0">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>1. What is the ground type?</label>
-                <div id="groundTypeList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Tarmac', this)">Tarmac</div>
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Concrete', this)">Concrete</div>
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Grass', this)">Grass</div>
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Soil', this)">Soil</div>
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Gravel Slabs', this)">Gravel Slabs</div>
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Block Paving', this)">Block Paving</div>
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="groundTypeOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('groundType', this.value)">
-            </div>
-
-            <div class="form-group">
-                <label>2. What is the structure wall type?</label>
-                <div id="wallTypeList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Brick', this)">Brick</div>
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Render', this)">Render</div>
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Metal Clad', this)">Metal Clad</div>
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Wooden Clad', this)">Wooden Clad</div>
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Composite Clad', this)">Composite Clad</div>
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Glazing', this)">Glazing</div>
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Stone Block', this)">Stone Block</div>
-                    <div class="failure-option" onclick="selectSystemDetail('wallType', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="wallTypeOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('wallType', this.value)">
-            </div>
-
-            <div class="form-group">
-                <label>3. What is the Roof type?</label>
-                <div id="roofTypeList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Felt', this)">Felt</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Membrane', this)">Membrane</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Metal Clad', this)">Metal Clad</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Tiles', this)">Tiles</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Lead', this)">Lead</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Thatch', this)">Thatch</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Concrete', this)">Concrete</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofType', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="roofTypeOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('roofType', this.value)">
-            </div>
-
-            <div class="form-group">
-                <label>4. What is the Roof Structure?</label>
-                <div id="roofStructureList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('roofStructure', 'Pitched', this)">Pitched</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofStructure', 'Domed', this)">Domed</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofStructure', 'Flat', this)">Flat</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofStructure', 'Complex', this)">Complex</div>
-                    <div class="failure-option" onclick="selectSystemDetail('roofStructure', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="roofStructureOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('roofStructure', this.value)">
-            </div>
-        </div>
-
-        <!-- System Details Section -->
-        <div class="section">
-            <h2>🏗️ System Details</h2>
-            
-            <div class="form-group">
-                <label>1. Air-Termination type</label>
-                <div id="airTerminationList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Externally fitted Faraday Cage', this)">Externally fitted Faraday Cage</div>
-                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'ESEAT', this)">ESEAT</div>
-                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Conductive Sheet & Cappings', this)">Conductive Sheet & Cappings</div>
-                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Finial Rods', this)">Finial Rods</div>
-                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'HVI Installation', this)">HVI Installation</div>
-                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="airTerminationOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('airTermination', this.value)">
-            </div>
-
-            <div class="form-group">
-                <label>2. AT Conductors</label>
-                <div id="atConductorsList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Black', this)">25x3mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Grey', this)">25x3mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Stone', this)">25x3mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Brown', this)">25x3mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC White', this)">25x3mm PVC White</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm Bare', this)">25x3mm Bare</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Black', this)">8mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Grey', this)">8mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Stone', this)">8mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Brown', this)">8mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC White', this)">8mm PVC White</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm Bare', this)">8mm Bare</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="atConductorsOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('atConductors', this.value)">
-            </div>
-
-            <div class="form-group">
-                <label>3. Down Conductor Type</label>
-                <div id="downConductorTypeList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('downConductorType', 'Externally fitted Conductors', this)">Externally fitted Conductors</div>
-                    <div class="failure-option" onclick="selectSystemDetail('downConductorType', 'Cavity Conductors', this)">Cavity Conductors</div>
-                    <div class="failure-option" onclick="selectSystemDetail('downConductorType', 'Internal Framework', this)">Internal Framework</div>
-                    <div class="failure-option" onclick="selectSystemDetail('downConductorType', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="downConductorTypeOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('downConductorType', this.value)">
-            </div>
-
-            <div class="form-group">
-                <label>4. DC Conductors</label>
-                <div id="dcConductorsList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Black', this)">25x3mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Grey', this)">25x3mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Stone', this)">25x3mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Brown', this)">25x3mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC White', this)">25x3mm PVC White</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm Bare', this)">25x3mm Bare</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Black', this)">8mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Grey', this)">8mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Stone', this)">8mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Brown', this)">8mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC White', this)">8mm PVC White</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm Bare', this)">8mm Bare</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'HVI Single', this)">HVI Single</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'HVI Multiple', this)">HVI Multiple</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Framework (Steel Columns)', this)">Framework (Steel Columns)</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Framework (Steel Reinforcing Bars)', this)">Framework (Steel Reinforcing Bars)</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Other', this, true)">Other</div>
-                </div>
-                <input type="text" id="dcConductorsOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('dcConductors', this.value)">
-            </div>
-
-            <div class="form-group">
-                <label>5. Earth Pits</label>
-                <select id="earthPits" title="Select earth pit type">
-                    <option value="">Select...</option>
-                    <option value="Concrete">Concrete</option>
-                    <option value="Polymer">Polymer</option>
-                    <option value="None">None</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>6. Main Equipotential Bond</label>
-                <select id="mainEquipotentialBond" title="Select main equipotential bond status">
-                    <option value="">Select...</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                    <option value="Unidentified">Unidentified</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>7. Surge Protection Installed</label>
-                <select id="surgeInstalled" title="Select if surge protection is installed">
-                    <option value="">Select...</option>
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>8. Surge Protection Type</label>
-                <select id="surgeType" title="Select surge protection type">
-                    <option value="">Select...</option>
-                    <option value="Type-1">Type-1</option>
-                    <option value="Type-2">Type-2</option>
-                    <option value="Type-3">Type-3</option>
-                    <option value="Combined Type-1, 2 & 3">Combined Type-1, 2 & 3</option>
-                    <option value="Unknown">Unknown</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>9. Surge Protection Safety Status</label>
-                <select id="surgeSafe" title="Select surge protection safety status">
-                    <option value="">Select...</option>
-                    <option value="Safe">Safe</option>
-                    <option value="Unsafe">Unsafe</option>
-                    <option value="Unidentified">Unidentified</option>
-                    <option value="Requires Further Investigation">Requires Further Investigation</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Earth Resistance Testing -->
-        <div class="section">
-            <h2>Earth Resistance Test</h2>
-            <div class="form-group">
-                <label for="numEarths">Number of Earths Tested:</label>
-                <input type="number" id="numEarths" min="0" max="20" onchange="generateEarthInputs()">
-            </div>
-            <div id="earthInputs" class="earth-inputs"></div>
-            <div id="earthResult" class="result-display hidden">
-                <h4>Overall Earth Resistance:</h4>
-                <div id="overallResistance"></div>
-            </div>
-            <div class="form-group">
-                <label for="earthImages">Earth Test Images:</label>
-                <div class="image-upload" onclick="document.getElementById('earthImagesFile').click()">
-                    <input type="file" id="earthImagesFile" accept="image/*" multiple class="hidden-file-input" aria-label="Upload earth test images" onchange="handleMultipleImageUpload(this, 'earthImagesPreview')">
-                    <div id="earthImagesPreview">Click to upload earth test images</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Final Comments Section -->
-        <div class="section">
-            <h2>Final Summary Comments</h2>
-            <div class="form-group">
-                <label for="finalComments">Summary & Recommendations:</label>
-                <textarea id="finalComments" rows="4" placeholder="Enter final summary, conclusions, and recommendations for the lightning protection system..."></textarea>
-            </div>
-        </div>
-
-        <!-- Generate Report Button -->
-        <button id="generateReport" onclick="generatePDF()">Generate PDF Report</button>
     </div>
 
-    <!-- External Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- Our JavaScript Files -->
-    <script src="js/exif.js"></script>
-    <script src="js/data.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/auto-save.js"></script>
-    <script src="js/pdf-generator.js"></script>
+    <style>
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .app-title {
+            font-size: 48px;
+            color: #2980b9;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .app-subtitle {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin: 10px 0 0 0;
+        }
+
+        .main-navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .nav-card {
+            background: #fff;
+            border: 2px solid #3498db;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .nav-card:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .nav-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .nav-card h2 {
+            font-size: 24px;
+            margin: 15px 0;
+        }
+
+        .nav-card p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .nav-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-card li {
+            padding: 5px 0;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .footer-section {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px 0;
+            border-top: 1px solid #ecf0f1;
+            color: #7f8c8d;
+        }
+
+        .footer-section p {
+            margin: 5px 0;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .main-navigation {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .app-title {
+                font-size: 36px;
+            }
+            
+            .nav-card {
+                padding: 20px;
+            }
+        }
+    </style>
 </body>
 </html>
