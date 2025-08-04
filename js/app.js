@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('testDate').valueAsDate = new Date();
 });
 
-// Function to fix EXIF orientation (targeted fix for landscape only)
+// Function to fix EXIF orientation (smart detection for portrait vs landscape)
 function fixImageOrientation(file) {
     return new Promise((resolve) => {
         EXIF.getData(file, function() {
@@ -18,32 +18,33 @@ function fixImageOrientation(file) {
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                // If orientation is 1 (normal/portrait), no rotation needed
-                if (orientation === 1) {
-                    resolve(e.target.result);
-                    return;
-                }
-                
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    // Only handle landscape orientations that need fixing
-                    if (orientation === 6) {
-                        // Rotate 90° clockwise (for landscape left)
-                        canvas.width = img.height;
-                        canvas.height = img.width;
-                        ctx.rotate(90 * Math.PI / 180);
-                        ctx.translate(0, -canvas.width);
-                    } else if (orientation === 8) {
-                        // Rotate 90° counter-clockwise (for landscape right)
-                        canvas.width = img.height;
-                        canvas.height = img.width;
-                        ctx.rotate(-90 * Math.PI / 180);
-                        ctx.translate(-canvas.height, 0);
+                    // Determine if image is naturally landscape or portrait shaped
+                    const isLandscapeShape = img.width > img.height;
+                    const isPortraitShape = img.height > img.width;
+                    
+                    // Smart logic: only apply rotation to landscape-shaped images that need it
+                    if (isLandscapeShape && (orientation === 6 || orientation === 8)) {
+                        // Apply rotation for landscape images
+                        if (orientation === 6) {
+                            // Rotate 90° clockwise
+                            canvas.width = img.height;
+                            canvas.height = img.width;
+                            ctx.rotate(90 * Math.PI / 180);
+                            ctx.translate(0, -canvas.width);
+                        } else if (orientation === 8) {
+                            // Rotate 90° counter-clockwise  
+                            canvas.width = img.height;
+                            canvas.height = img.width;
+                            ctx.rotate(-90 * Math.PI / 180);
+                            ctx.translate(-canvas.height, 0);
+                        }
                     } else {
-                        // For any other orientation, keep original
+                        // For portrait-shaped images or normal orientation, don't rotate
                         canvas.width = img.width;
                         canvas.height = img.height;
                     }
@@ -321,4 +322,5 @@ function handleMultipleImageUpload(input, previewId) {
         });
     }
 }
+
 
