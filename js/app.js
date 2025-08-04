@@ -10,71 +10,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('testDate').valueAsDate = new Date();
 });
 
-// Function to fix image orientation based on EXIF data
+// Function to detect EXIF orientation (TESTING - no rotation applied)
 function fixImageOrientation(file) {
     return new Promise((resolve) => {
         EXIF.getData(file, function() {
             const orientation = EXIF.getTag(this, "Orientation") || 1;
             
+            // LOG the orientation value for debugging
+            console.log(`EXIF Orientation detected: ${orientation}`);
+            console.log('Orientation meanings: 1=Normal, 3=180°, 6=90°CW, 8=90°CCW');
+            
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    // Set canvas dimensions based on orientation
-                    if (orientation > 4) {
-                        canvas.width = img.height;
-                        canvas.height = img.width;
-                    } else {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                    }
-                    
-                    // Apply rotation based on EXIF orientation
-                    switch (orientation) {
-                        case 2:
-                            // Flip horizontal
-                            ctx.transform(-1, 0, 0, 1, canvas.width, 0);
-                            break;
-                        case 3:
-                            // Rotate 180°
-                            ctx.transform(-1, 0, 0, -1, canvas.width, canvas.height);
-                            break;
-                        case 4:
-                            // Flip vertical
-                            ctx.transform(1, 0, 0, -1, 0, canvas.height);
-                            break;
-                        case 5:
-                            // Rotate 90° and flip horizontal
-                            ctx.transform(0, 1, 1, 0, 0, 0);
-                            break;
-                        case 6:
-                            // Rotate 90° clockwise
-                            ctx.transform(0, 1, -1, 0, canvas.width, 0);
-                            break;
-                        case 7:
-                            // Rotate 90° counter-clockwise and flip horizontal
-                            ctx.transform(0, -1, -1, 0, canvas.width, canvas.height);
-                            break;
-                        case 8:
-                            // Rotate 90° counter-clockwise
-                            ctx.transform(0, -1, 1, 0, 0, canvas.height);
-                            break;
-                        default:
-                            // No rotation needed
-                            break;
-                    }
-                    
-                    // Draw the image
-                    ctx.drawImage(img, 0, 0);
-                    
-                    // Convert back to base64 with compression
-                    const correctedImageData = canvas.toDataURL('image/jpeg', 0.8); // 80% quality for compression
-                    resolve(correctedImageData);
-                };
-                img.src = e.target.result;
+                // For now, just return the original image without any rotation
+                console.log('Returning original image without rotation for testing');
+                resolve(e.target.result);
             };
             reader.readAsDataURL(file);
         });
