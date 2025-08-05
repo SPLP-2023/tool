@@ -196,8 +196,7 @@ function handleFailureImage(index, input) {
             selectedFailuresList[index].image = file;
             selectedFailuresList[index].imageData = correctedImageData;
             document.getElementById(`failureImagePreview${index}`).textContent = 'Image uploaded';
-        })
-        .catch(error => {
+        }).catch(error => {
             console.error('Error processing failure image:', error);
             // Fallback
             const reader = new FileReader();
@@ -258,30 +257,55 @@ function calculateOverallResistance() {
     }
 }
 
+// UPDATED: handleImageUpload with EXIF rotation fix
+function handleImageUpload(input, previewId) {
+    if (input.files[0]) {
+        const file = input.files[0];
+        
+        // Show loading message
+        document.getElementById(previewId).textContent = 'Processing image...';
+        
+        // Fix orientation and compress
+        fixImageOrientation(file).then(correctedImageData => {
+            uploadedImages[previewId] = file;
+            uploadedImages[previewId + '_data'] = correctedImageData;
+            document.getElementById(previewId).textContent = 'Image uploaded successfully';
+        }).catch(error => {
+            console.error('Error processing image:', error);
+            // Fallback to original method
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImages[previewId + '_data'] = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            uploadedImages[previewId] = file;
+            document.getElementById(previewId).textContent = 'Image uploaded (orientation may need manual correction)';
+        });
+    }
+}
+
 // UPDATED: handleMultipleImageUpload with EXIF rotation fix
 function handleMultipleImageUpload(input, previewId) {
     if (input.files.length > 0) {
         const files = Array.from(input.files);
         uploadedImages[previewId] = files;
         uploadedImages[previewId + '_data'] = [];
-
+        
         // Show processing message
         document.getElementById(previewId).textContent = 'Processing images...';
         
         let processedCount = 0;
         
         files.forEach((file, index) => {
-            fixImageOrientation(file)
-                .then(correctedImageData => {
-                    uploadedImages[previewId + '_data'][index] = correctedImageData;
-                    processedCount++;
+            fixImageOrientation(file).then(correctedImageData => {
+                uploadedImages[previewId + '_data'][index] = correctedImageData;
+                processedCount++;
                 
                 // Update preview when all images are processed
                 if (processedCount === files.length) {
                     document.getElementById(previewId).textContent = `${files.length} image(s) uploaded`;
                 }
-            })
-            .catch(error => {
+            }).catch(error => {
                 console.error('Error processing image:', error);
                 // Fallback for this image
                 const reader = new FileReader();
@@ -294,11 +318,6 @@ function handleMultipleImageUpload(input, previewId) {
                 if (processedCount === files.length) {
                     document.getElementById(previewId).textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
                 }
-            });
-        });
-    }
-}
-
             // Register service worker
                if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -306,10 +325,11 @@ function handleMultipleImageUpload(input, previewId) {
                  .register('/service-worker.js')
                  .then(registration => {
                   console.log('✅ Service Worker registered:', registration.scope);
-                  registration.update();
-                 })
-                  .catch(error => {
-                    console.error('❌ Service Worker registration failed:', error);
-                  });
-        });
+          })
+        .catch(error => {
+         console.error('❌ Service Worker registration failed:', error);
+      });
+  });
 }
+
+
