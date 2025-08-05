@@ -331,5 +331,3 @@ function handleMultipleImageUpload(input, previewId) {
       });
   });
 }
-
-
