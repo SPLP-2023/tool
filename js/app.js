@@ -330,4 +330,4 @@ function handleMultipleImageUpload(input, previewId) {
          console.error('❌ Service Worker registration failed:', error);
       });
   });
-}
+               }
