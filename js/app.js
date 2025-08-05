@@ -8,6 +8,18 @@ let systemDetails = {};
 document.addEventListener('DOMContentLoaded', function() {
     // Set today's date as default
     document.getElementById('testDate').valueAsDate = new Date();
+    
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('/service-worker.js')
+            .then(registration => {
+                console.log('✅ Service Worker registered:', registration.scope);
+            })
+            .catch(error => {
+                console.error('❌ Service Worker registration failed:', error);
+            });
+    }
 });
 
 // Function to fix EXIF orientation (smart detection for portrait vs landscape)
@@ -25,7 +37,6 @@ function fixImageOrientation(file) {
                     
                     // Determine if image is naturally landscape or portrait shaped
                     const isLandscapeShape = img.width > img.height;
-                    const isPortraitShape = img.height > img.width;
                     
                     // Smart logic: only apply rotation to landscape-shaped images that need it
                     if (isLandscapeShape && (orientation === 6 || orientation === 8)) {
@@ -196,7 +207,8 @@ function handleFailureImage(index, input) {
             selectedFailuresList[index].image = file;
             selectedFailuresList[index].imageData = correctedImageData;
             document.getElementById(`failureImagePreview${index}`).textContent = 'Image uploaded';
-        }).catch(error => {
+        })
+        .catch(error => {
             console.error('Error processing failure image:', error);
             // Fallback
             const reader = new FileReader();
@@ -270,7 +282,8 @@ function handleImageUpload(input, previewId) {
             uploadedImages[previewId] = file;
             uploadedImages[previewId + '_data'] = correctedImageData;
             document.getElementById(previewId).textContent = 'Image uploaded successfully';
-        }).catch(error => {
+        })
+        .catch(error => {
             console.error('Error processing image:', error);
             // Fallback to original method
             const reader = new FileReader();
@@ -301,39 +314,26 @@ function handleMultipleImageUpload(input, previewId) {
                 .then(correctedImageData => {
                     uploadedImages[previewId + '_data'][index] = correctedImageData;
                     processedCount++;
-                
-                // Update preview when all images are processed
-                if (processedCount === files.length) {
-                    document.getElementById(previewId).textContent = `${files.length} image(s) uploaded`;
-                }
-            })
-        })    
-            .catch(error => {
-                console.error('Error processing image:', error);
-                // Fallback for this image
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedImages[previewId + '_data'][index] = e.target.result;
-                };
-                reader.readAsDataURL(file);
-                processedCount++;
-                
-                if (processedCount === files.length) {
-                    document.getElementById(previewId).textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
-                }
-            });    
-            // Register service worker
-               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                 navigator.serviceWorker
-                 .register('/service-worker.js')
-                 .then(registration => {
-                  console.log('✅ Service Worker registered:', registration.scope);
-          })
-        .catch(error => {
-         console.error('❌ Service Worker registration failed:', error);
-      });
-  });
-               }
-            }
-        }
+                    
+                    // Update preview when all images are processed
+                    if (processedCount === files.length) {
+                        document.getElementById(previewId).textContent = `${files.length} image(s) uploaded`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error processing image:', error);
+                    // Fallback for this image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedImages[previewId + '_data'][index] = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                    processedCount++;
+                    
+                    if (processedCount === files.length) {
+                        document.getElementById(previewId).textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
+                    }
+                });
+        });
+    }
+}
