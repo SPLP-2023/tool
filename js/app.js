@@ -297,15 +297,18 @@ function handleMultipleImageUpload(input, previewId) {
         let processedCount = 0;
         
         files.forEach((file, index) => {
-            fixImageOrientation(file).then(correctedImageData => {
-                uploadedImages[previewId + '_data'][index] = correctedImageData;
-                processedCount++;
+            fixImageOrientation(file)
+                .then(correctedImageData => {
+                    uploadedImages[previewId + '_data'][index] = correctedImageData;
+                    processedCount++;
                 
                 // Update preview when all images are processed
                 if (processedCount === files.length) {
                     document.getElementById(previewId).textContent = `${files.length} image(s) uploaded`;
                 }
-            }).catch(error => {
+            })
+        })    
+            .catch(error => {
                 console.error('Error processing image:', error);
                 // Fallback for this image
                 const reader = new FileReader();
@@ -331,4 +334,6 @@ function handleMultipleImageUpload(input, previewId) {
          console.error('❌ Service Worker registration failed:', error);
       });
   });
-}
+               }
+            }
+        }
