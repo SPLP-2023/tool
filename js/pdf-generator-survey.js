@@ -1,4 +1,4 @@
-// Survey Report PDF Generator
+// Enhanced Survey Report PDF Generator
 // File: js/pdf-generator-survey.js
 
 function generateSurveyPDF() {
@@ -15,140 +15,252 @@ function generateSurveyPDF() {
     
     let yPosition = 20;
     
-    // ==================== COVER PAGE ====================
-    const coverOptions = {
-        reportTitle: 'Lightning Protection Survey Report',
-        siteAddress: surveyData.siteAddress,
-        date: formatDate(surveyData.surveyDate),
-        engineerName: surveyData.surveyorName,
-        additionalFields: [
-            { label: 'Client Representative', value: surveyData.clientRepName }
-        ]
-    };
+    // ==================== ENHANCED COVER PAGE ====================
     
-    yPosition = createCoverPage(pdf, coverOptions);
+    // Company logo centered at top - using correct company logo
+    const logoHeight = addImageToPDF(pdf, COMPANY_LOGO_URL, 30, 20, 150, 60, true);
+    yPosition = 20 + logoHeight + 10;
     
-    // Add client signature to cover page if available
-    if (surveyData.signatureData) {
-        if (yPosition > PAGE_BOTTOM - 60) {
-            pdf.addPage();
-            yPosition = addPageHeader(pdf, 'SURVEY REPORT');
-            addFooterToPage(pdf, COMPANY_FOOTER);
-        }
-        
+    // Report title
+    pdf.setFontSize(24);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Lightning Protection Survey Report', 105, yPosition, { align: 'center' });
+    yPosition += 20;
+    
+    // Building image if provided (centered)
+    if (uploadedImages['buildingImagePreview_data']) {
+        const maxImageHeight = 80; // Reduced to ensure signature fits
+        const imageHeight = addImageToPDF(pdf, uploadedImages['buildingImagePreview_data'], 30, yPosition, 150, maxImageHeight, true);
+        yPosition += imageHeight + 15;
+    }
+    
+    // Site address under building image
+    if (surveyData.siteAddress) {
         pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
-        pdf.text('Client Representative Signature:', 105, yPosition, { align: 'center' });
-        yPosition += 15;
+        pdf.text('Site Address:', 105, yPosition, { align: 'center' });
+        yPosition += 8;
         
-        const signatureHeight = addImageToPDF(pdf, surveyData.signatureData, 55, yPosition, 100, 40, true);
-        yPosition += signatureHeight + 10;
+        pdf.setFont(undefined, 'normal');
+        const addressLines = pdf.splitTextToSize(surveyData.siteAddress, 150);
+        addressLines.forEach((line, index) => {
+            pdf.text(line, 105, yPosition + (index * 5), { align: 'center' });
+        });
+        yPosition += addressLines.length * 5 + 15;
+    }
+    
+    // Two-column layout for surveyor info and signature
+    const leftColumnX = 30;
+    const rightColumnX = 120;
+    
+    // Left side - Surveyor and Date
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Surveyor:', leftColumnX, yPosition);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(surveyData.surveyorName, leftColumnX, yPosition + 8);
+    
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Date:', leftColumnX, yPosition + 20);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(formatDate(surveyData.surveyDate), leftColumnX, yPosition + 28);
+    
+    // Right side - Site Representative and Compact Signature
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Site Representative:', rightColumnX, yPosition);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(surveyData.clientRepName, rightColumnX, yPosition + 8);
+    
+    // Compact signature display
+    if (surveyData.signatureData) {
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Signature:', rightColumnX, yPosition + 20);
+        
+        // Compact signature - 60x30 size
+        const signatureHeight = addImageToPDF(pdf, surveyData.signatureData, rightColumnX, yPosition + 25, 60, 30, false);
     }
     
     // ==================== SURVEY SUMMARY SECTION ====================
     yPosition = startNewSection(pdf, 'SURVEY SUMMARY', COMPANY_FOOTER);
     
-    // Survey overview in two columns
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'bold');
+    // Auto-generated description
+    if (surveyData.autoDescription) {
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('STRUCTURE & SYSTEM ASSESSMENT', LEFT_COLUMN_X, yPosition);
+        yPosition += 15;
+        
+        pdf.setFont(undefined, 'normal');
+        pdf.setFontSize(10);
+        const descriptionLines = pdf.splitTextToSize(surveyData.autoDescription, 170);
+        
+        descriptionLines.forEach((line, index) => {
+            if (yPosition > PAGE_BOTTOM - 10) {
+                pdf.addPage();
+                yPosition = addPageHeader(pdf, 'SURVEY SUMMARY (CONTINUED)');
+                addFooterToPage(pdf, COMPANY_FOOTER);
+            }
+            
+            pdf.text(line, LEFT_COLUMN_X, yPosition);
+            yPosition += 5;
+        });
+        
+        yPosition += 15;
+    }
     
-    // Left column - Structure Information
-    pdf.text('STRUCTURE INFORMATION', LEFT_COLUMN_X, yPosition);
-    let leftColumnY = yPosition + 10;
-    pdf.setFont(undefined, 'normal');
-    pdf.setFontSize(10);
-    
-    const structureInfo = [
-        'Type: ' + surveyData.structureType,
-        'Height: ' + (surveyData.structureHeight ? surveyData.structureHeight + ' m' : 'Not specified'),
-        'Roof Type: ' + surveyData.roofType,
-        'Roof Access: ' + surveyData.roofAccess
-    ];
-    
-    structureInfo.forEach((info, index) => {
-        if (info.split(': ')[1] !== '') {
-            pdf.text(info, LEFT_COLUMN_X, leftColumnY + (index * 6));
-        }
-    });
-    
-    // Right column - Existing System
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('EXISTING SYSTEM ASSESSMENT', RIGHT_COLUMN_X, yPosition);
-    let rightColumnY = yPosition + 10;
-    pdf.setFont(undefined, 'normal');
-    pdf.setFontSize(10);
-    
-    const systemInfo = [
-        'Current System: ' + surveyData.existingSystem,
-        'Overall Condition: ' + (surveyData.systemCondition || 'Not assessed'),
-        'Assessment Required: ' + (surveyData.existingSystem === 'None' ? 'Yes - New Installation' : 'Yes - Inspection Needed')
-    ];
-    
-    systemInfo.forEach((info, index) => {
-        if (info.split(': ')[1] !== '') {
-            pdf.text(info, RIGHT_COLUMN_X, rightColumnY + (index * 6));
-        }
-    });
-    
-    yPosition = Math.max(leftColumnY, rightColumnY) + 40;
-    
-    // ==================== RISK FACTORS ASSESSMENT ====================
-    if (surveyData.riskFactors.length > 0) {
+    // ==================== CONNECTED ELECTRICAL SYSTEMS SECTION ====================
+    if (surveyData.electricalSystems.length > 0) {
         if (yPosition > PAGE_BOTTOM - 60) {
-            yPosition = startNewSection(pdf, 'RISK FACTORS ASSESSMENT', COMPANY_FOOTER);
+            yPosition = startNewSection(pdf, 'CONNECTED ELECTRICAL SYSTEMS', COMPANY_FOOTER);
         } else {
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            pdf.text('IDENTIFIED RISK FACTORS', LEFT_COLUMN_X, yPosition);
+            pdf.text('CONNECTED ELECTRICAL SYSTEMS', LEFT_COLUMN_X, yPosition);
             yPosition += 15;
         }
         
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(10);
+        pdf.text('The following electrical systems were identified for surge protection assessment:', LEFT_COLUMN_X, yPosition);
+        yPosition += 10;
         
-        // Risk factors in two columns
+        // Electrical systems in two columns
         let currentColumn = 'left';
-        let leftRiskY = yPosition;
-        let rightRiskY = yPosition;
+        let leftElecY = yPosition;
+        let rightElecY = yPosition;
         
-        surveyData.riskFactors.forEach((factor, index) => {
+        surveyData.electricalSystems.forEach((system, index) => {
             const currentX = currentColumn === 'left' ? LEFT_COLUMN_X : RIGHT_COLUMN_X;
-            let currentY = currentColumn === 'left' ? leftRiskY : rightRiskY;
+            let currentY = currentColumn === 'left' ? leftElecY : rightElecY;
             
             // Check if we need a new page
             if (currentY > PAGE_BOTTOM - 15) {
                 pdf.addPage();
-                yPosition = addPageHeader(pdf, 'RISK FACTORS ASSESSMENT (CONTINUED)');
+                yPosition = addPageHeader(pdf, 'CONNECTED ELECTRICAL SYSTEMS (CONTINUED)');
                 addFooterToPage(pdf, COMPANY_FOOTER);
-                leftRiskY = yPosition;
-                rightRiskY = yPosition;
+                leftElecY = yPosition;
+                rightElecY = yPosition;
                 currentY = yPosition;
             }
             
-            pdf.text('• ' + factor, currentX, currentY);
+            pdf.text('• ' + system, currentX, currentY);
             
             // Update column positions
             if (currentColumn === 'left') {
-                leftRiskY = currentY + 6;
+                leftElecY = currentY + 6;
                 currentColumn = 'right';
             } else {
-                rightRiskY = currentY + 6;
+                rightElecY = currentY + 6;
                 currentColumn = 'left';
             }
         });
         
-        yPosition = Math.max(leftRiskY, rightRiskY) + 15;
+        yPosition = Math.max(leftElecY, rightElecY) + 15;
+    }
+    
+    // ==================== DETAILED STRUCTURE INFORMATION ====================
+    yPosition = startNewSection(pdf, 'DETAILED STRUCTURE INFORMATION', COMPANY_FOOTER);
+    
+    // Left column - Physical Details
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('PHYSICAL CHARACTERISTICS', LEFT_COLUMN_X, yPosition);
+    let leftDetailY = yPosition + 10;
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(10);
+    
+    const leftDetails = [];
+    if (surveyData.structureType) leftDetails.push('Type: ' + surveyData.structureType);
+    if (surveyData.structureHeight) leftDetails.push('Height: ' + surveyData.structureHeight + ' m');
+    if (surveyData.numberOfFloors) leftDetails.push('Floors: ' + surveyData.numberOfFloors);
+    if (surveyData.numberOfOccupants) leftDetails.push('Occupants: ' + surveyData.numberOfOccupants);
+    if (surveyData.buildingAge) leftDetails.push('Age: ' + surveyData.buildingAge + ' years');
+    if (surveyData.hasBasement) leftDetails.push('Basement: ' + surveyData.hasBasement);
+    if (surveyData.roofType) leftDetails.push('Roof: ' + surveyData.roofType);
+    if (surveyData.roofAccess) leftDetails.push('Access: ' + surveyData.roofAccess);
+    
+    leftDetails.forEach((detail, index) => {
+        pdf.text(detail, LEFT_COLUMN_X, leftDetailY + (index * 6));
+    });
+    
+    // Right column - Materials & Conditions
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('MATERIALS & CONDITIONS', RIGHT_COLUMN_X, yPosition);
+    let rightDetailY = yPosition + 10;
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(10);
+    
+    const rightDetails = [];
+    if (surveyData.wallTypes.length > 0) {
+        rightDetails.push('Wall Types:');
+        surveyData.wallTypes.forEach(type => rightDetails.push('  • ' + type));
+    }
+    if (surveyData.groundTypes.length > 0) {
+        rightDetails.push('Ground Types:');
+        surveyData.groundTypes.forEach(type => rightDetails.push('  • ' + type));
+    }
+    
+    rightDetails.forEach((detail, index) => {
+        if (detail.startsWith('  •')) {
+            pdf.text(detail, RIGHT_COLUMN_X + 5, rightDetailY + (index * 6));
+        } else {
+            pdf.setFont(undefined, 'bold');
+            pdf.text(detail, RIGHT_COLUMN_X, rightDetailY + (index * 6));
+            pdf.setFont(undefined, 'normal');
+        }
+    });
+    
+    yPosition = Math.max(leftDetailY + leftDetails.length * 6, rightDetailY + rightDetails.length * 6) + 20;
+    
+    // ==================== EXISTING SYSTEM DETAILED ASSESSMENT ====================
+    yPosition = startNewSection(pdf, 'EXISTING SYSTEM DETAILED ASSESSMENT', COMPANY_FOOTER);
+    
+    // System overview
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('SYSTEM OVERVIEW', LEFT_COLUMN_X, yPosition);
+    yPosition += 10;
+    
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(10);
+    
+    const systemOverview = [];
+    if (surveyData.existingSystem) systemOverview.push('System Status: ' + surveyData.existingSystem);
+    if (surveyData.systemCondition) systemOverview.push('Overall Condition: ' + surveyData.systemCondition);
+    if (surveyData.lastTested) systemOverview.push('Last Tested: ' + surveyData.lastTested);
+    if (surveyData.standardInstalled) systemOverview.push('Installed Standard: ' + surveyData.standardInstalled);
+    
+    systemOverview.forEach((item, index) => {
+        pdf.text(item, LEFT_COLUMN_X, yPosition + (index * 6));
+    });
+    
+    yPosition += systemOverview.length * 6 + 15;
+    
+    // System components if any visible
+    if (surveyData.systemComponents.length > 0) {
+        pdf.setFont(undefined, 'bold');
+        pdf.text('VISIBLE SYSTEM COMPONENTS', LEFT_COLUMN_X, yPosition);
+        yPosition += 10;
+        
+        pdf.setFont(undefined, 'normal');
+        surveyData.systemComponents.forEach((component, index) => {
+            if (yPosition > PAGE_BOTTOM - 10) {
+                pdf.addPage();
+                yPosition = addPageHeader(pdf, 'EXISTING SYSTEM ASSESSMENT (CONTINUED)');
+                addFooterToPage(pdf, COMPANY_FOOTER);
+            }
+            
+            pdf.text('• ' + component, LEFT_COLUMN_X, yPosition);
+            yPosition += 6;
+        });
+        
+        yPosition += 10;
     }
     
     // ==================== DETAILED FINDINGS SECTION ====================
-    yPosition = startNewSection(pdf, 'DETAILED SURVEY FINDINGS', COMPANY_FOOTER);
-    
     if (surveyData.surveyFindings) {
-        pdf.setFontSize(12);
-        pdf.setFont(undefined, 'bold');
-        pdf.text('SURVEY OBSERVATIONS', LEFT_COLUMN_X, yPosition);
-        yPosition += 15;
+        yPosition = startNewSection(pdf, 'DETAILED SURVEY FINDINGS', COMPANY_FOOTER);
         
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(10);
@@ -164,20 +276,11 @@ function generateSurveyPDF() {
             pdf.text(line, LEFT_COLUMN_X, yPosition);
             yPosition += 5;
         });
-        
-        yPosition += 15;
     }
     
     // ==================== RECOMMENDATIONS SECTION ====================
     if (surveyData.recommendations) {
-        if (yPosition > PAGE_BOTTOM - 60) {
-            yPosition = startNewSection(pdf, 'RECOMMENDATIONS', COMPANY_FOOTER);
-        } else {
-            pdf.setFontSize(12);
-            pdf.setFont(undefined, 'bold');
-            pdf.text('INITIAL RECOMMENDATIONS', LEFT_COLUMN_X, yPosition);
-            yPosition += 15;
-        }
+        yPosition = startNewSection(pdf, 'RECOMMENDATIONS', COMPANY_FOOTER);
         
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(10);
@@ -193,46 +296,24 @@ function generateSurveyPDF() {
             pdf.text(line, LEFT_COLUMN_X, yPosition);
             yPosition += 5;
         });
-        
-        yPosition += 15;
     }
     
     // ==================== SURVEY PHOTOS SECTION ====================
     let hasPhotos = false;
     
-    // Building image
-    if (uploadedImages['buildingImagePreview_data']) {
+    // Additional photos
+    if (uploadedImages['additionalPhotosPreview_data']) {
         yPosition = startNewSection(pdf, 'SURVEY PHOTOGRAPHS', COMPANY_FOOTER);
         hasPhotos = true;
         
-        pdf.setFontSize(12);
-        pdf.setFont(undefined, 'bold');
-        pdf.text('Building Overview:', LEFT_COLUMN_X, yPosition);
-        yPosition += 15;
-        
-        const imageHeight = addImageToPDF(pdf, uploadedImages['buildingImagePreview_data'], LEFT_COLUMN_X, yPosition, 170, 100, false);
-        yPosition += imageHeight + 20;
-    }
-    
-    // Additional photos
-    if (uploadedImages['additionalPhotosPreview_data']) {
-        if (!hasPhotos) {
-            yPosition = startNewSection(pdf, 'SURVEY PHOTOGRAPHS', COMPANY_FOOTER);
-        }
-        
         const images = Array.isArray(uploadedImages['additionalPhotosPreview_data']) ? 
             uploadedImages['additionalPhotosPreview_data'] : [uploadedImages['additionalPhotosPreview_data']];
-        
-        pdf.setFontSize(12);
-        pdf.setFont(undefined, 'bold');
-        pdf.text('Additional Survey Photos:', LEFT_COLUMN_X, yPosition);
-        yPosition += 15;
         
         let imagesOnCurrentPage = 0;
         const imageWidth = 80;
         const imageHeight = 60;
         const imagesPerRow = 2;
-        const maxImagesFirstPage = 4;
+        const maxImagesFirstPage = 6;
         const maxImagesSubsequentPage = 6;
         let isFirstPhotoPage = true;
         
@@ -268,27 +349,27 @@ function generateSurveyPDF() {
     pdf.setFont(undefined, 'normal');
     
     const nextSteps = [
-        'Based on this initial survey, the following steps are recommended:',
+        'Based on this survey, the following actions are recommended:',
         '',
-        '1. Detailed Risk Assessment',
-        '   • Conduct comprehensive BS EN 62305-2 risk assessment',
-        '   • Determine Lightning Protection Level (LPL) requirements',
-        '   • Calculate specific protection measures needed',
+        '1. Lightning Protection Risk Assessment',
+        '   • Conduct detailed BS EN 62305-2 risk assessment',
+        '   • Determine if lightning protection is required',
+        '   • Calculate Lightning Protection Level (LPL) if needed',
         '',
-        '2. System Design (if protection required)',
-        '   • Develop detailed lightning protection system design',
-        '   • Specify materials and installation requirements',
-        '   • Prepare installation drawings and specifications',
+        '2. Surge Protection Assessment',
+        '   • Evaluate connected electrical systems',
+        '   • Specify appropriate SPD requirements',
+        '   • Design coordinated surge protection strategy',
         '',
-        '3. Installation and Commissioning',
-        '   • Install lightning protection system to BS EN 62305-3',
-        '   • Commission system with full testing and documentation',
-        '   • Provide as-built drawings and test certificates',
+        '3. System Design & Installation (if required)',
+        '   • Develop detailed system design to BS EN 62305-3',
+        '   • Specify installation requirements and materials',
+        '   • Prepare installation drawings and method statements',
         '',
-        '4. Ongoing Maintenance',
-        '   • Establish annual inspection program',
-        '   • Maintain system in accordance with BS EN 62305-3',
-        '   • Update documentation as required'
+        '4. Testing & Commissioning',
+        '   • Commission system with full electrical testing',
+        '   • Provide test certificates and documentation',
+        '   • Establish ongoing maintenance program'
     ];
     
     nextSteps.forEach((step, index) => {
