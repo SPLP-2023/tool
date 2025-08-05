@@ -39,19 +39,19 @@
                     <input type="text" id="surveyorName" placeholder="Enter surveyor name...">
                 </div>
                 <div class="form-group">
-                    <label for="clientRepName">Client Representative Name:</label>
-                    <input type="text" id="clientRepName" placeholder="Enter client representative name...">
+                    <label for="clientRepName">Site Representative Name:</label>
+                    <input type="text" id="clientRepName" placeholder="Enter site representative name...">
                 </div>
             </div>
             
             <!-- Touch Signature Section -->
             <div class="form-group">
-                <label for="clientSignature">Client Representative Signature:</label>
+                <label for="clientSignature">Site Representative Signature:</label>
                 <div class="signature-container">
-                    <canvas id="signatureCanvas" width="400" height="200"></canvas>
+                    <canvas id="signatureCanvas" width="300" height="120"></canvas>
                     <div class="signature-controls">
-                        <button type="button" id="clearSignature" class="signature-btn clear-btn">Clear Signature</button>
-                        <button type="button" id="saveSignature" class="signature-btn save-btn">Save Signature</button>
+                        <button type="button" id="clearSignature" class="signature-btn clear-btn">Clear</button>
+                        <button type="button" id="saveSignature" class="signature-btn save-btn">Save</button>
                     </div>
                     <div id="signatureStatus" class="signature-status">Please sign above</div>
                 </div>
@@ -70,74 +70,194 @@
             </div>
         </div>
 
-        <!-- Structure Assessment Section -->
+        <!-- Enhanced Structure Assessment Section -->
         <div class="section">
             <h2>Structure Assessment</h2>
+            
+            <!-- Structure Type - Enhanced Options -->
+            <div class="form-group">
+                <label for="structureType">Structure Type:</label>
+                <select id="structureType">
+                    <option value="">Select structure type...</option>
+                    <option value="Residential - Single Family">Residential - Single Family</option>
+                    <option value="Residential - Multi-Family">Residential - Multi-Family</option>
+                    <option value="Commercial - Office">Commercial - Office</option>
+                    <option value="Commercial - Retail">Commercial - Retail</option>
+                    <option value="Commercial - Warehouse">Commercial - Warehouse</option>
+                    <option value="Industrial - Manufacturing">Industrial - Manufacturing</option>
+                    <option value="Industrial - Chemical Processing">Industrial - Chemical Processing</option>
+                    <option value="Agricultural - Farm Building">Agricultural - Farm Building</option>
+                    <option value="Educational - School">Educational - School</option>
+                    <option value="Educational - University">Educational - University</option>
+                    <option value="Healthcare - Hospital">Healthcare - Hospital</option>
+                    <option value="Healthcare - Care Home">Healthcare - Care Home</option>
+                    <option value="Heritage - Historic Building">Heritage - Historic Building</option>
+                    <option value="Telecommunications - Mast/Tower">Telecommunications - Mast/Tower</option>
+                    <option value="Telecommunications - Data Center">Telecommunications - Data Center</option>
+                    <option value="Utilities - Power Station">Utilities - Power Station</option>
+                    <option value="Utilities - Water Treatment">Utilities - Water Treatment</option>
+                    <option value="Entertainment - Sports Stadium">Entertainment - Sports Stadium</option>
+                    <option value="Transport - Airport Terminal">Transport - Airport Terminal</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <!-- Basic Measurements -->
             <div class="form-row">
                 <div class="form-group">
-                    <label for="structureType">Structure Type:</label>
-                    <select id="structureType">
-                        <option value="">Select structure type...</option>
-                        <option value="Residential">Residential</option>
-                        <option value="Commercial">Commercial</option>
-                        <option value="Industrial">Industrial</option>
-                        <option value="Agricultural">Agricultural</option>
-                        <option value="Educational">Educational</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Heritage">Heritage</option>
-                        <option value="Telecommunications">Telecommunications</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="structureHeight">Approximate Structure Height (m):</label>
+                    <label for="structureHeight">Structure Height (m):</label>
                     <input type="number" id="structureHeight" step="0.5" min="0" placeholder="0.0">
                 </div>
+                <div class="form-group">
+                    <label for="buildingAge">Building Age (years):</label>
+                    <input type="number" id="buildingAge" min="0" placeholder="e.g. 25">
+                </div>
             </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="numberOfFloors">Number of Floors:</label>
+                    <input type="number" id="numberOfFloors" min="1" placeholder="e.g. 3">
+                </div>
+                <div class="form-group">
+                    <label for="numberOfOccupants">Number of Occupants:</label>
+                    <input type="number" id="numberOfOccupants" min="0" placeholder="e.g. 50">
+                </div>
+            </div>
+
+            <!-- Ground Type Section -->
+            <div class="form-group">
+                <label>Ground Type (select all that apply):</label>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="groundGravel" class="ground-checkbox">
+                        <label for="groundGravel">Gravel</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="groundGrass" class="ground-checkbox">
+                        <label for="groundGrass">Grass</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="groundSoil" class="ground-checkbox">
+                        <label for="groundSoil">Soil</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="groundBlockPaving" class="ground-checkbox">
+                        <label for="groundBlockPaving">Block Paving</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="groundTarmac" class="ground-checkbox">
+                        <label for="groundTarmac">Tarmac</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="groundConcrete" class="ground-checkbox">
+                        <label for="groundConcrete">Concrete</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="groundResinGravel" class="ground-checkbox">
+                        <label for="groundResinGravel">Resin Gravel</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wall Type Options -->
+            <div class="form-group">
+                <label>Wall Type (select all that apply):</label>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallBrick" class="wall-checkbox">
+                        <label for="wallBrick">Brick</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallConcrete" class="wall-checkbox">
+                        <label for="wallConcrete">Concrete</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallSteel" class="wall-checkbox">
+                        <label for="wallSteel">Steel Frame</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallWood" class="wall-checkbox">
+                        <label for="wallWood">Timber Frame</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallMetal" class="wall-checkbox">
+                        <label for="wallMetal">Metal Cladding</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallGlass" class="wall-checkbox">
+                        <label for="wallGlass">Glazing/Curtain Wall</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallStone" class="wall-checkbox">
+                        <label for="wallStone">Stone</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wallComposite" class="wall-checkbox">
+                        <label for="wallComposite">Composite Panels</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Basement -->
+            <div class="form-group">
+                <label for="hasBasement">Basement Present:</label>
+                <select id="hasBasement">
+                    <option value="">Select...</option>
+                    <option value="Yes - Full">Yes - Full Basement</option>
+                    <option value="Yes - Partial">Yes - Partial Basement</option>
+                    <option value="No">No Basement</option>
+                </select>
+            </div>
+
+            <!-- Roof Information -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="roofType">Roof Type:</label>
                     <select id="roofType">
                         <option value="">Select roof type...</option>
-                        <option value="Flat">Flat</option>
-                        <option value="Pitched">Pitched</option>
-                        <option value="Complex">Complex</option>
+                        <option value="Flat - Membrane">Flat - Membrane</option>
+                        <option value="Flat - Concrete">Flat - Concrete</option>
+                        <option value="Pitched - Tiles">Pitched - Tiles</option>
+                        <option value="Pitched - Slate">Pitched - Slate</option>
+                        <option value="Pitched - Metal">Pitched - Metal</option>
+                        <option value="Complex - Multiple Levels">Complex - Multiple Levels</option>
                         <option value="Dome">Dome</option>
-                        <option value="Metal">Metal</option>
-                        <option value="Membrane">Membrane</option>
-                        <option value="Tiles">Tiles</option>
+                        <option value="Green Roof">Green Roof</option>
                         <option value="Thatch">Thatch</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="roofAccess">Roof Access Available:</label>
+                    <label for="roofAccess">Roof Access:</label>
                     <select id="roofAccess">
                         <option value="">Select...</option>
-                        <option value="Full Access">Full Access</option>
-                        <option value="Limited Access">Limited Access</option>
-                        <option value="No Access">No Access</option>
+                        <option value="Full Access - Internal Stairs">Full Access - Internal Stairs</option>
+                        <option value="Full Access - External Ladder">Full Access - External Ladder</option>
+                        <option value="Limited Access - Hatch Only">Limited Access - Hatch Only</option>
+                        <option value="No Safe Access">No Safe Access</option>
                         <option value="Requires Special Equipment">Requires Special Equipment</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <!-- Existing Protection Assessment -->
+        <!-- Enhanced Existing Protection Assessment -->
         <div class="section">
             <h2>Existing Lightning Protection Assessment</h2>
+            
             <div class="form-row">
                 <div class="form-group">
-                    <label for="existingSystem">Existing Lightning Protection System:</label>
+                    <label for="existingSystem">Lightning Protection System:</label>
                     <select id="existingSystem">
-                        <option value="None">None Visible</option>
-                        <option value="Complete">Complete System Present</option>
-                        <option value="Partial">Partial System Present</option>
-                        <option value="Damaged">Damaged System Present</option>
-                        <option value="Unknown">System Present - Condition Unknown</option>
+                        <option value="None Visible">None Visible</option>
+                        <option value="Complete System">Complete System Present</option>
+                        <option value="Partial System">Partial System Present</option>
+                        <option value="Damaged System">Damaged System Present</option>
+                        <option value="System Unknown">System Present - Condition Unknown</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="systemCondition">Overall System Condition:</label>
+                    <label for="systemCondition">Overall Condition:</label>
                     <select id="systemCondition">
                         <option value="">Select condition...</option>
                         <option value="Excellent">Excellent</option>
@@ -149,43 +269,236 @@
                     </select>
                 </div>
             </div>
+
+            <!-- System Components Assessment -->
+            <div class="form-group">
+                <label>System Components Visible:</label>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="airTerminalsPresent" class="system-checkbox">
+                        <label for="airTerminalsPresent">Air Terminals Present</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="downConductorsVisible" class="system-checkbox">
+                        <label for="downConductorsVisible">Down Conductors Visible</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="earthSystemAccessible" class="system-checkbox">
+                        <label for="earthSystemAccessible">Earth System Accessible</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="spdInstallation" class="system-checkbox">
+                        <label for="spdInstallation">SPD Installation Present</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="testRecordsAvailable" class="system-checkbox">
+                        <label for="testRecordsAvailable">Test Records Available</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="asInstalledAvailable" class="system-checkbox">
+                        <label for="asInstalledAvailable">As-Installed Drawings Available</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="testClamps" class="system-checkbox">
+                        <label for="testClamps">Test Clamps Installed</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="bondingVisible" class="system-checkbox">
+                        <label for="bondingVisible">Equipotential Bonding Visible</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lastTested">Last Tested:</label>
+                    <select id="lastTested">
+                        <option value="">Select...</option>
+                        <option value="Within 12 months">Within 12 months</option>
+                        <option value="1-2 years ago">1-2 years ago</option>
+                        <option value="2-5 years ago">2-5 years ago</option>
+                        <option value="Over 5 years ago">Over 5 years ago</option>
+                        <option value="Never tested">Never tested</option>
+                        <option value="Unknown">Unknown</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="standardInstalled">Standard Installed To:</label>
+                    <select id="standardInstalled">
+                        <option value="">Select...</option>
+                        <option value="BS EN 62305">BS EN 62305 (Current)</option>
+                        <option value="BS 6651">BS 6651 (Legacy)</option>
+                        <option value="CP 326">CP 326 (Historic)</option>
+                        <option value="NF C 17-102">NF C 17-102 (ESE)</option>
+                        <option value="Unknown Standard">Unknown Standard</option>
+                        <option value="Non-Standard">Non-Standard Installation</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <!-- Risk Factors Section -->
+        <!-- Enhanced Risk Factors Section -->
         <div class="section">
             <h2>Identified Risk Factors</h2>
-            <div class="risk-factors-grid">
-                <div class="risk-factor-item">
+            <div class="checkbox-grid">
+                <!-- Original Risk Factors -->
+                <div class="checkbox-item">
                     <input type="checkbox" id="heightRisk" class="risk-checkbox">
                     <label for="heightRisk">Structure Height (>20m)</label>
                 </div>
-                <div class="risk-factor-item">
+                <div class="checkbox-item">
                     <input type="checkbox" id="isolationRisk" class="risk-checkbox">
                     <label for="isolationRisk">Isolated Location</label>
                 </div>
-                <div class="risk-factor-item">
+                <div class="checkbox-item">
                     <input type="checkbox" id="hilltopRisk" class="risk-checkbox">
-                    <label for="hilltopRisk">Hilltop Location</label>
+                    <label for="hilltopRisk">Hilltop/Elevated Location</label>
                 </div>
-                <div class="risk-factor-item">
+                <div class="checkbox-item">
                     <input type="checkbox" id="metalRoof" class="risk-checkbox">
                     <label for="metalRoof">Metal Roof/Structure</label>
                 </div>
-                <div class="risk-factor-item">
+                <div class="checkbox-item">
                     <input type="checkbox" id="flammableRisk" class="risk-checkbox">
                     <label for="flammableRisk">Flammable Materials</label>
                 </div>
-                <div class="risk-factor-item">
+                <div class="checkbox-item">
                     <input type="checkbox" id="occupancyRisk" class="risk-checkbox">
-                    <label for="occupancyRisk">High Occupancy</label>
+                    <label for="occupancyRisk">High Occupancy (>50 people)</label>
                 </div>
-                <div class="risk-factor-item">
+                <div class="checkbox-item">
                     <input type="checkbox" id="electronicRisk" class="risk-checkbox">
                     <label for="electronicRisk">Sensitive Electronics</label>
                 </div>
-                <div class="risk-factor-item">
+                <div class="checkbox-item">
                     <input type="checkbox" id="historicRisk" class="risk-checkbox">
                     <label for="historicRisk">Historic/Heritage Building</label>
+                </div>
+                
+                <!-- NEW Risk Factors -->
+                <div class="checkbox-item">
+                    <input type="checkbox" id="explosiveRisk" class="risk-checkbox">
+                    <label for="explosiveRisk">Explosive Materials</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="criticalInfrastructure" class="risk-checkbox">
+                    <label for="criticalInfrastructure">Critical Infrastructure</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="previousDamage" class="risk-checkbox">
+                    <label for="previousDamage">Previous Lightning Damage</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="nearbyUtilities" class="risk-checkbox">
+                    <label for="nearbyUtilities">Nearby Utilities/Power Lines</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="waterExposure" class="risk-checkbox">
+                    <label for="waterExposure">Near Water/High Moisture</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="externalTanks" class="risk-checkbox">
+                    <label for="externalTanks">External Fuel/Chemical Tanks</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="crowdedArea" class="risk-checkbox">
+                    <label for="crowdedArea">Public Assembly Area</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="meteorologicalRisk" class="risk-checkbox">
+                    <label for="meteorologicalRisk">High Lightning Activity Area</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW Connected Electrical Systems Section -->
+        <div class="section">
+            <h2>Connected Electrical Systems</h2>
+            <p class="section-description">Identify electrical systems for surge protection assessment:</p>
+            
+            <div class="checkbox-grid">
+                <!-- Power Systems -->
+                <div class="checkbox-item">
+                    <input type="checkbox" id="powerLV" class="electrical-checkbox">
+                    <label for="powerLV">Power Supply (LV Distribution)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="powerHV" class="electrical-checkbox">
+                    <label for="powerHV">Power Supply (HV Connection)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="emergencyPower" class="electrical-checkbox">
+                    <label for="emergencyPower">Emergency Power/Generator</label>
+                </div>
+                
+                <!-- Communication Systems -->
+                <div class="checkbox-item">
+                    <input type="checkbox" id="telecomData" class="electrical-checkbox">
+                    <label for="telecomData">Telecommunications/Data</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="internet" class="electrical-checkbox">
+                    <label for="internet">Internet/Broadband</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="cctv" class="electrical-checkbox">
+                    <label for="cctv">CCTV/Security Systems</label>
+                </div>
+                
+                <!-- Safety Systems -->
+                <div class="checkbox-item">
+                    <input type="checkbox" id="fireAlarm" class="electrical-checkbox">
+                    <label for="fireAlarm">Fire Alarm System</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="securityAlarm" class="electrical-checkbox">
+                    <label for="securityAlarm">Security/Intruder Alarm</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="accessControl" class="electrical-checkbox">
+                    <label for="accessControl">Access Control System</label>
+                </div>
+                
+                <!-- Lighting Systems -->
+                <div class="checkbox-item">
+                    <input type="checkbox" id="externalLighting" class="electrical-checkbox">
+                    <label for="externalLighting">External Lighting</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="emergencyLighting" class="electrical-checkbox">
+                    <label for="emergencyLighting">Emergency Lighting</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="signageLighting" class="electrical-checkbox">
+                    <label for="signageLighting">Signage/Display Lighting</label>
+                </div>
+                
+                <!-- HVAC & Building Services -->
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hvacControls" class="electrical-checkbox">
+                    <label for="hvacControls">HVAC Control Systems</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="buildingManagement" class="electrical-checkbox">
+                    <label for="buildingManagement">Building Management System</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="liftSystems" class="electrical-checkbox">
+                    <label for="liftSystems">Lift/Elevator Systems</label>
+                </div>
+                
+                <!-- Specialized Systems -->
+                <div class="checkbox-item">
+                    <input type="checkbox" id="industrialControls" class="electrical-checkbox">
+                    <label for="industrialControls">Industrial Control Systems</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="medicalEquipment" class="electrical-checkbox">
+                    <label for="medicalEquipment">Medical Equipment</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="serverRoom" class="electrical-checkbox">
+                    <label for="serverRoom">Server/IT Equipment</label>
                 </div>
             </div>
         </div>
@@ -229,11 +542,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <!-- JavaScript Files -->
-<script src="js/exif.js"></script>
-<script src="js/pdf-generator-shared.js"></script>
-<script src="js/touch-signature.js"></script>      <!-- ⭐ Reusable signature -->
-<script src="js/survey-report.js"></script>        <!-- Survey-specific -->
-<script src="js/pdf-generator-survey.js"></script>
+    <script src="js/exif.js"></script>
+    <script src="js/pdf-generator-shared.js"></script>
+    <script src="js/touch-signature.js"></script>
+    <script src="js/survey-report.js"></script>
+    <script src="js/pdf-generator-survey.js"></script>
 
     <style>
         /* Navigation styles */
@@ -275,11 +588,53 @@
             margin: 0;
         }
 
-        /* Touch Signature Styles */
+        /* Checkbox Grid Styles */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        .section-description {
+            font-style: italic;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        /* Compact Touch Signature Styles */
         .signature-container {
             border: 2px solid #dee2e6;
             border-radius: 8px;
-            padding: 15px;
+            padding: 10px;
             background: #f8f9fa;
         }
 
@@ -289,26 +644,26 @@
             background: white;
             cursor: crosshair;
             width: 100%;
-            max-width: 400px;
-            height: 200px;
+            max-width: 300px;
+            height: 120px;
             display: block;
             margin: 0 auto;
-            touch-action: none; /* Prevents scrolling while signing */
+            touch-action: none;
         }
 
         .signature-controls {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 10px;
+            margin-top: 10px;
         }
 
         .signature-btn {
-            padding: 10px 20px;
+            padding: 6px 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             transition: all 0.3s ease;
         }
@@ -333,44 +688,14 @@
 
         .signature-status {
             text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
+            margin-top: 8px;
+            font-size: 12px;
             color: #6c757d;
         }
 
         .signature-status.saved {
             color: #28a745;
             font-weight: bold;
-        }
-
-        /* Risk Factors Grid */
-        .risk-factors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .risk-factor-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-        }
-
-        .risk-checkbox {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .risk-factor-item label {
-            cursor: pointer;
-            margin: 0;
-            font-weight: normal;
         }
 
         .new-report-button {
@@ -403,23 +728,22 @@
 
             #signatureCanvas {
                 width: 100%;
-                height: 150px;
+                height: 100px;
             }
 
-            .risk-factors-grid {
+            .checkbox-grid {
                 grid-template-columns: 1fr;
             }
 
             .signature-controls {
-                flex-direction: column;
-                gap: 10px;
+                flex-direction: row;
+                gap: 8px;
             }
 
             .signature-btn {
-                width: 100%;
+                flex: 1;
             }
         }
     </style>
-    <script src="/js/app.js"></script>
 </body>
 </html>
