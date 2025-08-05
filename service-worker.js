@@ -1,17 +1,17 @@
 const CACHE_NAME = 'strikeR-cache-v1';
 
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/reports.html', 
-  '/survey.html',
-  '/t&i-report.html',
-  '/risk-assessment.html',
-  '/tools.html',
-  '/css/styles.css',
-  '/js/app.js',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/tool/',
+  '/tool/index.html',
+  '/tool/reports.html', 
+  '/tool/survey.html',
+  '/tool/t&i-report.html',
+  '/tool/risk-assessment.html',
+  '/tool/tools.html',
+  '/tool/css/styles.css',
+  '/tool/js/app.js',
+  '/tool/icons/icon-192x192.png',
+  '/tool/icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', event => {
