@@ -57,6 +57,16 @@ function saveFormData() {
     if (isRestoring) return;
 
     try {
+        // Safely access global variables with fallbacks - check if they exist first
+        const safeSelectedFailuresList = (typeof selectedFailuresList !== 'undefined') ? selectedFailuresList : 
+                                        (window.selectedFailuresList || []);
+        const safeEarthResistances = (typeof earthResistances !== 'undefined') ? earthResistances : 
+                                    (window.earthResistances || []);
+        const safeSystemDetails = (typeof systemDetails !== 'undefined') ? systemDetails : 
+                                 (window.systemDetails || {});
+        const safeUploadedImages = (typeof uploadedImages !== 'undefined') ? uploadedImages : 
+                                  (window.uploadedImages || {});
+
         const formData = {
             // Basic form fields
             siteAddress: document.getElementById('siteAddress')?.value || '',
@@ -79,17 +89,17 @@ function saveFormData() {
             
             // Standards and failures
             standard: document.getElementById('standard')?.value || '',
-            selectedFailures: selectedFailuresList || [],
+            selectedFailures: safeSelectedFailuresList,
             
             // Earth resistance testing
             numEarths: document.getElementById('numEarths')?.value || '',
-            earthResistances: earthResistances || [],
+            earthResistances: safeEarthResistances,
             
             // System details selections
-            systemDetails: systemDetails || {},
+            systemDetails: safeSystemDetails,
             
             // Images (base64 data)
-            uploadedImages: uploadedImages || {},
+            uploadedImages: safeUploadedImages,
             
             // Timestamp
             savedAt: new Date().toISOString()
@@ -134,12 +144,18 @@ function restoreFormData() {
         if (formData.standard) {
             setFieldValue('standard', formData.standard);
             setTimeout(() => {
-                updateFailuresList();
+                if (typeof updateFailuresList === 'function') {
+                    updateFailuresList();
+                }
                 
                 // Restore selected failures
                 if (formData.selectedFailures && Array.isArray(formData.selectedFailures)) {
-                    selectedFailuresList = formData.selectedFailures;
-                    updateSelectedFailures();
+                    if (window.selectedFailuresList !== undefined) {
+                        window.selectedFailuresList = formData.selectedFailures;
+                        if (typeof updateSelectedFailures === 'function') {
+                            updateSelectedFailures();
+                        }
+                    }
                 }
             }, 100);
         }
@@ -148,29 +164,37 @@ function restoreFormData() {
         if (formData.numEarths) {
             setFieldValue('numEarths', formData.numEarths);
             setTimeout(() => {
-                generateEarthInputs();
+                if (typeof generateEarthInputs === 'function') {
+                    generateEarthInputs();
+                }
                 
                 // Restore earth resistance values
                 if (formData.earthResistances && Array.isArray(formData.earthResistances)) {
-                    earthResistances = formData.earthResistances;
+                    if (window.earthResistances !== undefined) {
+                        window.earthResistances = formData.earthResistances;
+                    }
                     formData.earthResistances.forEach((value, index) => {
                         const input = document.querySelector(`input[onchange*="updateEarthResistance(${index}"]`);
                         if (input) {
                             input.value = value;
                         }
                     });
-                    calculateOverallResistance();
+                    if (typeof calculateOverallResistance === 'function') {
+                        calculateOverallResistance();
+                    }
                 }
             }, 100);
         }
         
         // Restore system details selections
         if (formData.systemDetails) {
-            systemDetails = formData.systemDetails;
+            if (window.systemDetails !== undefined) {
+                window.systemDetails = formData.systemDetails;
+            }
             // Re-apply visual selections
-            Object.keys(systemDetails).forEach(category => {
-                if (Array.isArray(systemDetails[category])) {
-                    systemDetails[category].forEach(value => {
+            Object.keys(formData.systemDetails).forEach(category => {
+                if (Array.isArray(formData.systemDetails[category])) {
+                    formData.systemDetails[category].forEach(value => {
                         const option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${value}'"]`);
                         if (option) {
                             option.classList.add('selected');
@@ -182,16 +206,18 @@ function restoreFormData() {
         
         // Restore uploaded images
         if (formData.uploadedImages) {
-            uploadedImages = formData.uploadedImages;
+            if (window.uploadedImages !== undefined) {
+                window.uploadedImages = formData.uploadedImages;
+            }
             
             // Update image preview displays
-            Object.keys(uploadedImages).forEach(key => {
+            Object.keys(formData.uploadedImages).forEach(key => {
                 if (key.endsWith('_data')) {
                     const previewKey = key.replace('_data', '');
                     const previewElement = document.getElementById(previewKey);
                     if (previewElement) {
-                        if (key.includes('earthImages') && Array.isArray(uploadedImages[key])) {
-                            previewElement.textContent = `${uploadedImages[key].length} image(s) restored`;
+                        if (key.includes('earthImages') && Array.isArray(formData.uploadedImages[key])) {
+                            previewElement.textContent = `${formData.uploadedImages[key].length} image(s) restored`;
                         } else {
                             previewElement.textContent = 'Image restored';
                         }
@@ -222,11 +248,19 @@ function clearAllData() {
         // Clear localStorage
         localStorage.removeItem(STORAGE_KEY);
         
-        // Clear global variables
-        selectedFailuresList = [];
-        earthResistances = [];
-        uploadedImages = {};
-        systemDetails = {};
+        // Clear global variables safely
+        if (window.selectedFailuresList !== undefined) {
+            window.selectedFailuresList = [];
+        }
+        if (window.earthResistances !== undefined) {
+            window.earthResistances = [];
+        }
+        if (window.uploadedImages !== undefined) {
+            window.uploadedImages = {};
+        }
+        if (window.systemDetails !== undefined) {
+            window.systemDetails = {};
+        }
         
         // Clear all form fields
         const allInputs = document.querySelectorAll('input, textarea, select');
