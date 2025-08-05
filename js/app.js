@@ -7,7 +7,10 @@ let systemDetails = {};
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     // Set today's date as default
-    document.getElementById('testDate').valueAsDate = new Date();
+    const testDateElement = document.getElementById('testDate');
+    if (testDateElement) {
+        testDateElement.valueAsDate = new Date();
+    }
 });
 
 // Function to fix EXIF orientation (smart detection for portrait vs landscape)
@@ -25,7 +28,6 @@ function fixImageOrientation(file) {
                     
                     // Determine if image is naturally landscape or portrait shaped
                     const isLandscapeShape = img.width > img.height;
-                    const isPortraitShape = img.height > img.width;
                     
                     // Smart logic: only apply rotation to landscape-shaped images that need it
                     if (isLandscapeShape && (orientation === 6 || orientation === 8)) {
@@ -65,7 +67,9 @@ function fixImageOrientation(file) {
 // Collapsible functionality
 function toggleCollapsible(id) {
     const content = document.getElementById(id);
-    content.classList.toggle('active');
+    if (content) {
+        content.classList.toggle('active');
+    }
 }
 
 // System detail selection functionality
@@ -79,8 +83,11 @@ function selectSystemDetail(category, value, element, isOther = false) {
         systemDetails[category] = systemDetails[category].filter(item => item !== value);
         
         if (isOther) {
-            document.getElementById(category + 'Other').classList.add('hidden');
-            document.getElementById(category + 'Other').value = '';
+            const otherInput = document.getElementById(category + 'Other');
+            if (otherInput) {
+                otherInput.classList.add('hidden');
+                otherInput.value = '';
+            }
         }
     } else {
         element.classList.add('selected');
@@ -89,7 +96,10 @@ function selectSystemDetail(category, value, element, isOther = false) {
         }
         
         if (isOther) {
-            document.getElementById(category + 'Other').classList.remove('hidden');
+            const otherInput = document.getElementById(category + 'Other');
+            if (otherInput) {
+                otherInput.classList.remove('hidden');
+            }
         }
     }
 }
@@ -108,9 +118,15 @@ function updateOtherValue(category, value) {
 
 // Standards and failures functionality
 function updateFailuresList() {
-    const standard = document.getElementById('standard').value;
+    const standardElement = document.getElementById('standard');
     const container = document.getElementById('failuresContainer');
     const failuresList = document.getElementById('failuresList');
+    
+    if (!standardElement || !container || !failuresList) {
+        return;
+    }
+    
+    const standard = standardElement.value;
     
     if (standard && standardFailures[standard]) {
         container.classList.remove('hidden');
@@ -153,6 +169,8 @@ function selectFailure(failureObj, element) {
 
 function updateSelectedFailures() {
     const container = document.getElementById('selectedFailures');
+    if (!container) return;
+    
     container.innerHTML = '';
     
     selectedFailuresList.forEach((item, index) => {
@@ -181,39 +199,58 @@ function updateSelectedFailures() {
 }
 
 function updateFailureComment(index, comment) {
-    selectedFailuresList[index].comment = comment;
+    if (selectedFailuresList[index]) {
+        selectedFailuresList[index].comment = comment;
+    }
 }
 
-// UPDATED: handleFailureImage with EXIF rotation fix
+// Handle failure image with EXIF rotation fix
 function handleFailureImage(index, input) {
     if (input.files[0]) {
         const file = input.files[0];
         
         // Show processing message
-        document.getElementById(`failureImagePreview${index}`).textContent = 'Processing image...';
+        const preview = document.getElementById(`failureImagePreview${index}`);
+        if (preview) {
+            preview.textContent = 'Processing image...';
+        }
         
         fixImageOrientation(file).then(correctedImageData => {
-            selectedFailuresList[index].image = file;
-            selectedFailuresList[index].imageData = correctedImageData;
-            document.getElementById(`failureImagePreview${index}`).textContent = 'Image uploaded';
+            if (selectedFailuresList[index]) {
+                selectedFailuresList[index].image = file;
+                selectedFailuresList[index].imageData = correctedImageData;
+            }
+            if (preview) {
+                preview.textContent = 'Image uploaded';
+            }
         }).catch(error => {
             console.error('Error processing failure image:', error);
             // Fallback
             const reader = new FileReader();
             reader.onload = function(e) {
-                selectedFailuresList[index].imageData = e.target.result;
+                if (selectedFailuresList[index]) {
+                    selectedFailuresList[index].imageData = e.target.result;
+                }
             };
             reader.readAsDataURL(file);
-            selectedFailuresList[index].image = file;
-            document.getElementById(`failureImagePreview${index}`).textContent = 'Image uploaded (may need rotation)';
+            if (selectedFailuresList[index]) {
+                selectedFailuresList[index].image = file;
+            }
+            if (preview) {
+                preview.textContent = 'Image uploaded (may need rotation)';
+            }
         });
     }
 }
 
 // Earth resistance testing functionality
 function generateEarthInputs() {
-    const numEarths = parseInt(document.getElementById('numEarths').value) || 0;
+    const numEarthsElement = document.getElementById('numEarths');
     const container = document.getElementById('earthInputs');
+    
+    if (!numEarthsElement || !container) return;
+    
+    const numEarths = parseInt(numEarthsElement.value) || 0;
     
     if (numEarths > 0) {
         container.style.display = 'block';
@@ -232,7 +269,10 @@ function generateEarthInputs() {
         earthResistances = new Array(numEarths).fill(0);
     } else {
         container.style.display = 'none';
-        document.getElementById('earthResult').classList.add('hidden');
+        const earthResult = document.getElementById('earthResult');
+        if (earthResult) {
+            earthResult.classList.add('hidden');
+        }
     }
 }
 
@@ -247,29 +287,42 @@ function calculateOverallResistance() {
         const reciprocalSum = validResistances.reduce((sum, r) => sum + (1/r), 0);
         const overallResistance = 1 / reciprocalSum;
         
-        document.getElementById('earthResult').classList.remove('hidden');
-        document.getElementById('overallResistance').innerHTML = `
-            <strong>${overallResistance.toFixed(3)} Ohm</strong>
-            <br><small>Calculated from ${validResistances.length} earth electrode(s)</small>
-        `;
+        const earthResult = document.getElementById('earthResult');
+        const overallResistanceElement = document.getElementById('overallResistance');
+        
+        if (earthResult && overallResistanceElement) {
+            earthResult.classList.remove('hidden');
+            overallResistanceElement.innerHTML = `
+                <strong>${overallResistance.toFixed(3)} Ohm</strong>
+                <br><small>Calculated from ${validResistances.length} earth electrode(s)</small>
+            `;
+        }
     } else {
-        document.getElementById('earthResult').classList.add('hidden');
+        const earthResult = document.getElementById('earthResult');
+        if (earthResult) {
+            earthResult.classList.add('hidden');
+        }
     }
 }
 
-// UPDATED: handleImageUpload with EXIF rotation fix
+// Handle single image upload with EXIF rotation fix
 function handleImageUpload(input, previewId) {
     if (input.files[0]) {
         const file = input.files[0];
         
         // Show loading message
-        document.getElementById(previewId).textContent = 'Processing image...';
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            preview.textContent = 'Processing image...';
+        }
         
         // Fix orientation and compress
         fixImageOrientation(file).then(correctedImageData => {
             uploadedImages[previewId] = file;
             uploadedImages[previewId + '_data'] = correctedImageData;
-            document.getElementById(previewId).textContent = 'Image uploaded successfully';
+            if (preview) {
+                preview.textContent = 'Image uploaded successfully';
+            }
         }).catch(error => {
             console.error('Error processing image:', error);
             // Fallback to original method
@@ -279,12 +332,14 @@ function handleImageUpload(input, previewId) {
             };
             reader.readAsDataURL(file);
             uploadedImages[previewId] = file;
-            document.getElementById(previewId).textContent = 'Image uploaded (orientation may need manual correction)';
+            if (preview) {
+                preview.textContent = 'Image uploaded (orientation may need manual correction)';
+            }
         });
     }
 }
 
-// UPDATED: handleMultipleImageUpload with EXIF rotation fix
+// Handle multiple image upload with EXIF rotation fix
 function handleMultipleImageUpload(input, previewId) {
     if (input.files.length > 0) {
         const files = Array.from(input.files);
@@ -292,7 +347,10 @@ function handleMultipleImageUpload(input, previewId) {
         uploadedImages[previewId + '_data'] = [];
         
         // Show processing message
-        document.getElementById(previewId).textContent = 'Processing images...';
+        const preview = document.getElementById(previewId);
+        if (preview) {
+            preview.textContent = 'Processing images...';
+        }
         
         let processedCount = 0;
         
@@ -302,8 +360,8 @@ function handleMultipleImageUpload(input, previewId) {
                 processedCount++;
                 
                 // Update preview when all images are processed
-                if (processedCount === files.length) {
-                    document.getElementById(previewId).textContent = `${files.length} image(s) uploaded`;
+                if (processedCount === files.length && preview) {
+                    preview.textContent = `${files.length} image(s) uploaded`;
                 }
             }).catch(error => {
                 console.error('Error processing image:', error);
@@ -315,19 +373,26 @@ function handleMultipleImageUpload(input, previewId) {
                 reader.readAsDataURL(file);
                 processedCount++;
                 
-                if (processedCount === files.length) {
-                    document.getElementById(previewId).textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
+                if (processedCount === files.length && preview) {
+                    preview.textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
                 }
-            // Register service worker
-               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                 navigator.serviceWorker
-                 .register('/service-worker.js')
-                 .then(registration => {
-                  console.log('✅ Service Worker registered:', registration.scope);
-          })
-        .catch(error => {
-         console.error('❌ Service Worker registration failed:', error);
-      });
-  });
-               }
+            });
+        });
+    }
+}
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker
+            .register('/tool/service-worker.js', {
+                scope: '/tool/'
+            })
+            .then(registration => {
+                console.log('✅ Service Worker registered:', registration.scope);
+            })
+            .catch(error => {
+                console.error('❌ Service Worker registration failed:', error);
+            });
+    });
+}
