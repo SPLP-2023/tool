@@ -318,9 +318,19 @@ function handleMultipleImageUpload(input, previewId) {
                 if (processedCount === files.length) {
                     document.getElementById(previewId).textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
                 }
-            });
-        });
-    }
+            // Register service worker
+               if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                 navigator.serviceWorker
+                 .register('/service-worker.js')
+                 .then(registration => {
+                  console.log('✅ Service Worker registered:', registration.scope);
+          })
+        .catch(error => {
+         console.error('❌ Service Worker registration failed:', error);
+      });
+  });
 }
+
 
 
