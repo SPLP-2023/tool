@@ -7,7 +7,10 @@ let clientSignature;
 // Initialize the survey report
 document.addEventListener('DOMContentLoaded', function() {
     // Set today's date as default
-    document.getElementById('surveyDate').valueAsDate = new Date();
+    const surveyDateElement = document.getElementById('surveyDate');
+    if (surveyDateElement) {
+        surveyDateElement.valueAsDate = new Date();
+    }
     
     // Initialize touch signature
     clientSignature = createTouchSignature(
@@ -58,34 +61,52 @@ function getSelectedElectricalSystems() {
     return getSelectedCheckboxes('electrical-checkbox');
 }
 
-// Generate auto-description based on selected data
+// Generate auto-description based on form data (NOT calling getSurveyData to avoid circular reference)
 function generateAutoDescription() {
-    const data = getSurveyData();
     let description = '';
     
+    // Get form data directly without calling getSurveyData()
+    const structureType = document.getElementById('structureType')?.value || '';
+    const structureHeight = document.getElementById('structureHeight')?.value || '';
+    const buildingAge = document.getElementById('buildingAge')?.value || '';
+    const numberOfFloors = document.getElementById('numberOfFloors')?.value || '';
+    const numberOfOccupants = document.getElementById('numberOfOccupants')?.value || '';
+    const roofAccess = document.getElementById('roofAccess')?.value || '';
+    const existingSystem = document.getElementById('existingSystem')?.value || '';
+    const systemCondition = document.getElementById('systemCondition')?.value || '';
+    const lastTested = document.getElementById('lastTested')?.value || '';
+    const standardInstalled = document.getElementById('standardInstalled')?.value || '';
+    
+    // Get checkbox selections directly
+    const wallTypes = getSelectedWallTypes();
+    const groundTypes = getSelectedGroundTypes();
+    const systemComponents = getSelectedSystemComponents();
+    const riskFactors = getSelectedRiskFactors();
+    const electricalSystems = getSelectedElectricalSystems();
+    
     // Structure information
-    if (data.structureType) {
-        description += `The surveyed structure is a ${data.structureType} building`;
+    if (structureType) {
+        description += `The surveyed structure is a ${structureType} building`;
         
-        if (data.structureHeight) {
-            description += ` of approximately ${data.structureHeight}m height`;
+        if (structureHeight) {
+            description += ` of approximately ${structureHeight}m height`;
         }
         
-        if (data.wallTypes.length > 0) {
-            description += ` with ${data.wallTypes.join(' and ')} construction`;
+        if (wallTypes.length > 0) {
+            description += ` with ${wallTypes.join(' and ')} construction`;
         }
         
-        if (data.buildingAge) {
-            description += `, built approximately ${data.buildingAge} years ago`;
+        if (buildingAge) {
+            description += `, built approximately ${buildingAge} years ago`;
         }
         
         description += '.';
         
         // Additional structure details
         const structureDetails = [];
-        if (data.numberOfFloors) structureDetails.push(`${data.numberOfFloors} floors`);
-        if (data.numberOfOccupants) structureDetails.push(`${data.numberOfOccupants} occupants`);
-        if (data.roofAccess) structureDetails.push(`${data.roofAccess.toLowerCase()} roof access`);
+        if (numberOfFloors) structureDetails.push(`${numberOfFloors} floors`);
+        if (numberOfOccupants) structureDetails.push(`${numberOfOccupants} occupants`);
+        if (roofAccess) structureDetails.push(`${roofAccess.toLowerCase()} roof access`);
         
         if (structureDetails.length > 0) {
             description += ` The building has ${structureDetails.join(', ')}.`;
@@ -93,44 +114,44 @@ function generateAutoDescription() {
     }
     
     // Ground conditions
-    if (data.groundTypes.length > 0) {
-        description += ` The surrounding ground consists of ${data.groundTypes.join(', ').toLowerCase()}.`;
+    if (groundTypes.length > 0) {
+        description += ` The surrounding ground consists of ${groundTypes.join(', ').toLowerCase()}.`;
     }
     
     // Risk factors
-    if (data.riskFactors.length > 0) {
-        description += ` Risk factors identified include ${data.riskFactors.join(', ')}.`;
+    if (riskFactors.length > 0) {
+        description += ` Risk factors identified include ${riskFactors.join(', ')}.`;
     }
     
     // Existing system
-    if (data.existingSystem && data.existingSystem !== 'None Visible') {
-        description += ` The existing lightning protection system is assessed as ${data.existingSystem}`;
+    if (existingSystem && existingSystem !== 'None Visible') {
+        description += ` The existing lightning protection system is assessed as ${existingSystem}`;
         
-        if (data.systemCondition && data.systemCondition !== '') {
-            description += ` with ${data.systemCondition.toLowerCase()} overall condition`;
+        if (systemCondition && systemCondition !== '') {
+            description += ` with ${systemCondition.toLowerCase()} overall condition`;
         }
         
-        if (data.lastTested && data.lastTested !== '') {
-            description += `, last tested ${data.lastTested.toLowerCase()}`;
+        if (lastTested && lastTested !== '') {
+            description += `, last tested ${lastTested.toLowerCase()}`;
         }
         
-        if (data.standardInstalled && data.standardInstalled !== '') {
-            description += ` and installed to ${data.standardInstalled}`;
+        if (standardInstalled && standardInstalled !== '') {
+            description += ` and installed to ${standardInstalled}`;
         }
         
         description += '.';
         
         // System components
-        if (data.systemComponents.length > 0) {
-            description += ` Visible system components include ${data.systemComponents.join(', ').toLowerCase()}.`;
+        if (systemComponents.length > 0) {
+            description += ` Visible system components include ${systemComponents.join(', ').toLowerCase()}.`;
         }
     } else {
         description += ' No existing lightning protection system is visible.';
     }
     
     // Electrical systems
-    if (data.electricalSystems.length > 0) {
-        description += ` Connected electrical systems include ${data.electricalSystems.join(', ')}, indicating comprehensive surge protection requirements.`;
+    if (electricalSystems.length > 0) {
+        description += ` Connected electrical systems include ${electricalSystems.join(', ')}, indicating comprehensive surge protection requirements.`;
     }
     
     return description.trim();
@@ -172,10 +193,14 @@ function clearSurveyData() {
         });
         
         // Clear signature
-        clientSignature.reset();
+        if (clientSignature) {
+            clientSignature.reset();
+        }
         
         // Clear uploaded images
-        uploadedImages = {};
+        if (window.uploadedImages) {
+            window.uploadedImages = {};
+        }
         document.getElementById('buildingImagePreview').textContent = 'Click to upload building photo';
         document.getElementById('additionalPhotosPreview').textContent = 'Click to upload additional photos';
         
@@ -183,24 +208,24 @@ function clearSurveyData() {
     }
 }
 
-// Export comprehensive survey data for PDF generation
+// Export comprehensive survey data for PDF generation (WITHOUT calling generateAutoDescription)
 function getSurveyData() {
     return {
         // Basic information
-        siteAddress: document.getElementById('siteAddress').value,
-        surveyDate: document.getElementById('surveyDate').value,
-        surveyorName: document.getElementById('surveyorName').value,
-        clientRepName: document.getElementById('clientRepName').value,
+        siteAddress: document.getElementById('siteAddress')?.value || '',
+        surveyDate: document.getElementById('surveyDate')?.value || '',
+        surveyorName: document.getElementById('surveyorName')?.value || '',
+        clientRepName: document.getElementById('clientRepName')?.value || '',
         
         // Structure details
-        structureType: document.getElementById('structureType').value,
-        structureHeight: document.getElementById('structureHeight').value,
-        buildingAge: document.getElementById('buildingAge').value,
-        numberOfFloors: document.getElementById('numberOfFloors').value,
-        numberOfOccupants: document.getElementById('numberOfOccupants').value,
-        hasBasement: document.getElementById('hasBasement').value,
-        roofType: document.getElementById('roofType').value,
-        roofAccess: document.getElementById('roofAccess').value,
+        structureType: document.getElementById('structureType')?.value || '',
+        structureHeight: document.getElementById('structureHeight')?.value || '',
+        buildingAge: document.getElementById('buildingAge')?.value || '',
+        numberOfFloors: document.getElementById('numberOfFloors')?.value || '',
+        numberOfOccupants: document.getElementById('numberOfOccupants')?.value || '',
+        hasBasement: document.getElementById('hasBasement')?.value || '',
+        roofType: document.getElementById('roofType')?.value || '',
+        roofAccess: document.getElementById('roofAccess')?.value || '',
         
         // Checkbox selections
         groundTypes: getSelectedGroundTypes(),
@@ -210,19 +235,19 @@ function getSurveyData() {
         electricalSystems: getSelectedElectricalSystems(),
         
         // Existing system
-        existingSystem: document.getElementById('existingSystem').value,
-        systemCondition: document.getElementById('systemCondition').value,
-        lastTested: document.getElementById('lastTested').value,
-        standardInstalled: document.getElementById('standardInstalled').value,
+        existingSystem: document.getElementById('existingSystem')?.value || '',
+        systemCondition: document.getElementById('systemCondition')?.value || '',
+        lastTested: document.getElementById('lastTested')?.value || '',
+        standardInstalled: document.getElementById('standardInstalled')?.value || '',
         
         // Comments
-        surveyFindings: document.getElementById('surveyFindings').value,
-        recommendations: document.getElementById('recommendations').value,
+        surveyFindings: document.getElementById('surveyFindings')?.value || '',
+        recommendations: document.getElementById('recommendations')?.value || '',
         
         // Signature
-        signatureData: clientSignature.getSignatureData(),
+        signatureData: clientSignature ? clientSignature.getSignatureData() : null,
         
-        // Auto-generated description
+        // Auto-generated description - call the function separately to avoid circular reference
         autoDescription: generateAutoDescription()
     };
 }
@@ -244,7 +269,7 @@ function validateSurveyData() {
         errors.push('Site Representative Name is required');
     }
     
-    if (!clientSignature.isSaved()) {
+    if (!clientSignature || !clientSignature.isSaved()) {
         errors.push('Site Representative signature is required');
     }
     
