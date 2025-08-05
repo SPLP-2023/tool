@@ -6,6 +6,12 @@
     <title>Risk Assessment Report - Strike Tools</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/tool/icons/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/tool/icons/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/tool/icons/apple-touch-icon-152x152.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="StrikeR">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
     <div class="container">
@@ -350,5 +356,16 @@
             }
         }
     </style>
+        <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/tool/service-worker.js', {
+            scope: '/tool/'
+          }).then(registration => {
+            console.log('SW registered:', registration.scope);
+          }).catch(error => {
+            console.log('SW registration failed:', error);
+          });
+        }
+    </script>
 </body>
 </html>
