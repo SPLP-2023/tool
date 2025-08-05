@@ -1,20 +1,23 @@
 {
   "name": "Strike Reports",
-  "short_name": "SR",
-  "start_url": ".",
+  "short_name": "StrikeR",
+  "id": "/tool/",
+  "start_url": "/tool/",
+  "scope": "/tool/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#007bff",
+  "theme_color": "#000000",
+  "description": "Professional lightning protection reporting tool",
   "icons": [
     {
-      "src": "icons/SP-Bolt-192.png",
+      "src": "/tool/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icons/SP-Bolt-512.png",
+      "src": "/tool/icons/icon-512x512.png", 
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
-  ]
-}
