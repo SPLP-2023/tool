@@ -318,6 +318,7 @@ function handleMultipleImageUpload(input, previewId) {
                 if (processedCount === files.length) {
                     document.getElementById(previewId).textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
                 }
+            });    
             // Register service worker
                if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
