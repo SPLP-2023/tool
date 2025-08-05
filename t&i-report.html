@@ -212,7 +212,7 @@
                     <div class="failure-option" onclick="selectSystemDetail('groundType', 'Concrete', this)">Concrete</div>
                     <div class="failure-option" onclick="selectSystemDetail('groundType', 'Grass', this)">Grass</div>
                     <div class="failure-option" onclick="selectSystemDetail('groundType', 'Soil', this)">Soil</div>
-                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Gravel Slabs', this)">Gravel Slabs</div>
+                    <div class="failure-option" onclick="selectSystemDetail('groundType', 'Gravel Slabs', this)">Slabs</div>
                     <div class="failure-option" onclick="selectSystemDetail('groundType', 'Block Paving', this)">Block Paving</div>
                     <div class="failure-option" onclick="selectSystemDetail('groundType', 'Other', this, true)">Other</div>
                 </div>
@@ -271,7 +271,7 @@
                 <div id="airTerminationList" class="failures-list">
                     <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Externally fitted Faraday Cage', this)">Externally fitted Faraday Cage</div>
                     <div class="failure-option" onclick="selectSystemDetail('airTermination', 'ESEAT', this)">ESEAT</div>
-                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Conductive Sheet & Cappings', this)">Conductive Sheet & Cappings</div>
+                    <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Conductive Metal Sheet & Cappings', this)">Conductive Metal Sheet & Cappings</div>
                     <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Finial Rods', this)">Finial Rods</div>
                     <div class="failure-option" onclick="selectSystemDetail('airTermination', 'HVI Installation', this)">HVI Installation</div>
                     <div class="failure-option" onclick="selectSystemDetail('airTermination', 'Other', this, true)">Other</div>
@@ -282,18 +282,22 @@
             <div class="form-group">
                 <label>2. AT Conductors</label>
                 <div id="atConductorsList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Black', this)">25x3mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Grey', this)">25x3mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Stone', this)">25x3mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC Brown', this)">25x3mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC White', this)">25x3mm PVC White</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'NMDC Clips', this)">NMDC</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Self-Adhesive Clips', this)">Self-Adhesive</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Felt Pad Clips', this)">Felt Pad Clips</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Weldable Clips', this)">Weldable Clips</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Other Clips', this, true)">Other Clips</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Aluminium', this)">Aluminium</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Copper', this)">Copper</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm PVC', this)">25x3mm PVC</div>
                     <div class="failure-option" onclick="selectSystemDetail('atConductors', '25x3mm Bare', this)">25x3mm Bare</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Black', this)">8mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Grey', this)">8mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Stone', this)">8mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC Brown', this)">8mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC White', this)">8mm PVC White</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm PVC', this)">8mm PVC</div>
                     <div class="failure-option" onclick="selectSystemDetail('atConductors', '8mm Bare', this)">8mm Bare</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Black', this)">Black</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Grey', this)">Grey</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Stone', this)">Stone</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Brown', this)">Brown</div>
+                    <div class="failure-option" onclick="selectSystemDetail('atConductors', 'White', this)">White</div>
                     <div class="failure-option" onclick="selectSystemDetail('atConductors', 'Other', this, true)">Other</div>
                 </div>
                 <input type="text" id="atConductorsOther" class="hidden" placeholder="Please specify..." onchange="updateOtherValue('atConductors', this.value)">
@@ -313,20 +317,22 @@
             <div class="form-group">
                 <label>4. DC Conductors</label>
                 <div id="dcConductorsList" class="failures-list">
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Black', this)">25x3mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Grey', this)">25x3mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Stone', this)">25x3mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC Brown', this)">25x3mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC White', this)">25x3mm PVC White</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'NMDC Clips', this)">NMDC</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Self-Adhesive Clips', this)">Self-Adhesive</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Felt Pad Clips', this)">Felt Pad Clips</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Weldable Clips', this)">Weldable Clips</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Other Clips', this, true)">Other Clips</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Aluminium', this)">Aluminium</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Copper', this)">Copper</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm PVC', this)">25x3mm PVC</div>
                     <div class="failure-option" onclick="selectSystemDetail('dcConductors', '25x3mm Bare', this)">25x3mm Bare</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Black', this)">8mm PVC Black</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Grey', this)">8mm PVC Grey</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Stone', this)">8mm PVC Stone</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC Brown', this)">8mm PVC Brown</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC White', this)">8mm PVC White</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm PVC', this)">8mm PVC</div>
                     <div class="failure-option" onclick="selectSystemDetail('dcConductors', '8mm Bare', this)">8mm Bare</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'HVI Single', this)">HVI Single</div>
-                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'HVI Multiple', this)">HVI Multiple</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Black', this)">Black</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Grey', this)">Grey</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Stone', this)">Stone</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Brown', this)">Brown</div>
+                    <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'White', this)">White</div>
                     <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Framework (Steel Columns)', this)">Framework (Steel Columns)</div>
                     <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Framework (Steel Reinforcing Bars)', this)">Framework (Steel Reinforcing Bars)</div>
                     <div class="failure-option" onclick="selectSystemDetail('dcConductors', 'Other', this, true)">Other</div>
@@ -338,6 +344,7 @@
                 <label>5. Earth Pits</label>
                 <select id="earthPits" title="Select earth pit type">
                     <option value="">Select...</option>
+                    <option value="None">None</option>
                     <option value="Concrete">Concrete</option>
                     <option value="Polymer">Polymer</option>
                     <option value="None">None</option>
@@ -360,6 +367,8 @@
                     <option value="">Select...</option>
                     <option value="No">No</option>
                     <option value="Yes">Yes</option>
+                    <option value="Unknown">Unknown</option>
+                    <option value="Requires Further Investigation">Requires Further Investigation</option>
                 </select>
             </div>
 
@@ -379,6 +388,7 @@
                 <label>9. Surge Protection Safety Status</label>
                 <select id="surgeSafe" title="Select surge protection safety status">
                     <option value="">Select...</option>
+                    <option value="N/a">N/a</option>
                     <option value="Safe">Safe</option>
                     <option value="Unsafe">Unsafe</option>
                     <option value="Unidentified">Unidentified</option>
