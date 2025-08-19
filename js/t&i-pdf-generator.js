@@ -1,20 +1,90 @@
 // =============================================================================
-// T&I PDF GENERATOR - COMPLETE NEW FILE
-// Create this as: js/t&i-pdf-generator.js
+// T&I PDF GENERATOR - COMPLETE STANDALONE FILE
+// Create as: js/t&i-pdf-generator.js
+// Replaces: pdf-generator.js + pdf-generator-shared.js for T&I reports only
 // =============================================================================
 
-// Constants for consistent styling
-const PAGE_BOTTOM = 250;
-const HEADER_IMAGE_URL = 'images/header-logo.png';
-const FOOTER_IMAGE_URL = 'images/footer-logo.png';
-const COMPANY_LOGO_URL = 'images/company-logo.png';
+// Company logo URLs
+const COMPANY_LOGO_URL = "./assets/Color logo - no background (px reduction).png";
+const FOOTER_IMAGE_URL = "./assets/es12.png";
+const HEADER_IMAGE_URL = "./assets/SP Bolt 400x400.png";
 
-// Main PDF generation function
+// PDF Generation Functions with Two-Column Layout
+function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
+    if (imageData) {
+        try {
+            const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
+            
+            // Get image properties using jsPDF's built-in method
+            const imgProps = pdf.getImageProperties(imageData);
+            const imgWidth = imgProps.width;
+            const imgHeight = imgProps.height;
+            const aspectRatio = imgWidth / imgHeight;
+            
+            // Calculate final dimensions to fit within maxWidth x maxHeight
+            let finalWidth, finalHeight;
+            
+            if (aspectRatio > (maxWidth / maxHeight)) {
+                // Image is wider - constrain by width
+                finalWidth = maxWidth;
+                finalHeight = maxWidth / aspectRatio;
+            } else {
+                // Image is taller - constrain by height
+                finalHeight = maxHeight;
+                finalWidth = maxHeight * aspectRatio;
+            }
+            
+            // Center align if requested
+            let finalX = x;
+            if (centerAlign) {
+                finalX = x + (maxWidth - finalWidth) / 2;
+            }
+            
+            pdf.addImage(imageData, format, finalX, y, finalWidth, finalHeight);
+            return finalHeight + 5; // Return actual height used plus margin
+            
+        } catch (error) {
+            console.error('Error adding image to PDF:', error);
+            // Fallback to original method if aspect ratio calculation fails
+            const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
+            pdf.addImage(imageData, format, x, y, maxWidth, maxHeight);
+            return maxHeight + 5;
+        }
+    }
+    return 0;
+}
+
+function addPageHeader(pdf, title) {
+    addImageToPDF(pdf, uploadedImages[HEADER_IMAGE_URL.replace('./', '') + '_data'] || '', 160, 8, 40, 20, true);
+    
+    pdf.setFontSize(16);
+    pdf.setFont(undefined, 'bold');
+    pdf.text(title, 105, 30, { align: 'center' });
+    
+    return 40; // Return Y position after header
+}
+
+function addFooterToPage(pdf, footer) {
+    addImageToPDF(pdf, uploadedImages[FOOTER_IMAGE_URL.replace('./', '') + '_data'] || '', 50, 265, 90, 30, true);
+    
+    pdf.setFontSize(8);
+    const footerLines = pdf.splitTextToSize(footer, 190);
+    pdf.text(footerLines, 105, 285, { align: 'center' });
+}
+
+function startNewSection(pdf, title, footer) {
+    pdf.addPage();
+    const yStart = addPageHeader(pdf, title);
+    addFooterToPage(pdf, footer);
+    return yStart;
+}
+
+// Main PDF generation function for T&I reports
 function generatePDF() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
     
-    // Get all form data
+    // Get form data
     const siteAddress = document.getElementById('siteAddress')?.value || '';
     const testDate = document.getElementById('testDate')?.value || '';
     const engineerName = document.getElementById('engineerName')?.value || '';
@@ -33,51 +103,86 @@ function generatePDF() {
     const footer = "Strike Point Lightning Protection Ltd Registered office: Atkinson Evans, 10 Arnot Hill Road, Nottingham NG5 6LJ. Company No. 15114852, Registered in England and Wales. @: info@strikepoint.uk Tel: 01159903220";
     
     let yPosition = 20;
+    const leftColumnX = 20;
+    const rightColumnX = 110;
+    const columnWidth = 80;
+    const pageBottom = 250;
     
     // ==================== COVER PAGE ====================
-    const coverOptions = {
-        reportTitle: 'Lightning Protection Test & Inspection Report',
-        siteAddress: siteAddress,
-        date: formatDate(testDate),
-        engineerName: engineerName,
-        additionalFields: [
-            { label: 'Test Kit Reference', value: testKitRef },
-            { label: 'Standard Applied', value: standard }
-        ]
-    };
+    // Company logo at top
+    if (uploadedImages[COMPANY_LOGO_URL.replace('./', '') + '_data']) {
+        const logoHeight = addImageToPDF(pdf, uploadedImages[COMPANY_LOGO_URL.replace('./', '') + '_data'], 30, 20, 150, 60, true);
+        yPosition = 20 + logoHeight + 10;
+    }
     
-    createCoverPage(pdf, coverOptions);
+    // Report title
+    pdf.setFontSize(24);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Lightning Protection Test & Inspection Report', 105, yPosition, { align: 'center' });
+    yPosition += 30;
+    
+    // Building image if provided
+    if (uploadedImages['buildingImagePreview_data']) {
+        const imageHeight = addImageToPDF(pdf, uploadedImages['buildingImagePreview_data'], 30, yPosition, 150, 100, true);
+        yPosition += imageHeight + 20;
+    }
+    
+    // Site details
+    pdf.setFontSize(14);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Site Address:', 105, yPosition, { align: 'center' });
+    yPosition += 10;
+    
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'normal');
+    if (siteAddress) {
+        const addressLines = pdf.splitTextToSize(siteAddress, 140);
+        pdf.text(addressLines, 105, yPosition, { align: 'center' });
+        yPosition += addressLines.length * 6 + 10;
+    }
+    
+    // Footer details
+    yPosition = 220;
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Report Date: ', 20, yPosition);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(formatDate(testDate), 60, yPosition);
+    
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Engineer: ', 20, yPosition + 10);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(engineerName, 60, yPosition + 10);
+    
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Test Kit Ref: ', 20, yPosition + 20);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(testKitRef, 60, yPosition + 20);
+    
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Standard: ', 20, yPosition + 30);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(standard, 60, yPosition + 30);
     
     // ==================== PAGE 2: GENERAL INFORMATION ====================
     yPosition = startNewSection(pdf, 'GENERAL INFORMATION', footer);
     
-    const leftColumnX = 20;
-    const rightColumnX = 110;
     let leftColumnY = yPosition;
     let rightColumnY = yPosition;
     
+    // Left column - Site and test information
     pdf.setFontSize(12);
     pdf.setFont(undefined, 'bold');
+    pdf.text('SITE DETAILS', leftColumnX, leftColumnY);
+    leftColumnY += 12;
     
-    // Left column
-    pdf.text('Site Details:', leftColumnX, leftColumnY);
-    leftColumnY += 8;
-    pdf.setFont(undefined, 'normal');
     pdf.setFontSize(10);
+    pdf.setFont(undefined, 'normal');
     
     if (siteAddress) {
-        const addressLines = pdf.splitTextToSize(siteAddress, 80);
+        const addressLines = pdf.splitTextToSize(siteAddress, columnWidth);
         pdf.text(addressLines, leftColumnX, leftColumnY);
-        leftColumnY += addressLines.length * 5;
+        leftColumnY += addressLines.length * 5 + 10;
     }
-    
-    leftColumnY += 10;
-    pdf.setFont(undefined, 'bold');
-    pdf.setFontSize(12);
-    pdf.text('Test Information:', leftColumnX, leftColumnY);
-    leftColumnY += 8;
-    pdf.setFont(undefined, 'normal');
-    pdf.setFontSize(10);
     
     const testInfo = [
         ['Test Date:', formatDate(testDate)],
@@ -91,40 +196,41 @@ function generatePDF() {
             pdf.setFont(undefined, 'bold');
             pdf.text(label, leftColumnX, leftColumnY);
             pdf.setFont(undefined, 'normal');
-            pdf.text(value, leftColumnX + 30, leftColumnY);
-            leftColumnY += 6;
+            pdf.text(value, leftColumnX, leftColumnY + 5);
+            leftColumnY += 12;
         }
     });
     
-    // Right column - Structure details
+    // Right column - Structure and system details
     pdf.setFontSize(12);
     pdf.setFont(undefined, 'bold');
-    pdf.text('Structure Details:', rightColumnX, rightColumnY);
-    rightColumnY += 8;
-    pdf.setFont(undefined, 'normal');
+    pdf.text('STRUCTURE DETAILS', rightColumnX, rightColumnY);
+    rightColumnY += 12;
+    
     pdf.setFontSize(10);
     
-    const structureInfo = [
-        ['Height:', structureHeight ? structureHeight + 'm' : ''],
-        ['Perimeter:', structurePerimeter ? structurePerimeter + 'm' : '']
-    ];
+    if (structureHeight) {
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Structure Height:', rightColumnX, rightColumnY);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(structureHeight + ' m', rightColumnX, rightColumnY + 5);
+        rightColumnY += 12;
+    }
     
-    structureInfo.forEach(([label, value]) => {
-        if (value) {
-            pdf.setFont(undefined, 'bold');
-            pdf.text(label, rightColumnX, rightColumnY);
-            pdf.setFont(undefined, 'normal');
-            pdf.text(value, rightColumnX + 30, rightColumnY);
-            rightColumnY += 6;
-        }
-    });
+    if (structurePerimeter) {
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Structure Perimeter:', rightColumnX, rightColumnY);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(structurePerimeter + ' m', rightColumnX, rightColumnY + 5);
+        rightColumnY += 12;
+    }
     
     rightColumnY += 10;
     pdf.setFontSize(12);
     pdf.setFont(undefined, 'bold');
-    pdf.text('System Details:', rightColumnX, rightColumnY);
-    rightColumnY += 8;
-    pdf.setFont(undefined, 'normal');
+    pdf.text('SYSTEM DETAILS', rightColumnX, rightColumnY);
+    rightColumnY += 12;
+    
     pdf.setFontSize(10);
     
     const systemInfo = [
@@ -138,8 +244,8 @@ function generatePDF() {
             pdf.setFont(undefined, 'bold');
             pdf.text(label, rightColumnX, rightColumnY);
             pdf.setFont(undefined, 'normal');
-            pdf.text(value, rightColumnX + 30, rightColumnY);
-            rightColumnY += 6;
+            pdf.text(value, rightColumnX, rightColumnY + 5);
+            rightColumnY += 12;
         }
     });
     
@@ -149,16 +255,16 @@ function generatePDF() {
             pdf.setFont(undefined, 'bold');
             pdf.text('Surge Type:', rightColumnX, rightColumnY);
             pdf.setFont(undefined, 'normal');
-            pdf.text(surgeType, rightColumnX + 30, rightColumnY);
-            rightColumnY += 6;
+            pdf.text(surgeType, rightColumnX, rightColumnY + 5);
+            rightColumnY += 12;
         }
         
         if (surgeSafe) {
             pdf.setFont(undefined, 'bold');
             pdf.text('Surge Status:', rightColumnX, rightColumnY);
             pdf.setFont(undefined, 'normal');
-            pdf.text(surgeSafe, rightColumnX + 30, rightColumnY);
-            rightColumnY += 6;
+            pdf.text(surgeSafe, rightColumnX, rightColumnY + 5);
+            rightColumnY += 12;
         }
     }
     
@@ -167,7 +273,7 @@ function generatePDF() {
     yPosition = maxY + 20;
     
     if (generalComments) {
-        if (yPosition > PAGE_BOTTOM - 40) {
+        if (yPosition > pageBottom - 40) {
             pdf.addPage();
             yPosition = addPageHeader(pdf, 'GENERAL INFORMATION (CONTINUED)');
             addFooterToPage(pdf, footer);
@@ -185,72 +291,183 @@ function generatePDF() {
         yPosition += commentLines.length * 5;
     }
     
-    // ==================== SYSTEM DETAILS SECTION ====================
+    // ==================== STRUCTURE AND SYSTEM DETAILS SECTION ====================
     if (window.systemDetails && Object.keys(window.systemDetails).length > 0) {
-        yPosition = startNewSection(pdf, 'SYSTEM DETAILS', footer);
+        yPosition = startNewSection(pdf, 'STRUCTURE AND SYSTEM DETAILS', footer);
         
-        Object.keys(window.systemDetails).forEach(category => {
-            if (window.systemDetails[category] && window.systemDetails[category].length > 0) {
-                if (yPosition > PAGE_BOTTOM - 30) {
-                    pdf.addPage();
-                    yPosition = addPageHeader(pdf, 'SYSTEM DETAILS (CONTINUED)');
-                    addFooterToPage(pdf, footer);
-                }
-                
-                pdf.setFontSize(12);
+        leftColumnY = yPosition;
+        rightColumnY = yPosition;
+        
+        // Left Column - Structure Details
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('STRUCTURE DETAILS', leftColumnX, leftColumnY);
+        leftColumnY += 12;
+        
+        pdf.setFontSize(10);
+        pdf.setFont(undefined, 'normal');
+        
+        // Structure questions
+        const structureQuestions = [
+            { key: 'groundType', label: 'Ground Type' },
+            { key: 'wallType', label: 'Structure Wall Type' },
+            { key: 'roofType', label: 'Roof Type' },
+            { key: 'roofStructure', label: 'Roof Structure' }
+        ];
+        
+        structureQuestions.forEach(question => {
+            if (window.systemDetails[question.key] && window.systemDetails[question.key].length > 0) {
                 pdf.setFont(undefined, 'bold');
-                pdf.text(category.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) + ':', leftColumnX, yPosition);
-                yPosition += 8;
-                
-                pdf.setFontSize(10);
+                pdf.text(question.label + ':', leftColumnX, leftColumnY);
+                leftColumnY += 5;
                 pdf.setFont(undefined, 'normal');
-                window.systemDetails[category].forEach(item => {
-                    pdf.text('• ' + item, leftColumnX + 5, yPosition);
-                    yPosition += 6;
-                });
-                yPosition += 5;
+                
+                const answers = window.systemDetails[question.key].join(', ');
+                const answerLines = pdf.splitTextToSize(answers, columnWidth);
+                pdf.text(answerLines, leftColumnX, leftColumnY);
+                leftColumnY += answerLines.length * 4 + 8;
+            }
+        });
+        
+        // Right Column - System Details
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('SYSTEM DETAILS', rightColumnX, rightColumnY);
+        rightColumnY += 12;
+        
+        pdf.setFontSize(10);
+        pdf.setFont(undefined, 'normal');
+        
+        // System questions
+        const systemQuestions = [
+            { key: 'airTermination', label: 'Air-Termination Type' },
+            { key: 'downConductor', label: 'Down-Conductor Type' },
+            { key: 'earthTermination', label: 'Earth-Termination Type' },
+            { key: 'equipotentialBonding', label: 'Equipotential Bonding' }
+        ];
+        
+        systemQuestions.forEach(question => {
+            if (window.systemDetails[question.key] && window.systemDetails[question.key].length > 0) {
+                pdf.setFont(undefined, 'bold');
+                pdf.text(question.label + ':', rightColumnX, rightColumnY);
+                rightColumnY += 5;
+                pdf.setFont(undefined, 'normal');
+                
+                const answers = window.systemDetails[question.key].join(', ');
+                const answerLines = pdf.splitTextToSize(answers, columnWidth);
+                pdf.text(answerLines, rightColumnX, rightColumnY);
+                rightColumnY += answerLines.length * 4 + 8;
             }
         });
     }
     
-    // ==================== FAILURES SECTION ====================
+    // ==================== INSPECTION SUMMARY SECTION ====================
+    yPosition = startNewSection(pdf, 'INSPECTION SUMMARY', footer);
+    
+    leftColumnY = yPosition;
+    rightColumnY = yPosition;
+    let failureColumn = 'left';
+    
     if (window.selectedFailuresList && window.selectedFailuresList.length > 0) {
-        yPosition = startNewSection(pdf, 'IDENTIFIED ISSUES & FAILURES', footer);
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('IDENTIFIED ISSUES & FAILURES:', 105, yPosition, { align: 'center' });
+        leftColumnY += 15;
+        rightColumnY += 15;
         
         window.selectedFailuresList.forEach((failure, index) => {
-            if (yPosition > PAGE_BOTTOM - 40) {
+            const currentX = failureColumn === 'left' ? leftColumnX : rightColumnX;
+            let currentY = failureColumn === 'left' ? leftColumnY : rightColumnY;
+            
+            // Check if we need a new page
+            if (currentY > pageBottom - 50) {
                 pdf.addPage();
-                yPosition = addPageHeader(pdf, 'IDENTIFIED ISSUES & FAILURES (CONTINUED)');
+                yPosition = addPageHeader(pdf, 'INSPECTION SUMMARY (CONTINUED)');
                 addFooterToPage(pdf, footer);
+                leftColumnY = yPosition;
+                rightColumnY = yPosition;
+                failureColumn = 'left';
+                currentY = yPosition;
             }
             
-            pdf.setFontSize(12);
+            pdf.setFontSize(10);
             pdf.setFont(undefined, 'bold');
             pdf.setTextColor(220, 20, 60);
-            pdf.text(`${index + 1}. ${failure.name}`, leftColumnX, yPosition);
+            pdf.text(`${index + 1}. ${failure.name}`, currentX, currentY);
             pdf.setTextColor(0, 0, 0);
-            yPosition += 8;
+            currentY += 8;
             
             if (failure.comment) {
-                pdf.setFontSize(10);
                 pdf.setFont(undefined, 'normal');
-                const commentLines = pdf.splitTextToSize('Comment: ' + failure.comment, 170);
-                pdf.text(commentLines, leftColumnX + 5, yPosition);
-                yPosition += commentLines.length * 5;
+                pdf.setFontSize(9);
+                const commentLines = pdf.splitTextToSize('Comment: ' + failure.comment, columnWidth);
+                pdf.text(commentLines, currentX, currentY);
+                currentY += commentLines.length * 4 + 5;
             }
             
             if (failure.imageData) {
-                yPosition += 5;
-                const imageHeight = addImageToPDF(pdf, failure.imageData, leftColumnX, yPosition, 80, 60, false);
-                yPosition += imageHeight;
+                pdf.setFont(undefined, 'italic');
+                pdf.setFontSize(8);
+                pdf.text('Image:', currentX, currentY);
+                currentY += 5;
+                const imageHeight = addImageToPDF(pdf, failure.imageData, currentX, currentY, 60, 45);
+                currentY += imageHeight;
             }
             
-            yPosition += 10;
+            currentY += 10;
+            
+            // Update column positions
+            if (failureColumn === 'left') {
+                leftColumnY = currentY;
+                failureColumn = 'right';
+            } else {
+                rightColumnY = currentY;
+                failureColumn = 'left';
+            }
         });
+    } else {
+        pdf.setFont(undefined, 'normal');
+        pdf.setFontSize(12);
+        pdf.text('No faults identified during inspection.', 105, yPosition, { align: 'center' });
     }
     
     // ==================== ENHANCED EARTH RESISTANCE TESTING SECTION ====================
-    yPosition = generateEarthResistanceSection(pdf, yPosition, footer);
+    yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
+    
+    const earthData = getEarthTableData();
+    leftColumnY = yPosition;
+    rightColumnY = yPosition;
+    let earthTestColumn = 'left';
+    
+    if (earthData.numEarths > 0 && earthData.earthData.length > 0) {
+        // Display overall resistance prominently at the top
+        if (earthData.overallResistance > 0) {
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Overall System Resistance: ' + earthData.overallResistance.toFixed(3) + ' Ω', 105, yPosition, { align: 'center' });
+            yPosition += 10;
+            
+            pdf.setFont(undefined, 'normal');
+            if (earthData.overallResistance <= 10) {
+                pdf.setTextColor(34, 139, 34);
+                pdf.text('Overall Below 10Ohms', 105, yPosition, { align: 'center' });
+            } else {
+                pdf.setTextColor(220, 20, 60);
+                pdf.text('Overall Exceeds 10Ohms - Reduction Required', 105, yPosition, { align: 'center' });
+            }
+            pdf.setTextColor(0, 0, 0);
+            yPosition += 20;
+        }
+        
+        // Enhanced Earth Resistance Table
+        yPosition = renderEarthResistanceTable(pdf, earthData, yPosition, footer);
+        
+    } else {
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'normal');
+        pdf.text('No earth resistance testing performed.', 105, yPosition, { align: 'center' });
+        yPosition += 20;
+    }
     
     // ==================== EARTH TEST IMAGES SECTION ====================
     if (window.uploadedImages && window.uploadedImages['earthImagesPreview_data']) {
@@ -297,7 +514,7 @@ function generatePDF() {
     
     // ==================== FINAL COMMENTS SECTION ====================
     if (finalComments) {
-        if (yPosition > PAGE_BOTTOM - 50) {
+        if (yPosition > pageBottom - 50) {
             yPosition = startNewSection(pdf, 'FINAL SUMMARY & RECOMMENDATIONS', footer);
         } else {
             yPosition += 20;
@@ -318,60 +535,22 @@ function generatePDF() {
     pdf.save(filename);
 }
 
-// ==================== ENHANCED EARTH RESISTANCE TESTING SECTION ====================
-function generateEarthResistanceSection(pdf, yPosition, footer) {
-    yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
-    
-    const earthData = getEarthTableData();
-    
-    if (earthData.numEarths > 0 && earthData.earthData.length > 0) {
-        // Display overall resistance prominently at the top
-        if (earthData.overallResistance > 0) {
-            pdf.setFontSize(16);
-            pdf.setFont(undefined, 'bold');
-            pdf.text('Overall System Resistance:', 105, yPosition, { align: 'center' });
-            yPosition += 12;
-            
-            // Overall resistance value with color coding
-            pdf.setFontSize(20);
-            if (earthData.overallResistance <= 10) {
-                pdf.setTextColor(34, 139, 34); // Green
-            } else {
-                pdf.setTextColor(220, 20, 60); // Red
-            }
-            pdf.text(`${earthData.overallResistance.toFixed(3)} Ω`, 105, yPosition, { align: 'center' });
-            pdf.setTextColor(0, 0, 0); // Reset to black
-            yPosition += 20;
-        }
-        
-        // Earth resistance table
-        yPosition = renderEarthResistanceTable(pdf, earthData, yPosition, footer);
-        
-    } else {
-        pdf.setFontSize(12);
-        pdf.setFont(undefined, 'normal');
-        pdf.text('No earth resistance testing performed.', 105, yPosition, { align: 'center' });
-        yPosition += 20;
-    }
-    
-    return yPosition;
-}
-
-// Render the professional earth resistance table
+// ==================== ENHANCED EARTH RESISTANCE TABLE FUNCTION ====================
 function renderEarthResistanceTable(pdf, earthData, yPosition, footer) {
-    const leftMargin = 15;
-    const pageWidth = 180; // Page width minus margins
-    const rowHeight = 12;
-    const headerHeight = 15;
+    const leftMargin = 20;
+    const pageWidth = 170; // Adjusted for existing margins
+    const rowHeight = 10;
+    const headerHeight = 12;
+    const pageBottom = 250;
     
-    // Column widths (adjusted to fit page width)
-    const columnWidths = [15, 20, 25, 20, 25, 25, 25, 25]; // Total: 180
+    // Column widths optimized for page layout
+    const columnWidths = [15, 18, 22, 18, 22, 22, 22, 31]; // Total: 170
     
     // Column headers
     const headers = ['E', 'Ω', 'Test Clamp', 'Pit', 'Test Type', 'Ground Type', 'Earth Type', 'Comment'];
     
-    // Check if we need to start the table
-    if (yPosition + headerHeight > PAGE_BOTTOM) {
+    // Check if we need to start the table on a new page
+    if (yPosition + headerHeight + (earthData.earthData.length * rowHeight) > pageBottom - 30) {
         pdf.addPage();
         yPosition = addPageHeader(pdf, 'EARTH RESISTANCE TESTING (CONTINUED)');
         addFooterToPage(pdf, footer);
@@ -381,54 +560,51 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer) {
     let currentX = leftMargin;
     
     // Header background
-    pdf.setFillColor(102, 126, 234); // Blue gradient
-    pdf.rect(leftMargin, yPosition - 3, pageWidth, headerHeight, 'F');
+    pdf.setFillColor(240, 240, 240); // Light gray header
+    pdf.rect(leftMargin, yPosition - 2, pageWidth, headerHeight, 'F');
     
     // Header text
-    pdf.setTextColor(255, 255, 255); // White text
-    pdf.setFontSize(10);
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(9);
     pdf.setFont(undefined, 'bold');
     
     headers.forEach((header, index) => {
         const colWidth = columnWidths[index];
-        pdf.text(header, currentX + (colWidth / 2), yPosition + 8, { align: 'center' });
+        pdf.text(header, currentX + (colWidth / 2), yPosition + 7, { align: 'center' });
         currentX += colWidth;
     });
     
     yPosition += headerHeight;
-    pdf.setTextColor(0, 0, 0); // Reset to black
     pdf.setFont(undefined, 'normal');
     
     // Draw table rows
     earthData.earthData.forEach((earth, index) => {
         // Check if we need a new page
-        if (yPosition + rowHeight > PAGE_BOTTOM) {
+        if (yPosition + rowHeight > pageBottom - 30) {
             pdf.addPage();
             yPosition = addPageHeader(pdf, 'EARTH RESISTANCE TESTING (CONTINUED)');
             addFooterToPage(pdf, footer);
             
             // Redraw headers on new page
             currentX = leftMargin;
-            pdf.setFillColor(102, 126, 234);
-            pdf.rect(leftMargin, yPosition - 3, pageWidth, headerHeight, 'F');
-            pdf.setTextColor(255, 255, 255);
+            pdf.setFillColor(240, 240, 240);
+            pdf.rect(leftMargin, yPosition - 2, pageWidth, headerHeight, 'F');
             pdf.setFont(undefined, 'bold');
             
             headers.forEach((header, headerIndex) => {
                 const colWidth = columnWidths[headerIndex];
-                pdf.text(header, currentX + (colWidth / 2), yPosition + 8, { align: 'center' });
+                pdf.text(header, currentX + (colWidth / 2), yPosition + 7, { align: 'center' });
                 currentX += colWidth;
             });
             
             yPosition += headerHeight;
-            pdf.setTextColor(0, 0, 0);
             pdf.setFont(undefined, 'normal');
         }
         
         // Alternate row colors
         if (index % 2 === 0) {
-            pdf.setFillColor(248, 249, 250); // Light gray
-            pdf.rect(leftMargin, yPosition - 2, pageWidth, rowHeight, 'F');
+            pdf.setFillColor(250, 250, 250); // Very light gray
+            pdf.rect(leftMargin, yPosition - 1, pageWidth, rowHeight, 'F');
         }
         
         // Draw row data
@@ -444,31 +620,27 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer) {
             earth.comment || '-'
         ];
         
-        pdf.setFontSize(9);
+        pdf.setFontSize(8);
         rowData.forEach((data, dataIndex) => {
             const colWidth = columnWidths[dataIndex];
             
-            // Truncate text if too long
+            // Truncate text if too long for column
             let displayText = data.toString();
-            if (displayText.length > 12 && dataIndex > 1) { // Limit text for dropdown columns
-                displayText = displayText.substring(0, 12) + '...';
+            if (displayText.length > 10 && dataIndex > 1) {
+                displayText = displayText.substring(0, 10) + '...';
             }
             
-            pdf.text(displayText, currentX + (colWidth / 2), yPosition + 7, { align: 'center' });
+            pdf.text(displayText, currentX + (colWidth / 2), yPosition + 6, { align: 'center' });
             currentX += colWidth;
         });
-        
-        // Draw row border
-        pdf.setDrawColor(200, 200, 200);
-        pdf.line(leftMargin, yPosition + rowHeight - 2, leftMargin + pageWidth, yPosition + rowHeight - 2);
         
         yPosition += rowHeight;
     });
     
     // Table border
-    pdf.setDrawColor(0, 0, 0);
-    pdf.setLineWidth(0.5);
-    pdf.rect(leftMargin, yPosition - (earthData.earthData.length * rowHeight) - headerHeight + 3, pageWidth, (earthData.earthData.length * rowHeight) + headerHeight);
+    pdf.setDrawColor(150, 150, 150);
+    pdf.setLineWidth(0.3);
+    pdf.rect(leftMargin, yPosition - (earthData.earthData.length * rowHeight) - headerHeight + 2, pageWidth, (earthData.earthData.length * rowHeight) + headerHeight);
     
     yPosition += 10;
     
@@ -477,161 +649,14 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer) {
     if (validEarths.length > 0) {
         pdf.setFontSize(10);
         pdf.setFont(undefined, 'italic');
-        pdf.text(`Summary: ${validEarths.length} earth electrodes tested`, 15, yPosition);
-        yPosition += 10;
-        
-        // Status message
-        if (earthData.overallResistance > 10) {
-            pdf.setFontSize(12);
-            pdf.setFont(undefined, 'bold');
-            pdf.setTextColor(220, 20, 60); // Red
-            pdf.text('⚠ ATTENTION: Overall resistance exceeds 10Ω - Remedial action required', 105, yPosition, { align: 'center' });
-            pdf.setTextColor(0, 0, 0); // Reset to black
-            yPosition += 15;
-        }
+        pdf.text(`Summary: ${validEarths.length} earth electrodes tested from ${earthData.numEarths} total readings`, 20, yPosition);
+        yPosition += 15;
     }
     
     return yPosition;
 }
 
-// ==================== SHARED UTILITY FUNCTIONS ====================
-
-// Format date function
-function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
-}
-
-// Add image to PDF with error handling
-function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
-    if (imageData) {
-        try {
-            const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
-            pdf.addImage(imageData, format, x, y, maxWidth, maxHeight);
-            return maxHeight + 5;
-        } catch (error) {
-            console.error('Error adding image to PDF:', error);
-            return 0;
-        }
-    }
-    return 0;
-}
-
-// Add standardized page header
-function addPageHeader(pdf, title) {
-    // Company logo in header (if available)
-    if (window.uploadedImages && window.uploadedImages[HEADER_IMAGE_URL + '_data']) {
-        addImageToPDF(pdf, window.uploadedImages[HEADER_IMAGE_URL + '_data'], 160, 8, 40, 20, true);
-    }
-    
-    // Add section title
-    pdf.setFontSize(16);
-    pdf.setFont(undefined, 'bold');
-    pdf.text(title, 105, 30, { align: 'center' });
-    
-    return 40; // Return Y position after header
-}
-
-// Add standardized footer
-function addFooterToPage(pdf, footer) {
-    // Add footer image (if available)
-    if (window.uploadedImages && window.uploadedImages[FOOTER_IMAGE_URL + '_data']) {
-        addImageToPDF(pdf, window.uploadedImages[FOOTER_IMAGE_URL + '_data'], 50, 265, 90, 30, true);
-    }
-    
-    // Add footer text
-    pdf.setFontSize(8);
-    const footerLines = pdf.splitTextToSize(footer, 190);
-    pdf.text(footerLines, 105, 285, { align: 'center' });
-}
-
-// Start new section with header and footer
-function startNewSection(pdf, title, footer) {
-    pdf.addPage();
-    const yStart = addPageHeader(pdf, title);
-    addFooterToPage(pdf, footer);
-    return yStart;
-}
-
-// Create cover page
-function createCoverPage(pdf, options) {
-    const {
-        reportTitle,
-        siteAddress,
-        date,
-        engineerName,
-        additionalFields = []
-    } = options;
-
-    let yPosition = 20;
-    
-    // Company logo at top (if available)
-    if (window.uploadedImages && window.uploadedImages[COMPANY_LOGO_URL + '_data']) {
-        const logoHeight = addImageToPDF(pdf, window.uploadedImages[COMPANY_LOGO_URL + '_data'], 30, 20, 150, 60, true);
-        yPosition = 20 + logoHeight + 10;
-    }
-    
-    // Report title
-    pdf.setFontSize(24);
-    pdf.setFont(undefined, 'bold');
-    pdf.text(reportTitle, 105, yPosition, { align: 'center' });
-    yPosition += 30;
-    
-    // Building image if provided
-    if (window.uploadedImages && window.uploadedImages['buildingImagePreview_data']) {
-        const imageHeight = addImageToPDF(pdf, window.uploadedImages['buildingImagePreview_data'], 30, yPosition, 150, 100, false);
-        yPosition += imageHeight + 20;
-    }
-    
-    // Site information
-    pdf.setFontSize(16);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Site Address:', 105, yPosition, { align: 'center' });
-    yPosition += 10;
-    
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'normal');
-    if (siteAddress) {
-        const addressLines = pdf.splitTextToSize(siteAddress, 140);
-        pdf.text(addressLines, 105, yPosition, { align: 'center' });
-        yPosition += addressLines.length * 6 + 10;
-    }
-    
-    // Additional fields
-    additionalFields.forEach(field => {
-        if (field.value) {
-            pdf.setFont(undefined, 'bold');
-            pdf.text(field.label + ':', 105, yPosition, { align: 'center' });
-            yPosition += 8;
-            pdf.setFont(undefined, 'normal');
-            pdf.text(field.value, 105, yPosition, { align: 'center' });
-            yPosition += 12;
-        }
-    });
-    
-    // Date and engineer
-    yPosition = 220;
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Report Date: ', 20, yPosition);
-    pdf.setFont(undefined, 'normal');
-    pdf.text(date, 60, yPosition);
-    
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Engineer: ', 20, yPosition + 10);
-    pdf.setFont(undefined, 'normal');
-    pdf.text(engineerName, 60, yPosition + 10);
-}
-
-// Generate filename with date
-function generateFilename(reportType) {
-    const date = new Date().toISOString().split('T')[0];
-    return `${reportType}_${date}.pdf`;
-}
+// ==================== UTILITY FUNCTIONS ====================
 
 // Enhanced function to get earth table data
 function getEarthTableData() {
@@ -680,4 +705,21 @@ function getEarthTableData() {
         earthData: [],
         overallResistance: 0
     };
+}
+
+// Format date function
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+}
+
+// Generate filename with date
+function generateFilename(reportType) {
+    const date = new Date().toISOString().split('T')[0];
+    return `${reportType}_${date}.pdf`;
 }
