@@ -244,7 +244,7 @@ function handleFailureImage(index, input) {
 }
 
 // Earth resistance testing functionality
-function generateEarthInputs() {
+function generateEarthTable() {
     const numEarthsElement = document.getElementById('numEarths');
     const container = document.getElementById('earthInputs');
     
@@ -396,3 +396,4 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
