@@ -1,6 +1,15 @@
 // Touch Signature Component - Reusable across all reports
 // File: js/touch-signature.js
 
+// Initialize touch signature
+    clientSignature = createTouchSignature(
+        'signatureCanvas',
+        'clearSignature', 
+        'saveSignature',
+        'signatureStatus'
+    );
+});
+
 class TouchSignature {
     constructor(canvasId, clearButtonId, saveButtonId, statusId) {
         this.canvas = document.getElementById(canvasId);
