@@ -347,4 +347,147 @@ button:hover {
     .page-title {
         font-size: 24px;
     }
+
+    /* Enhanced Earth Table Styles */
+.earth-table-container {
+    margin: 20px 0;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.earth-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.earth-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+}
+
+.earth-table td {
+    padding: 8px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.earth-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.earth-table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Earth number column styling */
+.earth-table .earth-number {
+    font-weight: bold;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    width: 40px;
+}
+
+/* Input and select styling within table */
+.earth-table input[type="number"] {
+    width: 80px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.earth-table select {
+    width: 100%;
+    min-width: 80px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.earth-table input[type="text"] {
+    width: 100%;
+    min-width: 80px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* Overall resistance styling */
+.overall-resistance-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2980b9;
+    text-align: center;
+    margin: 10px 0;
+    padding: 15px;
+    background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%);
+    border-radius: 8px;
+    border: 2px solid #2980b9;
+}
+
+/* Validation error styling */
+.earth-table .error {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.earth-table .error-message {
+    color: #dc3545;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .earth-table {
+        font-size: 12px;
+    }
+    
+    .earth-table th,
+    .earth-table td {
+        padding: 6px 4px;
+    }
+    
+    .earth-table input,
+    .earth-table select {
+        font-size: 11px;
+        padding: 2px;
+    }
+    
+    .table-responsive {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .earth-table th,
+    .earth-table td {
+        padding: 4px 2px;
+        font-size: 11px;
+    }
+    
+    .earth-table input[type="number"] {
+        width: 60px;
+    }
+    
+    .earth-table select,
+    .earth-table input[type="text"] {
+        min-width: 60px;
+    }
 }
