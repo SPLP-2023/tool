@@ -403,14 +403,41 @@ function generatePDF() {
     }
     
     // ==================== EARTH RESISTANCE TESTING SECTION ====================
-    yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
+yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
+
+const earthData = getEarthTableData();
+leftColumnY = yPosition;
+rightColumnY = yPosition;
+let earthTestColumn = 'left';
+
+if (earthData && earthData.earthData && earthData.earthData.length > 0) {
+    // Display overall resistance prominently at the top (like your original)
+    if (earthData.overallResistance > 0) {
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Overall System Resistance: ' + earthData.overallResistance.toFixed(3) + ' Ω', 105, yPosition, { align: 'center' });
+        yPosition += 10;
+        
+        pdf.setFont(undefined, 'normal');
+        if (earthData.overallResistance <= 10) {
+            pdf.setTextColor(34, 139, 34);
+            pdf.text('Overall Below 10Ohms', 105, yPosition, { align: 'center' });
+        } else {
+            pdf.setTextColor(220, 20, 60);
+            pdf.text('Overall Exceeds 10Ohms - Reduction Required', 105, yPosition, { align: 'center' });
+        }
+        pdf.setTextColor(0, 0, 0);
+        yPosition += 20;
+    }
     
+    // Enhanced Earth Resistance Table
+    yPosition = renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBottom);
+    
+} else {
+    // Fallback to old system if new table data not available
     const numEarths = parseInt(document.getElementById('numEarths').value) || 0;
-    leftColumnY = yPosition;
-    rightColumnY = yPosition;
-    let earthTestColumn = 'left';
     
-    if (numEarths > 0) {
+    if (numEarths > 0 && typeof earthResistances !== 'undefined') {
         pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
         pdf.text('Individual Earth Readings:', 105, yPosition, { align: 'center' });
@@ -460,7 +487,7 @@ function generatePDF() {
             
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            pdf.text('Overall System Resistance: ' + overallResistance.toFixed(3) + ' Ohm', 105, yPosition, { align: 'center' });
+            pdf.text('Overall System Resistance: ' + overallResistance.toFixed(3) + ' Ω', 105, yPosition, { align: 'center' });
             yPosition += 10;
             
             pdf.setFont(undefined, 'normal');
@@ -473,31 +500,132 @@ function generatePDF() {
             }
             pdf.setTextColor(0, 0, 0);
         }
-        
-        // Add final comments if present
-        if (finalComments) {
-            yPosition += 20;
-            if (yPosition > pageBottom - 50) {
-                pdf.addPage();
-                yPosition = addPageHeader(pdf, 'EARTH RESISTANCE TESTING (CONTINUED)');
-                addFooterToPage(pdf, footer);
-            }
-            
-            pdf.setFontSize(12);
-            pdf.setFont(undefined, 'bold');
-            pdf.text('FINAL SUMMARY & RECOMMENDATIONS:', 105, yPosition, { align: 'center' });
-            yPosition += 10;
-            
-            pdf.setFont(undefined, 'normal');
-            pdf.setFontSize(10);
-            const finalLines = pdf.splitTextToSize(finalComments, 170);
-            pdf.text(finalLines, leftColumnX, yPosition);
-        }
     } else {
         pdf.setFontSize(12);
         pdf.setFont(undefined, 'normal');
         pdf.text('No earth resistance testing performed.', 105, yPosition, { align: 'center' });
     }
+}
+
+// ADD THIS NEW FUNCTION at the top of your pdf-generator.js file (after the existing functions)
+function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBottom) {
+    const leftMargin = 20;
+    const pageWidth = 170; // Matches your existing layout
+    const rowHeight = 10;
+    const headerHeight = 12;
+    
+    // Column widths optimized for your page layout
+    const columnWidths = [15, 18, 22, 18, 22, 22, 22, 31]; // Total: 170
+    
+    // Column headers
+    const headers = ['E', 'Ω', 'Test Clamp', 'Pit', 'Test Type', 'Ground Type', 'Earth Type', 'Comment'];
+    
+    // Check if we need to start the table on a new page
+    if (yPosition + headerHeight + (earthData.earthData.length * rowHeight) > pageBottom - 30) {
+        pdf.addPage();
+        yPosition = addPageHeader(pdf, 'EARTH RESISTANCE TESTING (CONTINUED)');
+        addFooterToPage(pdf, footer);
+    }
+    
+    // Draw table header
+    let currentX = leftMargin;
+    
+    // Header background
+    pdf.setFillColor(240, 240, 240); // Light gray header
+    pdf.rect(leftMargin, yPosition - 2, pageWidth, headerHeight, 'F');
+    
+    // Header text
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(9);
+    pdf.setFont(undefined, 'bold');
+    
+    headers.forEach((header, index) => {
+        const colWidth = columnWidths[index];
+        pdf.text(header, currentX + (colWidth / 2), yPosition + 7, { align: 'center' });
+        currentX += colWidth;
+    });
+    
+    yPosition += headerHeight;
+    pdf.setFont(undefined, 'normal');
+    
+    // Draw table rows
+    earthData.earthData.forEach((earth, index) => {
+        // Check if we need a new page
+        if (yPosition + rowHeight > pageBottom - 30) {
+            pdf.addPage();
+            yPosition = addPageHeader(pdf, 'EARTH RESISTANCE TESTING (CONTINUED)');
+            addFooterToPage(pdf, footer);
+            
+            // Redraw headers on new page
+            currentX = leftMargin;
+            pdf.setFillColor(240, 240, 240);
+            pdf.rect(leftMargin, yPosition - 2, pageWidth, headerHeight, 'F');
+            pdf.setFont(undefined, 'bold');
+            
+            headers.forEach((header, headerIndex) => {
+                const colWidth = columnWidths[headerIndex];
+                pdf.text(header, currentX + (colWidth / 2), yPosition + 7, { align: 'center' });
+                currentX += colWidth;
+            });
+            
+            yPosition += headerHeight;
+            pdf.setFont(undefined, 'normal');
+        }
+        
+        // Alternate row colors
+        if (index % 2 === 0) {
+            pdf.setFillColor(250, 250, 250); // Very light gray
+            pdf.rect(leftMargin, yPosition - 1, pageWidth, rowHeight, 'F');
+        }
+        
+        // Draw row data
+        currentX = leftMargin;
+        const rowData = [
+            `E${earth.earthNumber}`,
+            earth.resistance > 0 ? earth.resistance.toFixed(2) : '-',
+            earth.testClamp || '-',
+            earth.pitType || '-',
+            earth.testType || '-',
+            earth.groundType || '-',
+            earth.earthType || '-',
+            earth.comment || '-'
+        ];
+        
+        pdf.setFontSize(8);
+        rowData.forEach((data, dataIndex) => {
+            const colWidth = columnWidths[dataIndex];
+            
+            // Truncate text if too long for column
+            let displayText = data.toString();
+            if (displayText.length > 10 && dataIndex > 1) {
+                displayText = displayText.substring(0, 10) + '...';
+            }
+            
+            pdf.text(displayText, currentX + (colWidth / 2), yPosition + 6, { align: 'center' });
+            currentX += colWidth;
+        });
+        
+        yPosition += rowHeight;
+    });
+    
+    // Table border
+    pdf.setDrawColor(150, 150, 150);
+    pdf.setLineWidth(0.3);
+    pdf.rect(leftMargin, yPosition - (earthData.earthData.length * rowHeight) - headerHeight + 2, pageWidth, (earthData.earthData.length * rowHeight) + headerHeight);
+    
+    yPosition += 10;
+    
+    // Summary information
+    const validEarths = earthData.earthData.filter(earth => earth.resistance > 0);
+    if (validEarths.length > 0) {
+        pdf.setFontSize(10);
+        pdf.setFont(undefined, 'italic');
+        pdf.text(`Summary: ${validEarths.length} earth electrodes tested from ${earthData.earthData.length} total readings`, 20, yPosition);
+        yPosition += 15;
+    }
+    
+    return yPosition;
+}
     
     // ==================== EARTH TEST IMAGES SECTION ====================
     if (uploadedImages['earthImagesPreview_data']) {
