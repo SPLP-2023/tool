@@ -153,13 +153,21 @@
                 </div>
                 <div class="form-row">
                 <div class="form-group">
-                    <label for="siteRep">Site Rep. Name:</label>
+                    <label for="siteRep">Site Representative Name:</label>
                     <input type="date" id="siteRep">
                 </div>
                 <div class="form-group">
-                    <label for="siteSig">Site Rep Signature:</label>
-                    <input type="date" id="siteRep">
+                <label for="siteSig">Site Representative Signature:</label>
+                <div class="signature-container">
+                    <canvas id="signatureCanvas" width="300" height="120"></canvas>
+                    <div class="signature-controls">
+                        <button type="button" id="clearSignature" class="signature-btn clear-btn">Clear</button>
+                        <button type="button" id="saveSignature" class="signature-btn save-btn">Save</button>
+                    </div>
+                    <div id="signatureStatus" class="signature-status">Please sign above</div>
                 </div>
+            </div>
+        </div>
             </div>
             <div class="form-group">
                 <label for="buildingImage">Building Image (Cover Page):</label>
