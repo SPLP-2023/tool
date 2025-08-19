@@ -5,6 +5,14 @@ let earthTableData = [];
 let uploadedImages = {};
 let systemDetails = {};
 
+        // Initialize touch signature
+    clientSignature = createTouchSignature(
+        'signatureCanvas',
+        'clearSignature', 
+        'saveSignature',
+        'signatureStatus'
+    );
+});
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -562,6 +570,7 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
 
 
 
