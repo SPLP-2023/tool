@@ -130,13 +130,6 @@
             <h2>Site Information</h2>
             <div class="form-row">
                 <div class="form-group">
-                <label for="buildingImage">Building Image (Cover Page):</label>
-                <div class="image-upload" onclick="document.getElementById('buildingImageFile').click()">
-                    <input type="file" id="buildingImageFile" accept="image/*" class="hidden-file-input" aria-label="Upload building image for cover page" onchange="handleImageUpload(this, 'buildingImagePreview')">
-                    <div id="buildingImagePreview">Click to upload building image</div>
-                </div>
-            <div class="form-row">
-                <div class="form-group">
                     <label for="siteRef">Site Reference:</label>
                     <input type="text" id="siteRef" placeholder="Site Reference...">
                 </div>
@@ -172,6 +165,15 @@
                         <button type="button" id="saveSignature" class="signature-btn save-btn">Save</button>
                     </div>
                     <div id="signatureStatus" class="signature-status">Please sign above</div>
+                </div>
+            </div>
+        </div>
+            </div>
+            <div class="form-group">
+                <label for="buildingImage">Building Image (Cover Page):</label>
+                <div class="image-upload" onclick="document.getElementById('buildingImageFile').click()">
+                    <input type="file" id="buildingImageFile" accept="image/*" class="hidden-file-input" aria-label="Upload building image for cover page" onchange="handleImageUpload(this, 'buildingImagePreview')">
+                    <div id="buildingImagePreview">Click to upload building image</div>
                 </div>
             </div>
         </div>
