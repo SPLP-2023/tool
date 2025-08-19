@@ -60,8 +60,7 @@ function saveFormData() {
         // Safely access global variables with fallbacks - check if they exist first
         const safeSelectedFailuresList = (typeof selectedFailuresList !== 'undefined') ? selectedFailuresList : 
                                         (window.selectedFailuresList || []);
-        const safeEarthResistances = (typeof earthResistances !== 'undefined') ? earthResistances : 
-                                    (window.earthResistances || []);
+        const safeEarthTableData = (typeof earthTableData !== 'undefined') ? earthTableData : [];
         const safeSystemDetails = (typeof systemDetails !== 'undefined') ? systemDetails : 
                                  (window.systemDetails || {});
         const safeUploadedImages = (typeof uploadedImages !== 'undefined') ? uploadedImages : 
@@ -164,22 +163,21 @@ function restoreFormData() {
                 if (formData.numEarths) {
                 setFieldValue('numEarths', formData.numEarths);
                 setTimeout(() => {
-                // Restore enhanced earth table data
-                if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
-                 window.earthTableData = formData.earthTableData;
-                    if (typeof generateEarthTable === 'function') {
-                    generateEarthTable();
-                // Restore table data after generation
-                setTimeout(() => {
-                    earthTableData = formData.earthTableData;
-                    if (typeof calculateOverallResistance === 'function') {
-                        calculateOverallResistance();
+                    if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
+                        window.earthTableData = formData.earthTableData;
+                        if (typeof generateEarthTable === 'function') {
+                            generateEarthTable();
+                            // Restore table data after generation
+                            setTimeout(() => {
+                                earthTableData = formData.earthTableData;
+                                if (typeof calculateOverallResistance === 'function') {
+                                    calculateOverallResistance();
+                                }
+                            }, 200);
+                        }
                     }
-                }, 200);
+                }, 100);
             }
-        }
-    }, 100);
-}
                 
                 // Restore enhanced earth table data
                 if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
@@ -274,6 +272,7 @@ function clearAllData() {
         }
         if (window.earthResistances !== undefined) {
             window.earthResistances = [];
+        }
         }
         if (window.uploadedImages !== undefined) {
             window.uploadedImages = {};
