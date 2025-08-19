@@ -18,6 +18,7 @@ const urlsToCache = [
   '/tool/js/pdf-generator-survey.js',
   '/tool/js/pdf-generator-risk.js',
   '/tool/js/survey-report.js',
+  '/tool/js/t&i-pdf-generator.js',
   '/tool/js/touch-signature.js',
   '/tool/js/risk-assessment.js',
   '/tool/js/exif.js',
