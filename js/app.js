@@ -1,8 +1,10 @@
 // Global variables
 let selectedFailuresList = [];
 let earthResistances = [];
+let earthTableData = [];
 let uploadedImages = {};
 let systemDetails = {};
+
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -243,32 +245,55 @@ function handleFailureImage(index, input) {
     }
 }
 
-// Earth resistance testing functionality
+// Dropdown options for earth table
+const earthDropdownOptions = {
+    testClamp: ['', 'Stainless', 'Bi-Metallic', 'G-Clamp', 'A-Clamp', 'Sq. Clamp', 'Oblong', 'B-Bond', 'Coffin Clamp', 'Other'],
+    pitType: ['', 'Concrete', 'Polymer', 'None', 'Other'],
+    testType: ['', 'Dead', 'FOP', 'Continuity', 'Reference', 'No Test'],
+    groundType: ['', 'Gravel', 'Tarmac', 'Soft', 'Slabs', 'Concrete', 'Astro', 'Other'],
+    earthType: ['', 'Earth Rod', 'Earth Matt', 'B-Ring', 'REF', 'Foundations', 'Other', 'Unknown']
+};
+
+// Generate earth table based on number input
 function generateEarthTable() {
     const numEarthsElement = document.getElementById('numEarths');
-    const container = document.getElementById('earthInputs');
+    const container = document.getElementById('earthTableContainer');
+    const tableBody = document.getElementById('earthTableBody');
     
-    if (!numEarthsElement || !container) return;
+    if (!numEarthsElement || !container || !tableBody) return;
     
     const numEarths = parseInt(numEarthsElement.value) || 0;
     
     if (numEarths > 0) {
-        container.style.display = 'block';
-        container.innerHTML = '<h4>Enter Earth Resistance Values (Ohm):</h4>';
+        container.classList.remove('hidden');
+        tableBody.innerHTML = '';
         
+        // Initialize earth data array
+        earthTableData = [];
+        
+        // Generate table rows
         for (let i = 1; i <= numEarths; i++) {
-            const inputGroup = document.createElement('div');
-            inputGroup.className = 'earth-input-group';
-            inputGroup.innerHTML = `
-                <label>E ${i}:</label>
-                <input type="number" step="0.01" min="0" onchange="updateEarthResistance(${i-1}, this.value)" placeholder="0.00">
-                <span>Ohm</span>
-            `;
-            container.appendChild(inputGroup);
+            const row = createEarthTableRow(i);
+            tableBody.appendChild(row);
+            
+            // Initialize data object
+            earthTableData.push({
+                earthNumber: i,
+                resistance: 0,
+                testClamp: '',
+                pitType: '',
+                testType: '',
+                groundType: '',
+                earthType: '',
+                comment: ''
+            });
         }
-        earthResistances = new Array(numEarths).fill(0);
+        
+        // Clear overall resistance
+        updateOverallResistance();
     } else {
-        container.style.display = 'none';
+        container.classList.add('hidden');
+        earthTableData = [];
         const earthResult = document.getElementById('earthResult');
         if (earthResult) {
             earthResult.classList.add('hidden');
@@ -276,33 +301,174 @@ function generateEarthTable() {
     }
 }
 
+// Create a single earth table row
+function createEarthTableRow(earthNumber) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td class="earth-number">E${earthNumber}</td>
+        <td>
+            <input type="number" 
+                   step="0.01" 
+                   min="0" 
+                   placeholder="0.00"
+                   onchange="updateEarthResistance(${earthNumber - 1}, this.value)">
+        </td>
+        <td>
+            <select onchange="updateEarthDropdown(${earthNumber - 1}, 'testClamp', this.value)">
+                ${createDropdownOptions('testClamp')}
+            </select>
+        </td>
+        <td>
+            <select onchange="updateEarthDropdown(${earthNumber - 1}, 'pitType', this.value)">
+                ${createDropdownOptions('pitType')}
+            </select>
+        </td>
+        <td>
+            <select onchange="updateEarthDropdown(${earthNumber - 1}, 'testType', this.value)">
+                ${createDropdownOptions('testType')}
+            </select>
+        </td>
+        <td>
+            <select onchange="updateEarthDropdown(${earthNumber - 1}, 'groundType', this.value)">
+                ${createDropdownOptions('groundType')}
+            </select>
+        </td>
+        <td>
+            <select onchange="updateEarthDropdown(${earthNumber - 1}, 'earthType', this.value)">
+                ${createDropdownOptions('earthType')}
+            </select>
+        </td>
+        <td>
+            <input type="text" 
+                   placeholder="Comment..."
+                   onchange="updateEarthComment(${earthNumber - 1}, this.value)">
+        </td>
+    `;
+    return row;
+}
+
+// Create dropdown options HTML
+function createDropdownOptions(optionType) {
+    const options = earthDropdownOptions[optionType];
+    return options.map(option => `<option value="${option}">${option}</option>`).join('');
+}
+
+// Update earth resistance value
 function updateEarthResistance(index, value) {
-    earthResistances[index] = parseFloat(value) || 0;
-    calculateOverallResistance();
+    if (earthTableData[index]) {
+        earthTableData[index].resistance = parseFloat(value) || 0;
+        calculateOverallResistance();
+    }
 }
 
-function calculateOverallResistance() {
-    if (earthResistances.length > 0 && earthResistances.some(r => r > 0)) {
-        const validResistances = earthResistances.filter(r => r > 0);
-        const reciprocalSum = validResistances.reduce((sum, r) => sum + (1/r), 0);
-        const overallResistance = 1 / reciprocalSum;
+// Update dropdown values with auto-populate functionality
+function updateEarthDropdown(index, field, value) {
+    if (earthTableData[index]) {
+        earthTableData[index][field] = value;
         
-        const earthResult = document.getElementById('earthResult');
-        const overallResistanceElement = document.getElementById('overallResistance');
-        
-        if (earthResult && overallResistanceElement) {
-            earthResult.classList.remove('hidden');
-            overallResistanceElement.innerHTML = `
-                <strong>${overallResistance.toFixed(3)} Ohm</strong>
-                <br><small>Calculated from ${validResistances.length} earth electrode(s)</small>
-            `;
-        }
-    } else {
-        const earthResult = document.getElementById('earthResult');
-        if (earthResult) {
-            earthResult.classList.add('hidden');
+        // Auto-populate: If this is the first row (index 0), copy to all rows below
+        if (index === 0 && value !== '') {
+            for (let i = 1; i < earthTableData.length; i++) {
+                earthTableData[i][field] = value;
+                
+                // Update the visual dropdown
+                const tableBody = document.getElementById('earthTableBody');
+                if (tableBody) {
+                    const targetRow = tableBody.children[i];
+                    if (targetRow) {
+                        const fieldMap = {
+                            'testClamp': 2,
+                            'pitType': 3,
+                            'testType': 4,
+                            'groundType': 5,
+                            'earthType': 6
+                        };
+                        const columnIndex = fieldMap[field];
+                        if (columnIndex) {
+                            const select = targetRow.children[columnIndex].querySelector('select');
+                            if (select) {
+                                select.value = value;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+}
+
+// Update earth comment
+function updateEarthComment(index, value) {
+    if (earthTableData[index]) {
+        earthTableData[index].comment = value;
+    }
+}
+
+// Calculate overall resistance (enhanced version)
+function calculateOverallResistance() {
+    if (earthTableData.length > 0) {
+        const validResistances = earthTableData
+            .map(earth => earth.resistance)
+            .filter(r => r > 0);
+        
+        if (validResistances.length > 0) {
+            const reciprocalSum = validResistances.reduce((sum, r) => sum + (1/r), 0);
+            const overallResistance = 1 / reciprocalSum;
+            
+            const earthResult = document.getElementById('earthResult');
+            const overallResistanceElement = document.getElementById('overallResistance');
+            
+            if (earthResult && overallResistanceElement) {
+                earthResult.classList.remove('hidden');
+                overallResistanceElement.textContent = overallResistance.toFixed(2) + ' Ω';
+                overallResistanceElement.className = 'overall-resistance-value';
+            }
+        } else {
+            const earthResult = document.getElementById('earthResult');
+            if (earthResult) {
+                earthResult.classList.add('hidden');
+            }
+        }
+    }
+}
+
+// Get earth table data for PDF generation and auto-save
+function getEarthTableData() {
+    return {
+        numEarths: earthTableData.length,
+        earthData: earthTableData,
+        overallResistance: calculateOverallResistanceValue()
+    };
+}
+
+// Calculate overall resistance value (for data export)
+function calculateOverallResistanceValue() {
+    if (earthTableData.length > 0) {
+        const validResistances = earthTableData
+            .map(earth => earth.resistance)
+            .filter(r => r > 0);
+        
+        if (validResistances.length > 0) {
+            const reciprocalSum = validResistances.reduce((sum, r) => sum + (1/r), 0);
+            return (1 / reciprocalSum);
+        }
+    }
+    return 0;
+}
+
+// Validate earth table (optional - for future use)
+function validateEarthTable() {
+    let isValid = true;
+    const errors = [];
+    
+    earthTableData.forEach((earth, index) => {
+        if (earth.resistance < 0) {
+            errors.push(`E${index + 1}: Resistance cannot be negative`);
+            isValid = false;
+        }
+    });
+    
+    return { isValid, errors };
 }
 
 // Handle single image upload with EXIF rotation fix
@@ -396,4 +562,5 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
 
