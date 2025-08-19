@@ -345,7 +345,7 @@ function generateSurveyPDF() {
     // ==================== NEXT STEPS SECTION ====================
     yPosition = startNewSection(pdf, 'RECOMMENDED NEXT STEPS', COMPANY_FOOTER);
     
-    pdf.setFontSize(10);
+    pdf.setFontSize(12);
     pdf.setFont(undefined, 'normal');
     
     const nextSteps = [
