@@ -415,7 +415,7 @@ if (earthData && earthData.earthData && earthData.earthData.length > 0) {
     if (earthData.overallResistance > 0) {
         pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
-        pdf.text('Overall System Resistance: ' + earthData.overallResistance.toFixed(3) + ' Ω', 105, yPosition, { align: 'center' });
+        pdf.text('Overall System Resistance: ' + earthData.overallResistance.toFixed(3) + ' Ohms', 105, yPosition, { align: 'center' });
         yPosition += 10;
         
         pdf.setFont(undefined, 'normal');
@@ -487,7 +487,7 @@ if (earthData && earthData.earthData && earthData.earthData.length > 0) {
             
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            pdf.text('Overall System Resistance: ' + overallResistance.toFixed(3) + ' Ω', 105, yPosition, { align: 'center' });
+            pdf.text('Overall System Resistance: ' + overallResistance.toFixed(3) + ' Ohms', 105, yPosition, { align: 'center' });
             yPosition += 10;
             
             pdf.setFont(undefined, 'normal');
@@ -518,7 +518,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     const columnWidths = [15, 18, 22, 18, 22, 22, 22, 31]; // Total: 170
     
     // Column headers
-    const headers = ['E', 'Ω', 'Test Clamp', 'Pit', 'Test Type', 'Ground Type', 'Earth Type', 'Comment'];
+    const headers = ['E', 'Ohms', 'Test Clamp', 'Pit', 'Test Type', 'Ground Type', 'Earth Type', 'Comment'];
     
     // Check if we need to start the table on a new page
     if (yPosition + headerHeight + (earthData.earthData.length * rowHeight) > pageBottom - 30) {
