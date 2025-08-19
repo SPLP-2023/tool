@@ -66,7 +66,7 @@ function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = 
 // Add standardized page header with company branding
 function addPageHeader(pdf, title) {
     // Company logo in header
-    addImageToPDF(pdf, HEADER_IMAGE_URL, 160, 8, 40, 20, true);
+    addImageToPDF(pdf, HEADER_IMAGE_URL, 160, 8, 60, 25, true);
     
     // Add section title spanning full width
     pdf.setFontSize(16);
@@ -79,7 +79,7 @@ function addPageHeader(pdf, title) {
 // Add standardized footer with company branding and info
 function addFooterToPage(pdf, footer) {
     // Add footer image - larger, centered, above text
-    addImageToPDF(pdf, FOOTER_IMAGE_URL, 50, 265, 90, 30, true);
+    addImageToPDF(pdf, FOOTER_IMAGE_URL, 60, 260, 90, 30, true);
     
     // Add footer text below the image
     pdf.setFontSize(8);
