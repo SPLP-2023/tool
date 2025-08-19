@@ -161,14 +161,14 @@ function restoreFormData() {
         
                 // Restore earth resistance testing
                 if (formData.numEarths) {
-                setFieldValue('numEarths', formData.numEarths);
-                setTimeout(() => {
-                    if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
-                        window.earthTableData = formData.earthTableData;
-                        if (typeof generateEarthTable === 'function') {
-                            generateEarthTable();
-                            // Restore table data after generation
-                            setTimeout(() => {
+                    setFieldValue('numEarths', formData.numEarths);
+                    setTimeout(() => {
+                        if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
+                            window.earthTableData = formData.earthTableData;
+                            if (typeof generateEarthTable === 'function') {
+                                generateEarthTable();
+                        // Restore table data after generation
+                                setTimeout(() => {
                                 earthTableData = formData.earthTableData;
                                 if (typeof calculateOverallResistance === 'function') {
                                     calculateOverallResistance();
@@ -178,19 +178,6 @@ function restoreFormData() {
                     }
                 }, 100);
             }
-                
-                // Restore enhanced earth table data
-                if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
-                window.earthTableData = formData.earthTableData;
-                setTimeout(() => {
-                if (typeof generateEarthTable === 'function') {
-                generateEarthTable();
-                // Restore table data after generation
-                earthTableData = formData.earthTableData;
-                calculateOverallResistance();
-            }
-        }, 100);
-    }
                     formData.earthResistances.forEach((value, index) => {
                         const input = document.querySelector(`input[onchange*="updateEarthResistance(${index}"]`);
                         if (input) {
