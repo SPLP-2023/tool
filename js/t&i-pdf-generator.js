@@ -439,7 +439,7 @@ function generatePDF() {
     rightColumnY = yPosition;
     let earthTestColumn = 'left';
     
-    if (earthData.numEarths > 0 && earthData.earthData.length > 0) {
+    if (earthData.earthData && earthData.earthData.length > 0) {
         // Display overall resistance prominently at the top
         if (earthData.overallResistance > 0) {
             pdf.setFontSize(12);
@@ -649,7 +649,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer) {
     if (validEarths.length > 0) {
         pdf.setFontSize(10);
         pdf.setFont(undefined, 'italic');
-        pdf.text(`Summary: ${validEarths.length} earth electrodes tested from ${earthData.numEarths} total readings`, 20, yPosition);
+        pdf.text(`Summary: ${validEarths.length} earth electrodes tested from ${earthData.earthData.length} total readings`, 20, yPosition);
         yPosition += 15;
     }
     
