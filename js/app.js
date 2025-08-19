@@ -290,7 +290,7 @@ function generateEarthTable() {
         }
         
         // Clear overall resistance
-        updateOverallResistance();
+        calculateOverallResistance();
     } else {
         container.classList.add('hidden');
         earthTableData = [];
@@ -562,5 +562,6 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
 
 
