@@ -91,9 +91,9 @@ function saveFormData() {
             standard: document.getElementById('standard')?.value || '',
             selectedFailures: safeSelectedFailuresList,
             
-            // Earth resistance testing
+            // Enhanced earth resistance testing
             numEarths: document.getElementById('numEarths')?.value || '',
-            earthResistances: safeEarthResistances,
+            earthTableData: (typeof earthTableData !== 'undefined') ? earthTableData : [],
             
             // System details selections
             systemDetails: safeSystemDetails,
@@ -160,19 +160,39 @@ function restoreFormData() {
             }, 100);
         }
         
-        // Restore earth resistance testing
-        if (formData.numEarths) {
-            setFieldValue('numEarths', formData.numEarths);
-            setTimeout(() => {
-                if (typeof generateEarthInputs === 'function') {
-                    generateEarthInputs();
-                }
-                
-                // Restore earth resistance values
-                if (formData.earthResistances && Array.isArray(formData.earthResistances)) {
-                    if (window.earthResistances !== undefined) {
-                        window.earthResistances = formData.earthResistances;
+                // Restore earth resistance testing
+                if (formData.numEarths) {
+                setFieldValue('numEarths', formData.numEarths);
+                setTimeout(() => {
+                // Restore enhanced earth table data
+                if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
+                 window.earthTableData = formData.earthTableData;
+                    if (typeof generateEarthTable === 'function') {
+                    generateEarthTable();
+                // Restore table data after generation
+                setTimeout(() => {
+                    earthTableData = formData.earthTableData;
+                    if (typeof calculateOverallResistance === 'function') {
+                        calculateOverallResistance();
                     }
+                }, 200);
+            }
+        }
+    }, 100);
+}
+                
+                // Restore enhanced earth table data
+                if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
+                window.earthTableData = formData.earthTableData;
+                setTimeout(() => {
+                if (typeof generateEarthTable === 'function') {
+                generateEarthTable();
+                // Restore table data after generation
+                earthTableData = formData.earthTableData;
+                calculateOverallResistance();
+            }
+        }, 100);
+    }
                     formData.earthResistances.forEach((value, index) => {
                         const input = document.querySelector(`input[onchange*="updateEarthResistance(${index}"]`);
                         if (input) {
