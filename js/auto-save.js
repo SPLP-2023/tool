@@ -178,18 +178,7 @@ function restoreFormData() {
                     }
                 }, 100);
             }
-                    formData.earthResistances.forEach((value, index) => {
-                        const input = document.querySelector(`input[onchange*="updateEarthResistance(${index}"]`);
-                        if (input) {
-                            input.value = value;
-                        }
-                    });
-                    if (typeof calculateOverallResistance === 'function') {
-                        calculateOverallResistance();
-                    }
-                }
-            }, 100);
-        }
+                   
         
         // Restore system details selections
         if (formData.systemDetails) {
@@ -257,9 +246,8 @@ function clearAllData() {
         if (window.selectedFailuresList !== undefined) {
             window.selectedFailuresList = [];
         }
-        if (window.earthResistances !== undefined) {
-            window.earthResistances = [];
-        }
+        if (window.earthTableData !== undefined) {
+            window.earthTableData = [];
         }
         if (window.uploadedImages !== undefined) {
             window.uploadedImages = {};
