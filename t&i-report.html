@@ -476,7 +476,75 @@
         <!-- Generate Report Button -->
         <button id="generateReport" onclick="generatePDF()">Generate PDF Report</button>
     </div>
+    <style>
+     /* Compact Touch Signature Styles */
+        .signature-container {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f8f9fa;
+        }
 
+        #signatureCanvas {
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background: white;
+            cursor: crosshair;
+            width: 100%;
+            max-width: 300px;
+            height: 120px;
+            display: block;
+            margin: 0 auto;
+            touch-action: none;
+        }
+
+        .signature-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .signature-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background-color: #c82333;
+        }
+
+        .save-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #218838;
+        }
+
+        .signature-status {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .signature-status.saved {
+            color: #28a745;
+            font-weight: bold;
+        }
+        </style>
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
@@ -486,6 +554,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-save.js"></script>
     <script src="js/t&i-pdf-generator.js"></script>
+    <script src="js/touch-signature.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('/tool/service-worker.js', {
