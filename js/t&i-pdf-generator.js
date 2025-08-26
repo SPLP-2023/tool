@@ -329,10 +329,6 @@ function generatePDF() {
         pdf.text('No faults identified during inspection.', 105, yPosition, { align: 'center' });
     }
 
-    // Get recommendations
-    const recommendations = getRecommendationsForPDF();
-    const hasRecommendations = recommendations.length > 0;
-    
     // If we have recommendations, add them after failures
     if (hasRecommendations) {
         // Ensure proper spacing after failures
