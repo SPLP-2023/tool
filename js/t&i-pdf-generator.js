@@ -377,7 +377,7 @@ if (siteStaffSignature) {
                 if (failureColumn === 'left') {
                     // Switch to right column
                     failureColumn = 'right';
-                    recommendationY = rightColumnY;
+                    recommendationY = rightColumnY + 15;
                 } else {
                     // Need new page
                     pdf.addPage();
