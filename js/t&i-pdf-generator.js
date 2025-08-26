@@ -163,44 +163,46 @@ function generatePDF() {
     const leftX = 40;
     const rightX = 110;
 
-    // Left column
-    pdf.setFontSize(11);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Engineer Name:', leftX, detailsY);
-    pdf.setFont(undefined, 'normal');
-    pdf.text(engineerName || 'N/A', leftX, detailsY + 7);
+    // Adjusted spacing values
+const sectionGap = 14;
+const valueGap = 7;
 
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Test Kit Ref:', leftX, detailsY + 20);
-    pdf.setFont(undefined, 'normal');
-    pdf.text(testKitRef || 'N/A', leftX, detailsY + 27);
+// LEFT COLUMN
+let leftY = detailsY;
+pdf.setFontSize(11);
+pdf.setFont(undefined, 'bold');
+pdf.text('Engineer Name:', leftX, leftY);
+pdf.setFont(undefined, 'normal');
+pdf.text(engineerName || 'N/A', leftX, leftY + valueGap);
 
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Date:', leftX, detailsY + 40);
-    pdf.setFont(undefined, 'normal');
-    pdf.text(testDate || 'N/A', leftX, detailsY + 47);
+leftY += sectionGap;
+pdf.setFont(undefined, 'bold');
+pdf.text('Test Kit Ref:', leftX, leftY);
+pdf.setFont(undefined, 'normal');
+pdf.text(testKitRef || 'N/A', leftX, leftY + valueGap);
 
-    // Right column
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Site Staff Name:', rightX, detailsY);
-    pdf.setFont(undefined, 'normal');
-    pdf.text(siteStaffName || 'N/A', rightX, detailsY + 7);
+leftY += sectionGap;
+pdf.setFont(undefined, 'bold');
+pdf.text('Date:', leftX, leftY);
+pdf.setFont(undefined, 'normal');
+pdf.text(testDate || 'N/A', leftX, leftY + valueGap);
 
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Site Staff Signature:', rightX, detailsY + 20);
-    if (siteStaffSignature) {
-        // Add signature image
-        try {
-            pdf.addImage(siteStaffSignature, 'PNG', rightX, detailsY + 27, 60, 20);
-        } catch (error) {
-            console.error('Error adding signature:', error);
-            pdf.setFont(undefined, 'italic');
-            pdf.text('Signature on file', rightX, detailsY + 35);
-        }
-    } else {
-        pdf.setFont(undefined, 'italic');
-        pdf.text('Not signed', rightX, detailsY + 35);
-    }
+// RIGHT COLUMN
+let rightY = detailsY;
+pdf.setFont(undefined, 'bold');
+pdf.text('Site Staff Name:', rightX, rightY);
+pdf.setFont(undefined, 'normal');
+pdf.text(siteStaffName || 'N/A', rightX, rightY + valueGap);
+
+rightY += sectionGap;
+pdf.setFont(undefined, 'bold');
+pdf.text('Site Staff Signature:', rightX, rightY);
+if (siteStaffSignature) {
+    pdf.addImage(siteStaffSignature, 'PNG', rightX, rightY + valueGap, 60, 20);
+} else {
+    pdf.setFont(undefined, 'italic');
+    pdf.text('Not signed', rightX, rightY + valueGap + 1);
+}
     
     // ==================== INSPECTION SUMMARY SECTION ====================
     yPosition = startNewSection(pdf, 'INSPECTION SUMMARY', footer);
