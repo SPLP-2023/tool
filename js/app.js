@@ -1,5 +1,6 @@
 // Global variables
 let selectedFailuresList = [];
+let getRecommendationsForPDF = [];
 let earthResistances = [];
 let earthTableData = [];
 let uploadedImages = {};
@@ -658,6 +659,7 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
 
 
 
