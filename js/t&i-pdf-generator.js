@@ -204,6 +204,12 @@ function generatePDF() {
     
     // ==================== INSPECTION SUMMARY SECTION ====================
     yPosition = startNewSection(pdf, 'INSPECTION SUMMARY', footer);
+
+    // Get recommendations early (needed for PASS/FAIL header)
+    const recommendations = typeof getRecommendationsForPDF === 'function'
+  ? getRecommendationsForPDF()
+  : [];
+    const hasRecommendations = Array.isArray(recommendations) && recommendations.length > 0;
     
     // Result status spanning both columns
     const hasFaults = selectedFailuresList.length > 0;
