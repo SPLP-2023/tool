@@ -119,37 +119,88 @@ function generatePDF() {
     
 
     // ==================== COVER PAGE ====================
+    // Get new fields
+    const jobReference = document.getElementById('jobReference')?.value || '';
+    const siteStaffName = document.getElementById('siteStaffName')?.value || '';
+    const siteStaffSignature = window.siteStaffSignature?.signatureData || null;
+
     // Company logo centered at top
     const logoHeight = addImageToPDF(pdf, COMPANY_LOGO_URL, 30, 20, 150, 60, true);
     yPosition = 20 + logoHeight + 10;
-    
+
     pdf.setFontSize(24);
     pdf.setFont(undefined, 'bold');
     pdf.text('Lightning Protection System Report', 105, yPosition, { align: 'center' });
-    yPosition += 30;
-    
+    yPosition += 25;
+
+    // Building image - properly centered
     if (uploadedImages['buildingImagePreview_data']) {
-        const imageHeight = addImageToPDF(pdf, uploadedImages['buildingImagePreview_data'], 30, yPosition, 150, 100);
-        yPosition += imageHeight + 20;
+        const imageHeight = addImageToPDF(pdf, uploadedImages['buildingImagePreview_data'], 30, yPosition, 150, 80, true);
+        yPosition += imageHeight + 10;
     }
-    
-    pdf.setFontSize(14);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Site Details:', 105, yPosition, { align: 'center' });
-    yPosition += 20;
-    
+
+    // Job Reference (if building name/reference exists)
+    if (jobReference) {
+        pdf.setFontSize(14);
+        pdf.setFont(undefined, 'bold');
+        pdf.text(jobReference, 105, yPosition, { align: 'center' });
+        yPosition += 10;
+    }
+
+    // Site Address
     pdf.setFontSize(12);
     pdf.setFont(undefined, 'normal');
-    const details = [
-        'Site Address: ' + siteAddress,
-        'Date: ' + testDate,
-        'Engineer: ' + engineerName,
-        'Test Kit Reference: ' + testKitRef
-    ];
-    
-    details.forEach((detail, index) => {
-        pdf.text(detail, 105, yPosition + (index * 10), { align: 'center' });
-    });
+    if (siteAddress) {
+        const addressLines = pdf.splitTextToSize('Site Address: ' + siteAddress, 150);
+        addressLines.forEach((line, index) => {
+            pdf.text(line, 105, yPosition + (index * 6), { align: 'center' });
+        });
+        yPosition += (addressLines.length * 6) + 15;
+    }
+
+    // Two-column layout for details
+    const detailsY = yPosition;
+    const leftX = 40;
+    const rightX = 110;
+
+    // Left column
+    pdf.setFontSize(11);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Engineer Name:', leftX, detailsY);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(engineerName || 'N/A', leftX, detailsY + 7);
+
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Test Kit Ref:', leftX, detailsY + 20);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(testKitRef || 'N/A', leftX, detailsY + 27);
+
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Date:', leftX, detailsY + 40);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(testDate || 'N/A', leftX, detailsY + 47);
+
+    // Right column
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Site Staff Name:', rightX, detailsY);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(siteStaffName || 'N/A', rightX, detailsY + 7);
+
+    pdf.setFont(undefined, 'bold');
+    pdf.text('Site Staff Signature:', rightX, detailsY + 20);
+    if (siteStaffSignature) {
+        // Add signature image
+        try {
+            pdf.addImage(siteStaffSignature, 'PNG', rightX, detailsY + 27, 60, 20);
+        } catch (error) {
+            console.error('Error adding signature:', error);
+            pdf.setFont(undefined, 'italic');
+            pdf.text('Signature on file', rightX, detailsY + 35);
+        }
+    } else {
+        pdf.setFont(undefined, 'italic');
+        pdf.text('Not signed', rightX, detailsY + 35);
+    }
     
     // ==================== INSPECTION SUMMARY SECTION ====================
     yPosition = startNewSection(pdf, 'INSPECTION SUMMARY', footer);
@@ -164,6 +215,14 @@ function generatePDF() {
     } else {
         pdf.setTextColor(34, 139, 34);
         pdf.text('RESULT: PASS', 105, yPosition, { align: 'center' });
+        
+        // Add "with recommendations" if applicable
+        if (hasRecommendations) {
+            yPosition += 8;
+            pdf.setFontSize(11);
+            pdf.setFont(undefined, 'italic');
+            pdf.text('with recommendations', 105, yPosition, { align: 'center' });
+        }
     }
     pdf.setTextColor(0, 0, 0);
     yPosition += 15;
@@ -262,6 +321,100 @@ function generatePDF() {
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(12);
         pdf.text('No faults identified during inspection.', 105, yPosition, { align: 'center' });
+    }
+
+    // Get recommendations
+    const recommendations = getRecommendationsForPDF();
+    const hasRecommendations = recommendations.length > 0;
+    
+    // If we have recommendations, add them after failures
+    if (hasRecommendations) {
+        // Ensure proper spacing after failures
+        if (selectedFailuresList.length > 0) {
+            // Move to next available column or page
+            if (failureColumn === 'left') {
+                failureColumn = 'right';
+            } else {
+                // Check if we need a new page for recommendations
+                const spaceNeeded = 30 + (recommendations[0] ? 40 : 0);
+                if (Math.max(leftColumnY, rightColumnY) + spaceNeeded > pageBottom) {
+                    pdf.addPage();
+                    yPosition = addPageHeader(pdf, 'INSPECTION SUMMARY (CONTINUED)');
+                    addFooterToPage(pdf, footer);
+                    leftColumnY = yPosition;
+                    rightColumnY = yPosition;
+                    failureColumn = 'left';
+                }
+            }
+        }
+    
+        // Add recommendations header
+        let recommendationY = failureColumn === 'left' ? leftColumnY : rightColumnY;
+        const recommendationX = failureColumn === 'left' ? leftColumnX : rightColumnX;
+    
+        // Add spacing before recommendations
+        recommendationY += 15;
+    
+        pdf.setFontSize(11);
+        pdf.setFont(undefined, 'bold');
+        pdf.setTextColor(0, 100, 200); // Blue color for recommendations
+        pdf.text('RECOMMENDATIONS', recommendationX, recommendationY);
+        pdf.setTextColor(0, 0, 0);
+        recommendationY += 8;
+    
+        // Add each recommendation
+        recommendations.forEach((rec, index) => {
+            // Check space for this recommendation
+            const recLines = pdf.splitTextToSize(rec.text, columnWidth);
+            const estimatedHeight = 15 + (recLines.length * 4);
+            
+            // Check if we need to switch columns or pages
+            if (recommendationY + estimatedHeight > pageBottom) {
+                if (failureColumn === 'left') {
+                    // Switch to right column
+                    failureColumn = 'right';
+                    recommendationY = rightColumnY + 15;
+                } else {
+                    // Need new page
+                    pdf.addPage();
+                    yPosition = addPageHeader(pdf, 'INSPECTION SUMMARY (CONTINUED)');
+                    addFooterToPage(pdf, footer);
+                    leftColumnY = yPosition;
+                    rightColumnY = yPosition;
+                    failureColumn = 'left';
+                    recommendationY = yPosition;
+                }
+            }
+            
+            const currentX = failureColumn === 'left' ? leftColumnX : rightColumnX;
+            
+            // Add recommendation number and text
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'bold');
+            pdf.text(`Recommendation ${rec.number}:`, currentX, recommendationY);
+            recommendationY += 5;
+            
+            pdf.setFont(undefined, 'normal');
+            pdf.setFontSize(9);
+            pdf.text(recLines, currentX, recommendationY);
+            recommendationY += (recLines.length * 4) + 8;
+            
+            // Update column Y position
+            if (failureColumn === 'left') {
+                leftColumnY = recommendationY;
+            } else {
+                rightColumnY = recommendationY;
+            }
+            
+            // Switch columns for next recommendation if space allows
+            if (failureColumn === 'left' && rightColumnY + 30 < pageBottom) {
+                failureColumn = 'right';
+                recommendationY = rightColumnY;
+            } else if (failureColumn === 'right' && index < recommendations.length - 1) {
+                failureColumn = 'left';
+                recommendationY = leftColumnY;
+            }
+        });
     }
     
     // Add general comments if present
