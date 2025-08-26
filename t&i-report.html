@@ -148,6 +148,31 @@
                     <input type="text" id="testKitRef" placeholder="Enter test kit reference...">
                 </div>
             </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="jobReference">Job Reference:</label>
+                        <input type="text" id="jobReference" placeholder="Enter job reference...">
+                    </div>
+                    <div class="form-group">
+                        <label for="siteStaffName">Site Staff Name:</label>
+                        <input type="text" id="siteStaffName" placeholder="Enter site staff name...">
+                    </div>
+                </div>    
+
+                <!-- Site Staff Signature Section -->
+                <div class="form-group">
+                    <label for="siteStaffSignature">Site Staff Signature:</label>
+                    <div class="signature-container">
+                        <canvas id="siteStaffSignatureCanvas" width="300" height="120"></canvas>
+                        <div class="signature-controls">
+                            <button type="button" id="clearSiteStaffSignature" class="signature-btn clear-btn">Clear</button>
+                            <button type="button" id="saveSiteStaffSignature" class="signature-btn save-btn">Save</button>
+                        </div>
+                        <div id="siteStaffSignatureStatus" class="signature-status">Please sign above</div>
+                    </div>
+                </div>
+            
             <div class="form-group">
                 <label for="buildingImage">Building Image (Cover Page):</label>
                 <div class="image-upload" onclick="document.getElementById('buildingImageFile').click()">
@@ -179,6 +204,15 @@
         <div class="section">
             <h2>⚠ Selected Failures & Comments</h2>
             <div id="selectedFailures"></div>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="section">
+            <h2>Recommendations</h2>
+            <div class="recommendations-container">
+                <div id="recommendationsList"></div>
+                <button type="button" id="addRecommendation" class="add-btn">+ Add Recommendation</button>
+            </div>
         </div>
 
         <!-- General Comments Section -->
