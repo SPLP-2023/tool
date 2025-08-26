@@ -822,7 +822,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     
     // Generate filename
     const date = new Date().toISOString().split('T')[0];
-    const filename = 'Lightning Protection Inspection Report - ' + jobReference + date + '.pdf';
+    const filename = 'Lightning Protection Inspection Report - ' + jobReference + ' ' + date + '.pdf';
     
     // Save the PDF
     pdf.save(filename);
