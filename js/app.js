@@ -245,102 +245,6 @@ function handleFailureImage(index, input) {
     }
 }
 
-// ============================================
-// RECOMMENDATIONS FUNCTIONALITY
-// ============================================
-
-let recommendationCount = 0;
-const recommendationsData = {};
-
-function addRecommendation() {
-    recommendationCount++;
-    const recommendationId = `recommendation_${recommendationCount}`;
-    
-    const recommendationItem = document.createElement('div');
-    recommendationItem.className = 'recommendation-item';
-    recommendationItem.id = recommendationId;
-    
-    recommendationItem.innerHTML = `
-        <label for="${recommendationId}_text">Recommendation ${recommendationCount}:</label>
-        <textarea 
-            id="${recommendationId}_text" 
-            placeholder="Enter recommendation details..."
-            onchange="saveRecommendation('${recommendationId}', this.value)"
-        ></textarea>
-        <button type="button" class="remove-btn" onclick="removeRecommendation('${recommendationId}')">Remove</button>
-    `;
-    
-    document.getElementById('recommendationsList').appendChild(recommendationItem);
-    
-    // Initialize in data object
-    recommendationsData[recommendationId] = '';
-    
-    // Trigger auto-save
-    if (typeof saveFormData === 'function') {
-        saveFormData();
-    }
-}
-
-function removeRecommendation(recommendationId) {
-    const element = document.getElementById(recommendationId);
-    if (element) {
-        element.remove();
-        delete recommendationsData[recommendationId];
-        
-        // Renumber remaining recommendations
-        renumberRecommendations();
-        
-        // Trigger auto-save
-        if (typeof saveFormData === 'function') {
-            saveFormData();
-        }
-    }
-}
-
-function renumberRecommendations() {
-    const recommendations = document.querySelectorAll('.recommendation-item');
-    recommendationCount = 0;
-    
-    recommendations.forEach((item) => {
-        recommendationCount++;
-        const label = item.querySelector('label');
-        if (label) {
-            label.textContent = `Recommendation ${recommendationCount}:`;
-        }
-    });
-}
-
-function saveRecommendation(recommendationId, value) {
-    recommendationsData[recommendationId] = value;
-    
-    // Trigger auto-save
-    if (typeof saveFormData === 'function') {
-        saveFormData();
-    }
-}
-
-// Function to get all recommendations for PDF generation
-function getRecommendationsForPDF() {
-    const recommendations = [];
-    const items = document.querySelectorAll('.recommendation-item');
-    
-    items.forEach((item, index) => {
-        const textarea = item.querySelector('textarea');
-        if (textarea && textarea.value.trim()) {
-            recommendations.push({
-                number: index + 1,
-                text: textarea.value.trim()
-            });
-        }
-    });
-    
-    return recommendations;
-}
-
-// ============================================
-// END RECOMMENDATIONS FUNCTIONALITY
-// ============================================
-
 // Dropdown options for earth table
 const earthDropdownOptions = {
     testClamp: ['', 'Stainless', 'Bi-Metallic', 'G-Clamp', 'A-Clamp', 'Sq. Clamp', 'Oblong', 'B-Bond', 'Coffin Clamp', 'Other'],
@@ -658,6 +562,7 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
 
 
 
