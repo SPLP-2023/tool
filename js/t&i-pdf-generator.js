@@ -206,12 +206,6 @@ if (siteStaffSignature) {
     
     // ==================== INSPECTION SUMMARY SECTION ====================
     yPosition = startNewSection(pdf, 'INSPECTION SUMMARY', footer);
-
-    // Get recommendations early (needed for PASS/FAIL header)
-    const recommendations = typeof getRecommendationsForPDF === 'function'
-  ? getRecommendationsForPDF()
-  : [];
-    const hasRecommendations = Array.isArray(recommendations) && recommendations.length > 0;
     
     // Result status spanning both columns
     const hasFaults = selectedFailuresList.length > 0;
@@ -225,7 +219,7 @@ if (siteStaffSignature) {
         pdf.text('RESULT: PASS', 105, yPosition, { align: 'center' });
         
         // Add "with recommendations" if applicable
-        if (hasRecommendations) {
+        if (generalComments) {
             yPosition += 8;
             pdf.setFontSize(11);
             pdf.setFont(undefined, 'italic');
@@ -331,95 +325,6 @@ if (siteStaffSignature) {
         pdf.text('No faults identified during inspection.', 105, yPosition, { align: 'center' });
     }
 
-    // If we have recommendations, add them after failures
-    if (hasRecommendations) {
-        // Ensure proper spacing after failures
-        if (selectedFailuresList.length > 0) {
-            // Move to next available column or page
-            if (failureColumn === 'left') {
-                failureColumn = 'right';
-            } else {
-                // Check if we need a new page for recommendations
-                const spaceNeeded = 30 + (recommendations[0] ? 40 : 0);
-                if (Math.max(leftColumnY, rightColumnY) + spaceNeeded > pageBottom) {
-                    pdf.addPage();
-                    yPosition = addPageHeader(pdf, 'INSPECTION SUMMARY (CONTINUED)');
-                    addFooterToPage(pdf, footer);
-                    leftColumnY = yPosition;
-                    rightColumnY = yPosition;
-                    failureColumn = 'left';
-                }
-            }
-        }
-    
-        // Add recommendations header
-        let recommendationY = failureColumn === 'left' ? leftColumnY : rightColumnY;
-        const recommendationX = failureColumn === 'left' ? leftColumnX : rightColumnX;
-    
-        // Add spacing before recommendations
-        recommendationY += 15;
-    
-        pdf.setFontSize(11);
-        pdf.setFont(undefined, 'bold');
-        pdf.setTextColor(0, 100, 200); // Blue color for recommendations
-        pdf.text('RECOMMENDATIONS', recommendationX, recommendationY);
-        pdf.setTextColor(0, 0, 0);
-        recommendationY += 8;
-    
-        // Add each recommendation
-        recommendations.forEach((rec, index) => {
-            // Check space for this recommendation
-            const recLines = pdf.splitTextToSize(rec.text, columnWidth);
-            const estimatedHeight = 15 + (recLines.length * 4);
-            
-            // Check if we need to switch columns or pages
-            if (recommendationY + estimatedHeight > pageBottom) {
-                if (failureColumn === 'left') {
-                    // Switch to right column
-                    failureColumn = 'right';
-                    recommendationY = rightColumnY + 15;
-                } else {
-                    // Need new page
-                    pdf.addPage();
-                    yPosition = addPageHeader(pdf, 'INSPECTION SUMMARY (CONTINUED)');
-                    addFooterToPage(pdf, footer);
-                    leftColumnY = yPosition;
-                    rightColumnY = yPosition;
-                    failureColumn = 'left';
-                    recommendationY = yPosition;
-                }
-            }
-            
-            const currentX = failureColumn === 'left' ? leftColumnX : rightColumnX;
-            
-            // Add recommendation number and text
-            pdf.setFontSize(10);
-            pdf.setFont(undefined, 'bold');
-            pdf.text(`Recommendation ${rec.number}:`, currentX, recommendationY);
-            recommendationY += 5;
-            
-            pdf.setFont(undefined, 'normal');
-            pdf.setFontSize(9);
-            pdf.text(recLines, currentX, recommendationY);
-            recommendationY += (recLines.length * 4) + 8;
-            
-            // Update column Y position
-            if (failureColumn === 'left') {
-                leftColumnY = recommendationY;
-            } else {
-                rightColumnY = recommendationY;
-            }
-            
-            // Switch columns for next recommendation if space allows
-            if (failureColumn === 'left' && rightColumnY + 30 < pageBottom) {
-                failureColumn = 'right';
-                recommendationY = rightColumnY;
-            } else if (failureColumn === 'right' && index < recommendations.length - 1) {
-                failureColumn = 'left';
-                recommendationY = leftColumnY;
-            }
-        });
-    }
     
     // Add general comments if present
     if (generalComments) {
