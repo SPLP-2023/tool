@@ -75,7 +75,6 @@ function saveFormData() {
             jobReference: document.getElementById('jobReference')?.value || '',
             siteStaffName: document.getElementById('siteStaffName')?.value || '',
             siteStaffSignature: window.siteStaffSignature?.signatureData || null,
-            recommendations: (typeof recommendationsData !== 'undefined') ? recommendationsData : {},
             generalComments: document.getElementById('generalComments')?.value || '',
             finalComments: document.getElementById('finalComments')?.value || '',
             
@@ -138,23 +137,6 @@ function restoreFormData() {
             window.siteStaffSignature.updateStatus('Signature restored');
         }
 
-        // Restore recommendations
-        if (formData.recommendations && typeof formData.recommendations === 'object') {
-            Object.keys(formData.recommendations).forEach(key => {
-                if (typeof addRecommendation === 'function') {
-                    addRecommendation();
-                    const textarea = document.querySelector(`#${key}_text`);
-                    if (textarea) {
-                        textarea.value = formData.recommendations[key];
-                        if (typeof recommendationsData !== 'undefined') {
-                    recommendationsData[key] = formData.recommendations[key];
-                        }
-                    }
-                }
-            });
-        }
-        setFieldValue('generalComments', formData.generalComments);
-        setFieldValue('finalComments', formData.finalComments);
         
         // Restore structure details
         setFieldValue('structureHeight', formData.structureHeight);
@@ -283,9 +265,6 @@ function clearAllData() {
         if (window.systemDetails !== undefined) {
             window.systemDetails = {};
         }
-        if (window.recommendationsData !== undefined) {
-            window.recommendationsData = {};
-        }
         if (window.siteStaffSignature !== undefined) {
         window.siteStaffSignature.clear();
         }
@@ -312,13 +291,6 @@ function clearAllData() {
         if (selectedFailuresContainer) {
             selectedFailuresContainer.innerHTML = '';
         }
-
-        // Clear recommendations display
-        const recommendationsContainer = document.getElementById('recommendationsList');
-        if (recommendationsContainer) {
-            recommendationsContainer.innerHTML = '';
-        }
-        recommendationCount = 0;
         
         // Clear earth inputs
         const earthInputs = document.getElementById('earthInputs');
