@@ -326,7 +326,7 @@ if (siteStaffSignature) {
     }
 
     
-    // Add general comments if present
+    // Add general comments/recommendations if present
     if (generalComments) {
         const maxY = Math.max(leftColumnY, rightColumnY);
         if (maxY + 50 > pageBottom) {
@@ -337,6 +337,15 @@ if (siteStaffSignature) {
             yPosition = maxY + 15;
         }
         
+        // Add recommendations header
+        pdf.setFontSize(11);
+        pdf.setFont(undefined, 'bold');
+        pdf.setTextColor(0, 100, 200); // Blue color for recommendations
+        pdf.text('RECOMMENDATIONS', leftColumnX, yPosition);
+        pdf.setTextColor(0, 0, 0);
+        yPosition += 8;
+        
+        // Add recommendations content
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(10);
         const commentLines = pdf.splitTextToSize(generalComments, 170);
