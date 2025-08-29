@@ -617,7 +617,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     
     // Function to complete page border
     function completePageBorder(startY, endY) {
-        pdf.setDrawColor(200, 200, 200);
+        pdf.setDrawColor(8, 119, 195);
         pdf.setLineWidth(0.5);
         // Top border
         pdf.line(leftMargin, startY, leftMargin + pageWidth, startY);
@@ -660,7 +660,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
         
         // Alternate row colors
         if (index % 2 === 0) {
-            pdf.setFillColor(248, 249, 250);
+            pdf.setFillColor(180, 210, 235);
             pdf.rect(leftMargin, yPosition, pageWidth, rowHeight, 'F');
         }
         
@@ -699,7 +699,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     
     // ==================== EARTH TEST IMAGES SECTION ====================
     if (uploadedImages['earthImagesPreview_data']) {
-        yPosition = startNewSection(pdf, 'EARTH TEST IMAGES', footer);
+        yPosition = startNewSection(pdf, 'INSPECTION IMAGES', footer);
         
         const images = Array.isArray(uploadedImages['earthImagesPreview_data']) ? 
             uploadedImages['earthImagesPreview_data'] : [uploadedImages['earthImagesPreview_data']];
@@ -719,7 +719,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
                 // Check if we need a new page
                 if (imagesOnCurrentPage >= maxImagesThisPage) {
                     pdf.addPage();
-                    yPosition = addPageHeader(pdf, 'EARTH TEST IMAGES (CONTINUED)');
+                    yPosition = addPageHeader(pdf, 'INSPECTION IMAGES (CONTINUED)');
                     addFooterToPage(pdf, footer);
                     imagesOnCurrentPage = 0;
                     isFirstImagePage = false;
