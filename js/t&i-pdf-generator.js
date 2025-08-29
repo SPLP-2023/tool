@@ -118,9 +118,6 @@ function generatePDF() {
     const surgeInstalled = document.getElementById('surgeInstalled')?.value || '';
     const surgeType = document.getElementById('surgeType')?.value || '';
     const surgeSafe = document.getElementById('surgeSafe')?.value || '';
-
-    // Initialize systemDetails from global variable
-    const systemDetails = window.systemDetails || {};
     
     let yPosition = 20;    
 
@@ -863,5 +860,3 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     // Save the PDF
     pdf.save(filename);
 }
-
-    window.generatePDF = generatePDF;
