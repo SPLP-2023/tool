@@ -116,7 +116,6 @@ function generatePDF() {
     const surgeSafe = document.getElementById('surgeSafe').value;
     
     let yPosition = 20;    
-}
 
     // ==================== COVER PAGE ====================
     // Get new fields
@@ -863,4 +862,4 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     pdf.save(filename);
 }
 
-window.generatePDF = generatePDF;
+    window.generatePDF = generatePDF;
