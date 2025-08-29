@@ -109,7 +109,6 @@ function generatePDF() {
     const structurePerimeter = document.getElementById('structurePerimeter').value;
     
     // Get system details dropdowns
-    const earthPits = document.getElementById('earthPits').value;
     const mainEquipotentialBond = document.getElementById('mainEquipotentialBond').value;
     const surgeInstalled = document.getElementById('surgeInstalled').value;
     const surgeType = document.getElementById('surgeType').value;
