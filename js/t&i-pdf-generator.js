@@ -115,8 +115,8 @@ function generatePDF() {
     const surgeType = document.getElementById('surgeType').value;
     const surgeSafe = document.getElementById('surgeSafe').value;
     
-    let yPosition = 20;
-    
+    let yPosition = 20;    
+}
 
     // ==================== COVER PAGE ====================
     // Get new fields
