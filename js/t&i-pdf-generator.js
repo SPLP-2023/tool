@@ -352,126 +352,241 @@ if (siteStaffSignature) {
         pdf.text(commentLines, leftColumnX, yPosition);
     }
     
-    // ==================== STRUCTURE AND SYSTEM DETAILS SECTION ====================
-    yPosition = startNewSection(pdf, 'STRUCTURE AND SYSTEM DETAILS', footer);
-    
-    leftColumnY = yPosition;
-    rightColumnY = yPosition;
-    
-    // Left Column - Structure Details
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('STRUCTURE DETAILS', leftColumnX, leftColumnY);
-    leftColumnY += 12;
-    
-    pdf.setFontSize(10);
-    pdf.setFont(undefined, 'normal');
-    
-    // Structure measurements
-    if (structureHeight) {
+        // ==================== STRUCTURE & SYSTEM DETAILS ====================
+        yPosition = startNewSection(pdf, 'Structure & System Details', footer);
+        
+        const leftColumnY_start = yPosition;
+        const rightColumnY_start = yPosition;
+        let leftColumnY = leftColumnY_start;
+        let rightColumnY = rightColumnY_start;
+        
+        // Left Column - Structure Details
+        pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
-        pdf.text('Structure Height:', leftColumnX, leftColumnY);
-        pdf.setFont(undefined, 'normal');
-        pdf.text(structureHeight + ' m', leftColumnX, leftColumnY + 5);
+        pdf.text('STRUCTURE DETAILS', leftColumnX, leftColumnY);
         leftColumnY += 12;
-    }
-    
-    if (structurePerimeter) {
-        pdf.setFont(undefined, 'bold');
-        pdf.text('Structure Perimeter:', leftColumnX, leftColumnY);
-        pdf.setFont(undefined, 'normal');
-        pdf.text(structurePerimeter + ' m', leftColumnX, leftColumnY + 5);
-        leftColumnY += 12;
-    }
-    
-    // Structure questions
-    const structureQuestions = [
-        { key: 'groundType', label: 'Ground Type' },
-        { key: 'wallType', label: 'Structure Wall Type' },
-        { key: 'roofType', label: 'Roof Type' },
-        { key: 'roofStructure', label: 'Roof Structure' }
-    ];
-    
-    structureQuestions.forEach(question => {
-        if (systemDetails[question.key] && systemDetails[question.key].length > 0) {
+        
+        pdf.setFontSize(10);
+        
+        // Structure Height
+        if (structureHeight) {
             pdf.setFont(undefined, 'bold');
-            pdf.text(question.label + ':', leftColumnX, leftColumnY);
+            pdf.text('Structure Height:', leftColumnX, leftColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(structureHeight + ' m', leftColumnX, leftColumnY + 5);
+            leftColumnY += 12;
+        }
+        
+        // Structure Perimeter
+        if (structurePerimeter) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Structure Perimeter:', leftColumnX, leftColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(structurePerimeter + ' m', leftColumnX, leftColumnY + 5);
+            leftColumnY += 12;
+        }
+        
+        // Ground Type
+        if (systemDetails.groundType && systemDetails.groundType.length > 0) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Ground Type:', leftColumnX, leftColumnY);
             leftColumnY += 5;
             pdf.setFont(undefined, 'normal');
-            
-            const answers = systemDetails[question.key].join(', ');
+            const answers = systemDetails.groundType.join(', ');
             const answerLines = pdf.splitTextToSize(answers, columnWidth);
             pdf.text(answerLines, leftColumnX, leftColumnY);
             leftColumnY += answerLines.length * 4 + 8;
         }
-    });
-    
-    // Right Column - System Details
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('SYSTEM DETAILS', rightColumnX, rightColumnY);
-    rightColumnY += 12;
-    
-    pdf.setFontSize(10);
-    pdf.setFont(undefined, 'normal');
-    
-    // System questions
-    const systemQuestions = [
-        { key: 'airTermination', label: 'Air-Termination Type' },
-        { key: 'atConductors', label: 'AT Conductors' },
-        { key: 'downConductorType', label: 'Down Conductor Type' },
-        { key: 'dcConductors', label: 'DC Conductors' }
-    ];
-    
-    systemQuestions.forEach(question => {
-        if (systemDetails[question.key] && systemDetails[question.key].length > 0) {
+        
+        // Boundary Type
+        if (systemDetails.boundaryType && systemDetails.boundaryType.length > 0) {
             pdf.setFont(undefined, 'bold');
-            pdf.text(question.label + ':', rightColumnX, rightColumnY);
+            pdf.text('Boundary Type:', leftColumnX, leftColumnY);
+            leftColumnY += 5;
+            pdf.setFont(undefined, 'normal');
+            const answers = systemDetails.boundaryType.join(', ');
+            const answerLines = pdf.splitTextToSize(answers, columnWidth);
+            pdf.text(answerLines, leftColumnX, leftColumnY);
+            leftColumnY += answerLines.length * 4 + 8;
+        }
+        
+        // Roof Type
+        if (systemDetails.roofType && systemDetails.roofType.length > 0) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Roof Type:', leftColumnX, leftColumnY);
+            leftColumnY += 5;
+            pdf.setFont(undefined, 'normal');
+            const answers = systemDetails.roofType.join(', ');
+            const answerLines = pdf.splitTextToSize(answers, columnWidth);
+            pdf.text(answerLines, leftColumnX, leftColumnY);
+            leftColumnY += answerLines.length * 4 + 8;
+        }
+        
+        // Roof Layout
+        if (systemDetails.roofLayout && systemDetails.roofLayout.length > 0) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Roof Layout:', leftColumnX, leftColumnY);
+            leftColumnY += 5;
+            pdf.setFont(undefined, 'normal');
+            const answers = systemDetails.roofLayout.join(', ');
+            const answerLines = pdf.splitTextToSize(answers, columnWidth);
+            pdf.text(answerLines, leftColumnX, leftColumnY);
+            leftColumnY += answerLines.length * 4 + 8;
+        }
+        
+        // Structure Use
+        const structureUse = document.getElementById('structureUse')?.value;
+        if (structureUse) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Structure Use:', leftColumnX, leftColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(structureUse, leftColumnX, leftColumnY + 5);
+            leftColumnY += 12;
+        }
+        
+        // Structure Maximum Occupancy
+        const structureOccupancy = document.getElementById('structureOccupancy')?.value;
+        if (structureOccupancy) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Max Occupancy:', leftColumnX, leftColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(structureOccupancy + ' people', leftColumnX, leftColumnY + 5);
+            leftColumnY += 12;
+        }
+        
+        // Age of Structure
+        const structureAge = document.getElementById('structureAge')?.value;
+        if (structureAge) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Age of Structure:', leftColumnX, leftColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(structureAge + ' years', leftColumnX, leftColumnY + 5);
+            leftColumnY += 12;
+        }
+        
+        // Previous Inspections
+        const previousInspections = document.getElementById('previousInspections')?.value;
+        if (previousInspections) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Previous Inspections:', leftColumnX, leftColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(previousInspections, leftColumnX, leftColumnY + 5);
+            leftColumnY += 12;
+        }
+        
+        // Right Column - System Details
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('SYSTEM DETAILS', rightColumnX, rightColumnY);
+        rightColumnY += 12;
+        
+        pdf.setFontSize(10);
+        
+        // Air Termination Network
+        if (systemDetails.airTermination && systemDetails.airTermination.length > 0) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Air Termination Network:', rightColumnX, rightColumnY);
             rightColumnY += 5;
             pdf.setFont(undefined, 'normal');
-            
-            const answers = systemDetails[question.key].join(', ');
+            const answers = systemDetails.airTermination.join(', ');
             const answerLines = pdf.splitTextToSize(answers, columnWidth);
             pdf.text(answerLines, rightColumnX, rightColumnY);
             rightColumnY += answerLines.length * 4 + 8;
         }
-    });
-    
-    // Add dropdown questions to right column
-    const dropdownQuestions = [
-        { id: 'earthPits', label: 'Earth Pits', value: earthPits },
-        { id: 'mainEquipotentialBond', label: 'Main Equipotential Bond', value: mainEquipotentialBond },
-        { id: 'surgeInstalled', label: 'Surge Protection Installed', value: surgeInstalled }
-    ];
-    
-    dropdownQuestions.forEach(question => {
-        if (question.value) {
+        
+        // Air Conductors & Fixings
+        if (systemDetails.airConductors && systemDetails.airConductors.length > 0) {
             pdf.setFont(undefined, 'bold');
-            pdf.text(question.label + ':', rightColumnX, rightColumnY);
+            pdf.text('AT Conductors & Fixings:', rightColumnX, rightColumnY);
+            rightColumnY += 5;
             pdf.setFont(undefined, 'normal');
-            pdf.text(question.value, rightColumnX, rightColumnY + 5);
+            const answers = systemDetails.airConductors.join(', ');
+            const answerLines = pdf.splitTextToSize(answers, columnWidth);
+            pdf.text(answerLines, rightColumnX, rightColumnY);
+            rightColumnY += answerLines.length * 4 + 8;
+        }
+        
+        // Down Conductor Network
+        if (systemDetails.downConductorNetwork && systemDetails.downConductorNetwork.length > 0) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Down Conductor Network:', rightColumnX, rightColumnY);
+            rightColumnY += 5;
+            pdf.setFont(undefined, 'normal');
+            const answers = systemDetails.downConductorNetwork.join(', ');
+            const answerLines = pdf.splitTextToSize(answers, columnWidth);
+            pdf.text(answerLines, rightColumnX, rightColumnY);
+            rightColumnY += answerLines.length * 4 + 8;
+        }
+        
+        // Down Conductors & Fixings
+        if (systemDetails.downConductors && systemDetails.downConductors.length > 0) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('DC Conductors & Fixings:', rightColumnX, rightColumnY);
+            rightColumnY += 5;
+            pdf.setFont(undefined, 'normal');
+            const answers = systemDetails.downConductors.join(', ');
+            const answerLines = pdf.splitTextToSize(answers, columnWidth);
+            pdf.text(answerLines, rightColumnX, rightColumnY);
+            rightColumnY += answerLines.length * 4 + 8;
+        }
+        
+        // Earth Termination Network
+        if (systemDetails.earthTermination && systemDetails.earthTermination.length > 0) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Earth Termination Network:', rightColumnX, rightColumnY);
+            rightColumnY += 5;
+            pdf.setFont(undefined, 'normal');
+            const answers = systemDetails.earthTermination.join(', ');
+            const answerLines = pdf.splitTextToSize(answers, columnWidth);
+            pdf.text(answerLines, rightColumnX, rightColumnY);
+            rightColumnY += answerLines.length * 4 + 8;
+        }
+        
+        // Earth Arrangement
+        const earthArrangement = document.getElementById('earthArrangement')?.value;
+        if (earthArrangement) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Earth Arrangement:', rightColumnX, rightColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(earthArrangement, rightColumnX, rightColumnY + 5);
             rightColumnY += 12;
         }
-    });
-    
-    // Surge Protection details
-    if (surgeInstalled === 'Yes') {
+        
+        // Main Equipotential Bond
+        if (mainEquipotentialBond) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Main Equipotential Bond:', rightColumnX, rightColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(mainEquipotentialBond, rightColumnX, rightColumnY + 5);
+            rightColumnY += 12;
+        }
+        
+        // Surge Protection Installation
+        if (surgeInstalled) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Surge Protection:', rightColumnX, rightColumnY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(surgeInstalled, rightColumnX, rightColumnY + 5);
+            rightColumnY += 12;
+        }
+        
+        // Surge Protection Type
         if (surgeType) {
             pdf.setFont(undefined, 'bold');
-            pdf.text('Surge Protection Type:', rightColumnX, rightColumnY);
+            pdf.text('SPD Type:', rightColumnX, rightColumnY);
             pdf.setFont(undefined, 'normal');
             pdf.text(surgeType, rightColumnX, rightColumnY + 5);
             rightColumnY += 12;
         }
         
+        // Surge Protection Status
         if (surgeSafe) {
             pdf.setFont(undefined, 'bold');
-            pdf.text('Surge Protection Status:', rightColumnX, rightColumnY);
+            pdf.text('SPD Status:', rightColumnX, rightColumnY);
             pdf.setFont(undefined, 'normal');
             pdf.text(surgeSafe, rightColumnX, rightColumnY + 5);
             rightColumnY += 12;
         }
-    }
     
     // ==================== EARTH RESISTANCE TESTING SECTION ====================
 yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
