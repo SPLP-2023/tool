@@ -124,6 +124,9 @@ function generatePDF() {
     const siteStaffName = document.getElementById('siteStaffName')?.value || '';
     const siteStaffSignature = window.siteStaffSignature?.signatureData || null;
 
+    // Initialize systemDetails from global variable
+    const systemDetails = window.systemDetails || {};
+
     // Company logo centered at top
     const logoHeight = addImageToPDF(pdf, COMPANY_LOGO_URL, 30, 20, 150, 60, true);
     yPosition = 20 + logoHeight + 10;
