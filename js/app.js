@@ -4,7 +4,7 @@ let earthResistances = [];
 let earthTableData = [];
 let uploadedImages = {};
 let systemDetails = {};
-
+window.systemDetails = systemDetails;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -562,6 +562,7 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+
 
 
 
