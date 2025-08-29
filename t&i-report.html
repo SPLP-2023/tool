@@ -665,7 +665,15 @@
         }
     </script>
     <script>
-            // Initialize site staff signature
+        // Initialize T&I Report specific components
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize recommendations button
+            const addBtn = document.getElementById('addRecommendation');
+            if (addBtn) {
+                addBtn.addEventListener('click', addRecommendation);
+            }    
+        
+        // Initialize site staff signature
             if (document.getElementById('siteStaffSignatureCanvas')) {
                 const siteStaffSignature = new TouchSignature(
                     'siteStaffSignatureCanvas',
