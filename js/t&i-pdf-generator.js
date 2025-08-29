@@ -106,6 +106,7 @@ function startNewSection(pdf, title, footer) {
 }
 
 function generatePDF() {
+        rebuildSystemDetailsFromDOM();
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
     
