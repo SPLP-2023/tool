@@ -162,50 +162,50 @@ function generatePDF() {
     }
 
     // Two-column layout for details
-    const detailsY = yPosition;
-    const leftX = 40;
-    const rightX = 110;
+        const detailsY = yPosition;
+        const leftX = 40;
+        const rightX = 110;
 
     // Adjusted spacing values
-const sectionGap = 14;
-const valueGap = 7;
-
-// LEFT COLUMN
-let leftY = detailsY;
-pdf.setFontSize(11);
-pdf.setFont(undefined, 'bold');
-pdf.text('Engineer Name:', leftX, leftY);
-pdf.setFont(undefined, 'normal');
-pdf.text(engineerName || 'N/A', leftX, leftY + valueGap);
-
-leftY += sectionGap;
-pdf.setFont(undefined, 'bold');
-pdf.text('Test Kit Ref:', leftX, leftY);
-pdf.setFont(undefined, 'normal');
-pdf.text(testKitRef || 'N/A', leftX, leftY + valueGap);
-
-leftY += sectionGap;
-pdf.setFont(undefined, 'bold');
-pdf.text('Date:', leftX, leftY);
-pdf.setFont(undefined, 'normal');
-pdf.text(testDate || 'N/A', leftX, leftY + valueGap);
-
-// RIGHT COLUMN
-let rightY = detailsY;
-pdf.setFont(undefined, 'bold');
-pdf.text('Site Staff Name:', rightX, rightY);
-pdf.setFont(undefined, 'normal');
-pdf.text(siteStaffName || 'N/A', rightX, rightY + valueGap);
-
-rightY += sectionGap;
-pdf.setFont(undefined, 'bold');
-pdf.text('Site Staff Signature:', rightX, rightY);
-if (siteStaffSignature) {
-    pdf.addImage(siteStaffSignature, 'PNG', rightX, rightY + valueGap, 60, 20);
-} else {
-    pdf.setFont(undefined, 'italic');
-    pdf.text('Not signed', rightX, rightY + valueGap + 1);
-}
+        const sectionGap = 14;
+        const valueGap = 7;
+        
+        // LEFT COLUMN
+        let leftY = detailsY;
+        pdf.setFontSize(11);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Engineer Name:', leftX, leftY);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(engineerName || 'N/A', leftX, leftY + valueGap);
+        
+        leftY += sectionGap;
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Test Kit Ref:', leftX, leftY);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(testKitRef || 'N/A', leftX, leftY + valueGap);
+        
+        leftY += sectionGap;
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Date:', leftX, leftY);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(testDate || 'N/A', leftX, leftY + valueGap);
+        
+        // RIGHT COLUMN
+        let rightY = detailsY;
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Site Staff Name:', rightX, rightY);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(siteStaffName || 'N/A', rightX, rightY + valueGap);
+        
+        rightY += sectionGap;
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Site Staff Signature:', rightX, rightY);
+        if (siteStaffSignature) {
+            pdf.addImage(siteStaffSignature, 'PNG', rightX, rightY + valueGap, 60, 20);
+        } else {
+            pdf.setFont(undefined, 'italic');
+            pdf.text('Not signed', rightX, rightY + valueGap + 1);
+        }
     
     // ==================== INSPECTION SUMMARY SECTION ====================
     yPosition = startNewSection(pdf, 'INSPECTION SUMMARY', footer);
@@ -862,3 +862,5 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     // Save the PDF
     pdf.save(filename);
 }
+
+window.generatePDF = generatePDF;
