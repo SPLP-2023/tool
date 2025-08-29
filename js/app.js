@@ -563,6 +563,27 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+function rebuildSystemDetailsFromDOM() {
+  const categories = [
+    'groundType', 'boundaryType', 'roofType', 'roofLayout',
+    'airTermination', 'airConductors', 'downConductorNetwork',
+    'downConductors', 'earthTermination'
+  ];
+
+  const rebuilt = {};
+
+  categories.forEach(cat => {
+    const selected = document.querySelectorAll(`#${cat}List .selected`);
+    rebuilt[cat] = Array.from(selected).map(el => el.textContent.trim());
+
+    const otherInput = document.getElementById(cat + 'Other');
+    if (otherInput && !otherInput.classList.contains('hidden') && otherInput.value.trim()) {
+      rebuilt[cat].push('Other: ' + otherInput.value.trim());
+    }
+  });
+
+  window.systemDetails = rebuilt;
+}
 
 
 
