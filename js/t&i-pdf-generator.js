@@ -4,10 +4,32 @@
 // Replaces: pdf-generator.js + pdf-generator-shared.js for T&I reports only
 // =============================================================================
 
-// Company logo URL (hosted on GitHub)
-const COMPANY_LOGO_URL = "./assets/Color logo - no background (px reduction).png";
-const FOOTER_IMAGE_URL = "./assets/es12.png";
-const HEADER_IMAGE_URL = "./assets/SP Bolt 400x400.png";
+        // Company logo URL (hosted on GitHub)
+        const COMPANY_LOGO_URL = "./assets/Color logo - no background (px reduction).png";
+        const FOOTER_IMAGE_URL = "./assets/es12.png";
+        const HEADER_IMAGE_URL = "./assets/SP Bolt 400x400.png";
+        
+        // Ensure systemDetails is populated before PDF generation
+        if (!window.systemDetails || Object.keys(window.systemDetails).length === 0) {
+          const categories = [
+            'groundType', 'boundaryType', 'roofType', 'roofLayout',
+            'airTermination', 'airConductors', 'downConductorNetwork',
+            'downConductors', 'earthTermination'
+          ];
+        
+          window.systemDetails = {};
+        
+          categories.forEach(cat => {
+            const selected = document.querySelectorAll(`#${cat}List .selected`);
+            window.systemDetails[cat] = Array.from(selected).map(el => el.textContent.trim());
+        
+            // Handle "Other" input if visible
+            const otherInput = document.getElementById(cat + 'Other');
+            if (otherInput && !otherInput.classList.contains('hidden') && otherInput.value.trim()) {
+              window.systemDetails[cat].push('Other: ' + otherInput.value.trim());
+            }
+          });
+        }
 
 // PDF Generation Functions with Two-Column Layout
 function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
