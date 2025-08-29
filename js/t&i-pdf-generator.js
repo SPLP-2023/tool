@@ -105,28 +105,22 @@ function generatePDF() {
     const finalComments = document.getElementById('finalComments').value;
     
     // Get structure details
-    const structureUse = document.getElementById('structureUse')?.value;
-    const structureOccupancy = document.getElementById('structureOccupancy')?.value;
-    const structureAge = document.getElementById('structureAge')?.value;
-    const previousInspections = document.getElementById('previousInspections')?.value;
-    const roofTypeList = document.getElementById('roofTypeList')?.value;
-    const roofFixingsList = document.getElementById('roofFixingsList')?.value;
-    const roofConditionList = document.getElementById('roofConditionList')?.value;
-    const roofBondingList = document.getElementById('roofBondingList')?.value;
-    const structuralBondingList = document.getElementById('structuralBondingList')?.value;
-    const bondingConditionList = document.getElementById('bondingConditionList')?.value;
+    const structureHeight = document.getElementById('structureHeight').value;
+    const structurePerimeter = document.getElementById('structurePerimeter').value;
+    const structureUse = document.getElementById('structureUse')?.value || '';
+    const structureOccupancy = document.getElementById('structureOccupancy')?.value || '';
+    const structureAge = document.getElementById('structureAge')?.value || '';
+    const previousInspections = document.getElementById('previousInspections')?.value || '';
     
     // Get system details dropdowns
-    const earthArrangement = document.getElementById('earthArrangement')?.value;
-    const earthTerminationList = document.getElementById('earthTerminationList')?.value;
-    const earthElectrodeList = document.getElementById('earthElectrodeList')?.value;
-    const earthConditionList = document.getElementById('earthConditionList')?.value;
-    const downConductorsList = document.getElementById('downConductorsList')?.value;
-    const conductorFixingsList = document.getElementById('conductorFixingsList')?.value;
-    const conductorConditionList = document.getElementById('conductorConditionList')?.value;
-    const mainEquipotentialBond = document.getElementById('mainEquipotentialBond')?.value;
-    const surgeInstalled = document.getElementById('surgeInstalled')?.value;
-    const surgeType = document.getElementById('surgeType')?.value;
+    const earthArrangement = document.getElementById('earthArrangement')?.value || '';
+    const mainEquipotentialBond = document.getElementById('mainEquipotentialBond')?.value || '';
+    const surgeInstalled = document.getElementById('surgeInstalled')?.value || '';
+    const surgeType = document.getElementById('surgeType')?.value || '';
+    const surgeSafe = document.getElementById('surgeSafe')?.value || '';
+
+    // Initialize systemDetails from global variable
+    const systemDetails = window.systemDetails || {};
     
     let yPosition = 20;    
 
