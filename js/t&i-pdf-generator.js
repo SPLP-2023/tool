@@ -450,7 +450,6 @@ function generatePDF() {
         }
         
         // Structure Use
-        const structureUse = document.getElementById('structureUse')?.value;
         if (structureUse) {
             pdf.setFont(undefined, 'bold');
             pdf.text('Structure Use:', leftColumnX, leftColumnY);
@@ -460,7 +459,6 @@ function generatePDF() {
         }
         
         // Structure Maximum Occupancy
-        const structureOccupancy = document.getElementById('structureOccupancy')?.value;
         if (structureOccupancy) {
             pdf.setFont(undefined, 'bold');
             pdf.text('Max Occupancy:', leftColumnX, leftColumnY);
@@ -470,7 +468,6 @@ function generatePDF() {
         }
         
         // Age of Structure
-        const structureAge = document.getElementById('structureAge')?.value;
         if (structureAge) {
             pdf.setFont(undefined, 'bold');
             pdf.text('Age of Structure:', leftColumnX, leftColumnY);
@@ -480,7 +477,6 @@ function generatePDF() {
         }
         
         // Previous Inspections
-        const previousInspections = document.getElementById('previousInspections')?.value;
         if (previousInspections) {
             pdf.setFont(undefined, 'bold');
             pdf.text('Previous Inspections:', leftColumnX, leftColumnY);
@@ -558,7 +554,6 @@ function generatePDF() {
         }
         
         // Earth Arrangement
-        const earthArrangement = document.getElementById('earthArrangement')?.value;
         if (earthArrangement) {
             pdf.setFont(undefined, 'bold');
             pdf.text('Earth Arrangement:', rightColumnX, rightColumnY);
@@ -604,37 +599,37 @@ function generatePDF() {
         }
     
     // ==================== EARTH RESISTANCE TESTING SECTION ====================
-yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
-
-const earthData = getEarthTableData();
-leftColumnY = yPosition;
-rightColumnY = yPosition;
-let earthTestColumn = 'left';
-
-if (earthData && earthData.earthData && earthData.earthData.length > 0) {
-    // Display overall resistance prominently at the top (like your original)
-    if (earthData.overallResistance > 0) {
-        pdf.setFontSize(12);
-        pdf.setFont(undefined, 'bold');
-        pdf.text('Overall System Resistance: ' + earthData.overallResistance.toFixed(3) + ' Ohms', 105, yPosition, { align: 'center' });
-        yPosition += 10;
+        yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
         
-        pdf.setFont(undefined, 'normal');
-        if (earthData.overallResistance <= 10) {
-            pdf.setTextColor(34, 139, 34);
-            pdf.text('Overall Below 10Ohms', 105, yPosition, { align: 'center' });
+        const earthData = getEarthTableData();
+        leftColumnY = yPosition;
+        rightColumnY = yPosition;
+        let earthTestColumn = 'left';
+
+        if (earthData && earthData.earthData && earthData.earthData.length > 0) {
+            // Display overall resistance prominently at the top (like your original)
+            if (earthData.overallResistance > 0) {
+                pdf.setFontSize(12);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Overall System Resistance: ' + earthData.overallResistance.toFixed(3) + ' Ohms', 105, yPosition, { align: 'center' });
+                yPosition += 10;
+                
+                pdf.setFont(undefined, 'normal');
+                if (earthData.overallResistance <= 10) {
+                    pdf.setTextColor(34, 139, 34);
+                    pdf.text('Overall Below 10Ohms', 105, yPosition, { align: 'center' });
+                } else {
+                    pdf.setTextColor(220, 20, 60);
+                    pdf.text('Overall Exceeds 10Ohms - Reduction Required', 105, yPosition, { align: 'center' });
+                }
+                pdf.setTextColor(0, 0, 0);
+                yPosition += 20;
+            }
+            
+            // Enhanced Earth Resistance Table
+            yPosition = renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBottom);
+            
         } else {
-            pdf.setTextColor(220, 20, 60);
-            pdf.text('Overall Exceeds 10Ohms - Reduction Required', 105, yPosition, { align: 'center' });
-        }
-        pdf.setTextColor(0, 0, 0);
-        yPosition += 20;
-    }
-    
-    // Enhanced Earth Resistance Table
-    yPosition = renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBottom);
-    
-} else {
     // Fallback to old system if new table data not available
     const numEarths = parseInt(document.getElementById('numEarths').value) || 0;
     
