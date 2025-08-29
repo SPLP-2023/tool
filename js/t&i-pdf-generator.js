@@ -360,8 +360,8 @@ function generatePDF() {
         
         const leftColumnY_start = yPosition;
         const rightColumnY_start = yPosition;
-        let leftColumnY = leftColumnY_start;
-        let rightColumnY = rightColumnY_start;
+        leftColumnY = leftColumnY_start;
+        rightColumnY = rightColumnY_start;
         
         // Left Column - Structure Details
         pdf.setFontSize(12);
