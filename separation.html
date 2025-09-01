@@ -30,7 +30,7 @@
             <!-- Item Considered Input -->
             <div class="input-group">
                 <label for="itemConsidered" class="input-label">Item Considered</label>
-                <input type="text" id="itemConsidered" placeholder="Enter item name (e.g. Gas meter, Water pipe, etc.)">
+                <input type="text" id="itemConsidered" placeholder="Enter item name (e.g. A/C unit, Handrail, etc.)">
             </div>
 
             <!-- Formula Display -->
@@ -87,7 +87,7 @@
 
             <div class="input-group">
                 <div class="label-container">
-                    <span class="bold-italic">I</span>
+                    <span class="bold-italic">l</span>
                     <span class="sub-label">Distance from bond location to the nearest earth</span>
                 </div>
                 <input type="number" id="i" step="any" placeholder="Enter distance in meters">
@@ -342,7 +342,7 @@
 
             // Generate recommendation text
             const recommendationDiv = document.getElementById('recommendation');
-            const recommendationText = `The "${itemConsidered}" has been calculated for separation distance. The item must be and remain at least ${sRounded}mm away from the lightning protection system to avoid flashover. If this is not possible a finial rod should be installed to provide an angle of protection. Should a finial rod not be possible to install, the item must be bonded to the lightning protection system and a type-1 SPD (Surge Protection Device) must be installed at the service line entry.`;
+            const recommendationText = `The item "${itemConsidered}" has been calculated for separation distance. The item must be and remain at least ${sRounded}mm away from the lightning protection system to avoid flashover. If this is not possible a finial rod should be installed to provide an angle of protection. Should a finial rod not be possible to install, the item must be bonded to the lightning protection system and a type-1 SPD (Surge Protection Device) must be installed at the service line entry.`;
             
             recommendationDiv.textContent = recommendationText;
             recommendationDiv.style.display = 'block';
