@@ -475,6 +475,10 @@ function updateSelectedRecommendations() {
                     <input type="checkbox" id="recommendationCompleted${index}" onchange="updateRecommendationCompletion(${index}, this.checked)" ${completedClass}>
                     <h4 style="margin: 0 0 0 10px;">${item.recommendation}${customLabel}</h4>
                 </div>
+                <div class="form-group">
+                    <label>Repair Comments:</label>
+                    <textarea onchange="updateRecommendationComment(${index}, this.value)" placeholder="Add details about this recommendation...">${item.comment || ''}</textarea>
+                </div>
             </div>
         `;
     });
