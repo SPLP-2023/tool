@@ -725,7 +725,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
     const rowsPerPage = 18;
     
     // Column widths
-    const columnWidths = [15, 18, 22, 18, 22, 22, 22, 31];
+    const columnWidths = [10, 18, 22, 18, 22, 22, 22, 36];
     const headers = ['E', 'Ohms', 'Test Clamp', 'Pit', 'Test Type', 'Ground Type', 'Earth Type', 'Comment'];
     
     let rowsOnCurrentPage = 0;
@@ -807,7 +807,7 @@ function renderEarthResistanceTable(pdf, earthData, yPosition, footer, pageBotto
         let currentX = leftMargin;
         const rowData = [
             `E${earth.earthNumber}`,
-            earth.resistance > 0 ? `${earth.resistance.toFixed(2)}Ω` : '-',
+            earth.resistance > 0 ? `${earth.resistance.toFixed(2)}` : '-',
             earth.testClamp || '-',
             earth.pitType || '-',
             earth.testType || '-',
