@@ -1,11 +1,10 @@
 // Remedial Report JavaScript Functions
 // File: js/remedial-report.js
 
-// Global variables for remedial report
-let selectedFailuresList = [];
+// Global variables for remedial report (only declare what's not in app.js)
 let selectedRecommendationsList = [];
-let uploadedImages = {};
 let tiReportData = null;
+let remedialSelectedFailuresList = []; // Separate list for remedial failures
 
 // Initialize the remedial report
 document.addEventListener('DOMContentLoaded', function() {
@@ -326,8 +325,96 @@ function handleFailureImage(index, input) {
     }
 }
 
-// Select recommendation
-function selectRecommendation(recommendation, element) {
+// Update selected failures display
+function updateSelectedFailures() {
+    const container = document.getElementById('selectedFailures');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    selectedFailuresList.forEach((item, index) => {
+        const failureDiv = document.createElement('div');
+        failureDiv.className = 'failure-item';
+        
+        const completedClass = item.completed ? 'checked' : '';
+        const importedLabel = item.imported ? ' (Imported from T&I)' : '';
+        
+        failureDiv.innerHTML = `
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <input type="checkbox" id="failureCompleted${index}" onchange="updateFailureCompletion(${index}, this.checked)" ${completedClass}>
+                <h4 style="margin: 0 0 0 10px;">${item.failure}${importedLabel}</h4>
+            </div>
+            <div class="failure-reference">${item.reference}</div>
+            <div class="minimum-requirement">
+                <strong>Requirement:</strong> ${item.requirement}
+            </div>
+            <div class="form-group">
+                <label>Repair Comments:</label>
+                <textarea onchange="updateFailureComment(${index}, this.value)" placeholder="Add details about repair work completed...">${item.comment}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Image:</label>
+                <div class="image-upload" onclick="document.getElementById('failureImage${index}').click()">
+                    <input type="file" id="failureImage${index}" accept="image/*" class="hidden-file-input" aria-label="Upload repair image" onchange="handleFailureImage(${index}, this)">
+                    <div id="failureImagePreview${index}">${item.image ? 'Image uploaded' : 'Click to upload repair image'}</div>
+                </div>
+            </div>
+        `;
+        container.appendChild(failureDiv);
+    });
+}
+
+// Update failure completion status
+function updateFailureCompletion(index, completed) {
+    if (selectedFailuresList[index]) {
+        selectedFailuresList[index].completed = completed;
+    }
+}
+
+// Update failure comment
+function updateFailureComment(index, comment) {
+    if (selectedFailuresList[index]) {
+        selectedFailuresList[index].comment = comment;
+    }
+}
+
+// Handle failure image upload
+function handleFailureImage(index, input) {
+    if (input.files[0]) {
+        const file = input.files[0];
+        const preview = document.getElementById(`failureImagePreview${index}`);
+        
+        if (preview) {
+            preview.textContent = 'Processing image...';
+        }
+        
+        fixImageOrientation(file).then(correctedImageData => {
+            if (selectedFailuresList[index]) {
+                selectedFailuresList[index].image = file;
+                selectedFailuresList[index].imageData = correctedImageData;
+            }
+            if (preview) {
+                preview.textContent = 'Image uploaded';
+            }
+        }).catch(error => {
+            console.error('Error processing failure image:', error);
+            // Fallback
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (selectedFailuresList[index]) {
+                    selectedFailuresList[index].imageData = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+            if (selectedFailuresList[index]) {
+                selectedFailuresList[index].image = file;
+            }
+            if (preview) {
+                preview.textContent = 'Image uploaded';
+            }
+        });
+    }
+}
     if (element.classList.contains('selected')) {
         element.classList.remove('selected');
         selectedRecommendationsList = selectedRecommendationsList.filter(r => r.recommendation !== recommendation);
