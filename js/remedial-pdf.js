@@ -108,8 +108,8 @@ function generateRemedialPDF() {
     if (remedialData.selectedFailures.length > 0) {
         pdf.setFontSize(14);
         pdf.setFont(undefined, 'bold');
-        pdf.setTextColor(220, 20, 60); // Red for failures
-        pdf.text('FAILURES REPAIRED', leftColumnX, yPosition);
+        pdf.setTextColor(8, 119, 225); // Strike Point Blue
+        pdf.text('REQUIRED REMEDIAL WORKS COMPLETED', leftColumnX, yPosition);
         pdf.setTextColor(0, 0, 0);
         yPosition += 15;
         
@@ -133,15 +133,15 @@ function generateRemedialPDF() {
             yPosition += titleLines.length * 4 + 3;
             
             pdf.setFont(undefined, 'italic');
-            pdf.setFontSize(8);
+            pdf.setFontSize(12);
             const refLines = pdf.splitTextToSize('Ref: ' + failure.reference, 170);
             pdf.text(refLines, leftColumnX, yPosition);
             yPosition += refLines.length * 3 + 3;
             
             // Requirement
             pdf.setFont(undefined, 'bold');
-            pdf.setFontSize(8);
-            pdf.setTextColor(40, 167, 69);
+            pdf.setFontSize(12);
+            pdf.setTextColor(0, 0, 0);
             const reqLines = pdf.splitTextToSize('Requirement: ' + failure.requirement, 170);
             pdf.text(reqLines, leftColumnX, yPosition);
             yPosition += reqLines.length * 3 + 5;
@@ -150,8 +150,8 @@ function generateRemedialPDF() {
             // Repair comment
             if (failure.comment) {
                 pdf.setFont(undefined, 'normal');
-                pdf.setFontSize(9);
-                pdf.setTextColor(0, 100, 200);
+                pdf.setFontSize(10);
+                pdf.setTextColor(0, 0, 0);
                 const commentLines = pdf.splitTextToSize('Repair Details: ' + failure.comment, 170);
                 pdf.text(commentLines, leftColumnX, yPosition);
                 yPosition += commentLines.length * 4 + 5;
@@ -185,8 +185,8 @@ function generateRemedialPDF() {
         
         pdf.setFontSize(14);
         pdf.setFont(undefined, 'bold');
-        pdf.setTextColor(0, 100, 200); // Blue for recommendations
-        pdf.text('RECOMMENDATIONS COMPLETED', leftColumnX, yPosition);
+        pdf.setTextColor(0, 0, 0); 
+        pdf.text('RECOMMENDED REMEDIAL WORKS COMPLETED', leftColumnX, yPosition);
         pdf.setTextColor(0, 0, 0);
         yPosition += 15;
         
@@ -211,7 +211,7 @@ function generateRemedialPDF() {
             // Custom label if applicable
             if (recommendation.custom) {
                 pdf.setFont(undefined, 'italic');
-                pdf.setFontSize(7);
+                pdf.setFontSize(10);
                 pdf.setTextColor(100, 100, 100);
                 pdf.text('(Custom recommendation)', leftColumnX, yPosition);
                 yPosition += 8;
@@ -236,7 +236,7 @@ function generateRemedialPDF() {
         pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
         pdf.setTextColor(230, 126, 34); // Orange for additional work
-        pdf.text('ADDITIONAL REPAIRS PERFORMED', leftColumnX, yPosition);
+        pdf.text('ADDITIONAL WORKS REQUIRED', leftColumnX, yPosition);
         pdf.setTextColor(0, 0, 0);
         yPosition += 15;
         
@@ -267,9 +267,9 @@ function generateRemedialPDF() {
             addFooterToPage(pdf, footer);
         }
         
-        pdf.setFontSize(12);
+        pdf.setFontSize(14);
         pdf.setFont(undefined, 'bold');
-        pdf.setTextColor(46, 125, 50); // Green for completion
+        pdf.setTextColor(0, 0, 0); 
         pdf.text('COMPLETION NOTES', leftColumnX, yPosition);
         pdf.setTextColor(0, 0, 0);
         yPosition += 15;
