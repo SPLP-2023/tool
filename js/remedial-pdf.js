@@ -125,15 +125,15 @@ function generateRemedialPDF() {
             // Completion checkbox - show as checked or unchecked
             const checkboxSymbol = failure.completed ? '☑' : '☐';
             
-            pdf.setFontSize(10);
-            pdf.setFont(undefined, 'bold');
+            pdf.setFontSize(12);
+            pdf.setFont(helvetica, 'bold');
             const failureTitle = `${checkboxSymbol} ${index + 1}. ${failure.failure}`;
             const titleLines = pdf.splitTextToSize(failureTitle, 170);
             pdf.text(titleLines, leftColumnX, yPosition);
             yPosition += titleLines.length * 4 + 3;
             
             pdf.setFont(undefined, 'italic');
-            pdf.setFontSize(12);
+            pdf.setFontSize(10);
             const refLines = pdf.splitTextToSize('Ref: ' + failure.reference, 170);
             pdf.text(refLines, leftColumnX, yPosition);
             yPosition += refLines.length * 3 + 3;
