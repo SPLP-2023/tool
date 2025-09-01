@@ -24,7 +24,7 @@ const urlsToCache = [
   '/tool/js/exif.js',
   '/tool/remedial-report.html',
   '/tool/js/remedial-report.js',
-  '/tool/js/remedial-pdf.js'
+  '/tool/js/remedial-pdf.js',
   '/tool/icons/icon-192x192.png',
   '/tool/icons/icon-512x512.png'
 ];
