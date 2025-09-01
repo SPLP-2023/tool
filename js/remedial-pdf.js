@@ -123,7 +123,7 @@ function generateRemedialPDF() {
             }
             
             // Completion checkbox - show as checked or unchecked
-            const checkboxSymbol = failure.completed ? '☑' : '☐';
+            const checkboxSymbol = failure.completed ? '\u2611' : '\u2610';
             
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
@@ -199,7 +199,7 @@ function generateRemedialPDF() {
             }
             
             // Completion checkbox
-            const checkboxSymbol = recommendation.completed ? '☑' : '☐';
+            const checkboxSymbol = recommendation.completed ? '\u2611' : '\u2610';
             
             pdf.setFontSize(10);
             pdf.setFont(undefined, 'normal');
