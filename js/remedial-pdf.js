@@ -224,7 +224,7 @@ yPosition += 10;
     }
     
     yPosition += 10;
-}
+
     
     // Additional Repairs Section
     if (remedialData.additionalRepairs) {
