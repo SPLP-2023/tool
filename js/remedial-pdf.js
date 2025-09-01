@@ -170,9 +170,6 @@ function generateRemedialPDF() {
             
             yPosition += 10;
         });
-        
-        yPosition += 10;
-    }
 
         // Add recommendations within the same section
     if (remedialData.selectedRecommendations.length > 0) {
