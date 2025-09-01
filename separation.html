@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Separation Distance Calculator - Strike Tools</title>
+    <link rel="manifest" href="/tool/manifest.json">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/tool/icons/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/tool/icons/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/tool/icons/apple-touch-icon-152x152.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="StrikeR">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="nav-header">
+            <button class="nav-button back-button" onclick="location.href='tools.html'">
+                ← Back
+            </button>
+            <h1 class="page-title">Separation Distance Calculator</h1>
+        </div>
+
+        <!-- Calculator Container -->
+        <div class="calculator-container">
+            
+            <!-- Item Considered Input -->
+            <div class="input-group">
+                <label for="itemConsidered" class="input-label">Item Considered</label>
+                <input type="text" id="itemConsidered" placeholder="Enter item name (e.g. Gas meter, Water pipe, etc.)">
+            </div>
+
+            <!-- Formula Display -->
+            <div class="formula-display">
+                <span class="bold-italic">S</span> = 
+                <span class="fraction">
+                    <span class="bold-italic">k<span class="subscript">I</span></span>
+                    <span class="line"></span>
+                    <span class="bold-italic">k<span class="subscript">M</span></span>
+                </span> × 
+                <span class="bold-italic">k<span class="subscript">C</span></span> × 
+                <span class="bold-italic">I</span>
+            </div>
+
+            <!-- Input Fields -->
+            <div class="input-group">
+                <div class="label-container">
+                    <span class="bold-italic">k<span class="subscript">I</span></span>
+                    <span class="sub-label">Class of LPS</span>
+                </div>
+                <select id="ki">
+                    <option value="" disabled selected>Class of LPS</option>
+                    <option value="0.08">I</option>
+                    <option value="0.06">II</option>
+                    <option value="0.04">III</option>
+                    <option value="0.04">IV</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <div class="label-container">
+                    <span class="bold-italic">k<span class="subscript">M</span></span>
+                    <span class="sub-label">Insulating Material</span>
+                </div>
+                <select id="km">
+                    <option value="" disabled selected>Insulating Material</option>
+                    <option value="1">Air</option>
+                    <option value="0.5">Brick</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <div class="label-container">
+                    <span class="bold-italic">k<span class="subscript">C</span></span>
+                    <span class="sub-label">№ of Down Conductors</span>
+                </div>
+                <select id="kc">
+                    <option value="" disabled selected>No. of Down Conductors</option>
+                    <option value="1">One</option>
+                    <option value="0.66">Two</option>
+                    <option value="0.44">Three or more</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <div class="label-container">
+                    <span class="bold-italic">I</span>
+                    <span class="sub-label">Distance from bond location to the nearest earth</span>
+                </div>
+                <input type="number" id="i" step="any" placeholder="Enter distance in meters">
+            </div>
+
+            <!-- Calculation Result -->
+            <div class="result" id="result"></div>
+            
+            <!-- Recommendation Text -->
+            <div class="recommendation" id="recommendation"></div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="calc-button primary" onclick="calculate()">Calculate</button>
+                <button class="calc-button secondary" onclick="copyDistance()" id="copyDistanceBtn" style="display:none">Copy Distance</button>
+                <button class="calc-button secondary" onclick="copyRecommendation()" id="copyRecommendationBtn" style="display:none">Copy Recommendation</button>
+                <button class="calc-button tertiary" onclick="resetForm()">New Calculation</button>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .calculator-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .label-container {
+            margin-bottom: 8px;
+        }
+
+        .bold-italic {
+            font-size: 1.4em;
+            font-weight: bold;
+            font-style: italic;
+            color: #2c3e50;
+        }
+
+        .subscript {
+            font-size: 0.7em;
+            display: inline-block;
+            vertical-align: -0.4em;
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        .sub-label {
+            display: block;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 2px;
+        }
+
+        .formula-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 25px 0;
+            border: 2px solid #ecf0f1;
+            font-size: 1.3em;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8em;
+            line-height: 1;
+            vertical-align: middle;
+            margin: 0 8px;
+        }
+
+        .line {
+            display: block;
+            border-top: 2px solid #2c3e50;
+            width: 80%;
+            height: 2px;
+            margin: -2px 0;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .result {
+            background: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 50px;
+            display: none;
+        }
+
+        .result-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8em;
+            color: #e67e22;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            background: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .calc-button {
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .calc-button.primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .calc-button.primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .calc-button.secondary {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .calc-button.secondary:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+        }
+
+        .calc-button.tertiary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .calc-button.tertiary:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .calc-button:active {
+            transform: translateY(1px);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .calculator-container {
+                margin: 0 10px;
+                padding: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .calc-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+
+    <script>
+        function calculate() {
+            const itemConsidered = document.getElementById('itemConsidered').value.trim();
+            const ki = parseFloat(document.getElementById('ki').value);
+            const km = parseFloat(document.getElementById('km').value);
+            const kc = parseFloat(document.getElementById('kc').value);
+            const i = parseFloat(document.getElementById('i').value);
+
+            // Validation
+            if (!itemConsidered) {
+                alert('Please enter the item being considered.');
+                return;
+            }
+
+            if (isNaN(ki) || isNaN(km) || isNaN(kc)) {
+                alert('Please select all dropdown values.');
+                return;
+            }
+
+            if (isNaN(i) || i <= 0) {
+                alert('Please enter a valid distance (I) greater than 0.');
+                return;
+            }
+
+            // Calculate separation distance
+            const s = (ki / km) * kc * i * 1000; // Convert to millimeters
+            const sRounded = Math.round(s);
+
+            // Display result
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `Separation Distance Required: <span class="result-number">${sRounded}</span>mm`;
+            resultDiv.style.display = 'block';
+
+            // Generate recommendation text
+            const recommendationDiv = document.getElementById('recommendation');
+            const recommendationText = `The "${itemConsidered}" has been calculated for separation distance. The item must be and remain at least ${sRounded}mm away from the lightning protection system to avoid flashover. If this is not possible a finial rod should be installed to provide an angle of protection. Should a finial rod not be possible to install, the item must be bonded to the lightning protection system and a type-1 SPD (Surge Protection Device) must be installed at the service line entry.`;
+            
+            recommendationDiv.textContent = recommendationText;
+            recommendationDiv.style.display = 'block';
+
+            // Show copy buttons
+            document.getElementById('copyDistanceBtn').style.display = 'inline-block';
+            document.getElementById('copyRecommendationBtn').style.display = 'inline-block';
+        }
+
+        function copyDistance() {
+            const resultText = document.getElementById('result').innerText;
+            const match = resultText.match(/\d+mm/);
+
+            if (match) {
+                navigator.clipboard.writeText(match[0]).then(() => {
+                    alert(`Copied: ${match[0]}`);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('Failed to copy. Please try again.');
+                });
+            } else {
+                alert('No valid result to copy.');
+            }
+        }
+
+        function copyRecommendation() {
+            const recommendationText = document.getElementById('recommendation').textContent;
+
+            if (recommendationText) {
+                navigator.clipboard.writeText(recommendationText).then(() => {
+                    alert('Recommendation text copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('Failed to copy. Please try again.');
+                });
+            } else {
+                alert('No recommendation to copy. Please calculate first.');
+            }
+        }
+
+        function resetForm() {
+            // Reset all form inputs
+            document.getElementById('itemConsidered').value = '';
+            document.getElementById('ki').selectedIndex = 0;
+            document.getElementById('km').selectedIndex = 0;
+            document.getElementById('kc').selectedIndex = 0;
+            document.getElementById('i').value = '';
+            
+            // Hide results and buttons
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('recommendation').style.display = 'none';
+            document.getElementById('copyDistanceBtn').style.display = 'none';
+            document.getElementById('copyRecommendationBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
