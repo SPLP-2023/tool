@@ -109,7 +109,7 @@ function generateRemedialPDF() {
         pdf.setFontSize(14);
         pdf.setFont(undefined, 'bold');
         pdf.setTextColor(8, 119, 225); // Strike Point Blue
-        pdf.text('REQUIRED REMEDIAL WORKS COMPLETED', leftColumnX, yPosition);
+        pdf.text('REMEDIAL WORKS', leftColumnX, yPosition);
         pdf.setTextColor(0, 0, 0);
         yPosition += 15;
         
@@ -123,14 +123,14 @@ function generateRemedialPDF() {
             }
             
             // Completion checkbox - show as checked or unchecked
-            const checkboxSymbol = failure.completed ? '\u2611' : '\u2610';
+            const checkboxSymbol = failure.completed ? '[X]' : '[ ]';
             
             pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
             const failureTitle = `${checkboxSymbol} ${index + 1}. ${failure.failure}`;
             const titleLines = pdf.splitTextToSize(failureTitle, 170);
             pdf.text(titleLines, leftColumnX, yPosition);
-            yPosition += titleLines.length * 4 + 3;
+            yPosition += titleLines.length * 5 + 3;
             
             pdf.setFont(undefined, 'italic');
             pdf.setFontSize(10);
@@ -199,7 +199,7 @@ function generateRemedialPDF() {
             }
             
             // Completion checkbox
-            const checkboxSymbol = recommendation.completed ? '\u2611' : '\u2610';
+            const checkboxSymbol = recommendation.completed ? '[X]' : '[ ]';
             
             pdf.setFontSize(10);
             pdf.setFont(undefined, 'normal');
