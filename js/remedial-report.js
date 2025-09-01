@@ -182,8 +182,9 @@ function populateFromTIData(data) {
         recommendations.forEach(rec => {
             if (rec.trim()) {
                 selectedRecommendationsList.push({
-                    recommendation: rec.trim(),
-                    completed: false
+                    recommendation: recommendation,
+                    completed: false,
+                    comment: ''
                 });
             }
         });
@@ -442,9 +443,10 @@ function addCustomRecommendation() {
     
     if (recommendation) {
         selectedRecommendationsList.push({
-            recommendation: recommendation,
+        recommendation: recommendation,
             completed: false,
-            custom: true
+            custom: true,
+            comment: ''
         });
         updateSelectedRecommendations();
         input.value = '';
@@ -478,6 +480,12 @@ function updateSelectedRecommendations() {
     });
     
     container.innerHTML = html;
+}
+
+    function updateRecommendationComment(index, comment) {
+        if (selectedRecommendationsList[index]) {
+            selectedRecommendationsList[index].comment = comment;
+        }
 }
 
 // Update recommendation completion status
