@@ -125,7 +125,6 @@ function generatePDF() {
     const testKitRef = document.getElementById('testKitRef').value;
     const standard = document.getElementById('standard').value;
     const generalComments = document.getElementById('generalComments').value;
-    const finalComments = document.getElementById('finalComments').value;
     
     // Get structure details
     const structureHeight = document.getElementById('structureHeight').value;
