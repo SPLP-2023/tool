@@ -224,7 +224,7 @@ function generateRemedialPDF() {
 }
     
 yPosition += 10;
-    }
+    
     
 
     
