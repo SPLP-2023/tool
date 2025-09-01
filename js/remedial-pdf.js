@@ -223,11 +223,6 @@ function generateRemedialPDF() {
     yPosition += 10;
 }
     
-yPosition += 10;
-    
-    
-
-    
     // Additional Repairs Section
     if (remedialData.additionalRepairs) {
         // Check if we need a new page
