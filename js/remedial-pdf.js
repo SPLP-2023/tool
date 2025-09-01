@@ -335,7 +335,7 @@ yPosition += 10;
     // Generate filename and save
     const filename = generateFilename(`Lightning_Protection_Remedial_Report_${remedialData.jobReference}`);
     pdf.save(filename);
-}
+
 
 // Helper function to format dates
 function formatDate(dateString) {
