@@ -415,6 +415,8 @@ function handleFailureImage(index, input) {
         });
     }
 }
+// Select recommendation
+function selectRecommendation(recommendation, element) {
     if (element.classList.contains('selected')) {
         element.classList.remove('selected');
         selectedRecommendationsList = selectedRecommendationsList.filter(r => r.recommendation !== recommendation);
@@ -554,6 +556,33 @@ function handleMultipleImageUpload(input, previewId) {
     }
 }
 
+// Export T&I report data to text file
+function exportTIData() {
+    // This function would be added to the T&I report page
+    // For now, it's a placeholder showing the expected format
+    
+    const data = {
+        jobReference: document.getElementById('jobReference')?.value || '',
+        siteAddress: document.getElementById('siteAddress')?.value || '',
+        // ... other T&I data
+    };
+    
+    let exportContent = '=== LIGHTNING PROTECTION T&I REPORT DATA ===\n';
+    exportContent += `JOB_REF: ${data.jobReference}\n`;
+    exportContent += `SITE_ADDRESS: ${data.siteAddress}\n`;
+    // ... add all other data
+    
+    const blob = new Blob([exportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `TI_Report_Data_${data.jobReference || 'Export'}_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 // Get remedial report data for PDF generation
 function getRemedialData() {
     return {
@@ -668,31 +697,4 @@ function clearRemedialData() {
         
         console.log('Remedial report form cleared');
     }
-}
-
-// Export T&I report data to text file
-function exportTIData() {
-    // This function would be added to the T&I report page
-    // For now, it's a placeholder showing the expected format
-    
-    const data = {
-        jobReference: document.getElementById('jobReference')?.value || '',
-        siteAddress: document.getElementById('siteAddress')?.value || '',
-        // ... other T&I data
-    };
-    
-    let exportContent = '=== LIGHTNING PROTECTION T&I REPORT DATA ===\n';
-    exportContent += `JOB_REF: ${data.jobReference}\n`;
-    exportContent += `SITE_ADDRESS: ${data.siteAddress}\n`;
-    // ... add all other data
-    
-    const blob = new Blob([exportContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `TI_Report_Data_${data.jobReference || 'Export'}_${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
 }
