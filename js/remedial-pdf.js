@@ -126,7 +126,7 @@ function generateRemedialPDF() {
             const checkboxSymbol = failure.completed ? '☑' : '☐';
             
             pdf.setFontSize(12);
-            pdf.setFont(helvetica, 'bold');
+            pdf.setFont(undefined, 'bold');
             const failureTitle = `${checkboxSymbol} ${index + 1}. ${failure.failure}`;
             const titleLines = pdf.splitTextToSize(failureTitle, 170);
             pdf.text(titleLines, leftColumnX, yPosition);
