@@ -352,3 +352,4 @@ function generateFilename(baseFilename) {
     const date = new Date().toISOString().split('T')[0];
     return `${baseFilename}_${date}.pdf`;
 }
+}
