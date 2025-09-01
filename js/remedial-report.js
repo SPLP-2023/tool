@@ -6,6 +6,11 @@ let selectedRecommendationsList = [];
 let tiReportData = null;
 let remedialSelectedFailuresList = []; // Separate list for remedial failures
 
+// Ensure global arrays are initialized
+if (typeof selectedFailuresList === 'undefined') {
+    window.selectedFailuresList = [];
+}
+
 // Initialize the remedial report
 document.addEventListener('DOMContentLoaded', function() {
     // Set today's date as default
