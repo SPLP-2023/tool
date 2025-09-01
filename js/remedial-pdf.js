@@ -221,7 +221,7 @@ function generateRemedialPDF() {
     }
     
     yPosition += 10;
-}
+
     
     // Additional Repairs Section
     if (remedialData.additionalRepairs) {
@@ -332,6 +332,8 @@ function generateRemedialPDF() {
     // Generate filename and save
     const filename = generateFilename(`Lightning_Protection_Remedial_Report_${remedialData.jobReference}`);
     pdf.save(filename);
+
+    
 
 
 // Helper function to format dates
