@@ -65,67 +65,80 @@
     });
 }
 
-        async function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
-        if (imageData) {
-        try {
-        // Compress before adding
-        imageData = await compressImage(imageData);
-        
-        
-        const format = 'JPEG'; // force JPEG for smaller size
-        const imgProps = pdf.getImageProperties(imageData);
-        const aspectRatio = imgProps.width / imgProps.height;
-
-
-        // Calculate final dimensions to fit within maxWidth x maxHeight
-        let finalWidth, finalHeight;
-        if (aspectRatio > (maxWidth / maxHeight)) {
-        finalWidth = maxWidth;
-        finalHeight = maxWidth / aspectRatio;
-        } else {
-        finalHeight = maxHeight;
-        finalWidth = maxHeight * aspectRatio;
-}
-
-
-        // Center align if requested
-        let finalX = x;
-        if (centerAlign) {
-        finalX = x + (maxWidth - finalWidth) / 2;
-}
-
-
-        pdf.addImage(imageData, format, finalX, y, finalWidth, finalHeight);
-        return finalHeight + 5; // Return actual height used plus margin
-        
-        
+        // PDF Generation Functions with Two-Column Layout
+        function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
+            if (imageData) {
+                try {
+                    const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
+            
+            // Get image properties using jsPDF's built-in method
+            const imgProps = pdf.getImageProperties(imageData);
+            const imgWidth = imgProps.width;
+            const imgHeight = imgProps.height;
+            const aspectRatio = imgWidth / imgHeight;
+            
+            // Calculate final dimensions to fit within maxWidth x maxHeight
+            let finalWidth, finalHeight;
+            
+            if (aspectRatio > (maxWidth / maxHeight)) {
+                // Image is wider - constrain by width
+                finalWidth = maxWidth;
+                finalHeight = maxWidth / aspectRatio;
+            } else {
+                // Image is taller - constrain by height
+                finalHeight = maxHeight;
+                finalWidth = maxHeight * aspectRatio;
+            }
+            
+            // Center align if requested
+            let finalX = x;
+            if (centerAlign) {
+                finalX = x + (maxWidth - finalWidth) / 2;
+            }
+            
+            pdf.addImage(imageData, format, finalX, y, finalWidth, finalHeight);
+            return finalHeight + 5; // Return actual height used plus margin
+            
         } catch (error) {
-        console.error('Error adding image to PDF:', error);
-        pdf.addImage(imageData, 'JPEG', x, y, maxWidth, maxHeight);
-        return maxHeight + 5;
-}
+            console.error('Error adding image to PDF:', error);
+            // Fallback to original method if aspect ratio calculation fails
+            const format = imageData.includes('data:image/jpeg') ? 'JPEG' : 'PNG';
+            pdf.addImage(imageData, format, x, y, maxWidth, maxHeight);
+            return maxHeight + 5;
         }
-        return 0;
+    }
+    return 0;
 }
-
 
         function addPageHeader(pdf, title) {
-        // Company logo in header
-        addImageToPDF(pdf, HEADER_IMAGE_URL, 160, 8, 60, 25, true);
-        // Add section title spanning full width
-        pdf.setFontSize(16);
-        pdf.setFont(undefined, 'bold');
-        pdf.text(title, 105, 30, { align: 'center' });
-        return 40; // Return Y position after header
+            // Company logo in header
+            addImageToPDF(pdf, HEADER_IMAGE_URL, 160, 8, 60, 25, true);
+            
+            // Add section title spanning full width
+            pdf.setFontSize(16);
+            pdf.setFont(undefined, 'bold');
+            pdf.text(title, 105, 30, { align: 'center' });
+            
+            return 40; // Return Y position after header
 }
-
 
         function addFooterToPage(pdf, footer) {
-        // Add footer image - larger, centered, above text
-        addImageToPDF(pdf, FOOTER_IMAGE_URL, 60, 260, 90, 30, true);
-        // Add footer text below the image
-        pdf.setFontSize(8);
+            // Add footer image - larger, centered, above text
+            addImageToPDF(pdf, FOOTER_IMAGE_URL, 60, 260, 90, 30, true);
+            
+            // Add footer text below the image
+            pdf.setFontSize(8);
+            const footerLines = pdf.splitTextToSize(footer, 190);
+            pdf.text(footerLines, 105, 285, { align: 'center' });
 }
+
+        function startNewSection(pdf, title, footer) {
+            pdf.addPage();
+            const yStart = addPageHeader(pdf, title);
+            addFooterToPage(pdf, footer);
+            return yStart;
+}
+
 
 function generatePDF() {
         rebuildSystemDetailsFromDOM();
