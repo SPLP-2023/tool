@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remedial Report - Strike Tools</title>
+    <link rel="manifest" href="/tool/manifest.json">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/tool/icons/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/tool/icons/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/tool/icons/apple-touch-icon-152x152.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="StrikeR">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="nav-header">
+            <button class="nav-button back-button" onclick="location.href='reports.html'">
+                ← Back to Reports
+            </button>
+            <h1 class="page-title">Remedial Report</h1>
+            <button class="nav-button" onclick="location.href='tools.html'">
+                Tools
+            </button>
+        </div>
+
+        <!-- Data Import Section -->
+        <div class="section">
+            <h2>Import T&I Report Data (Optional)</h2>
+            <div class="form-group">
+                <label for="tiDataFile">T&I Report Data File:</label>
+                <div class="image-upload" onclick="document.getElementById('tiDataFileInput').click()">
+                    <input type="file" id="tiDataFileInput" accept=".txt" class="hidden-file-input" aria-label="Upload T&I report data file" onchange="handleTIDataUpload(this)">
+                    <div id="tiDataFilePreview">Click to upload T&I report data file (.txt)</div>
+                </div>
+            </div>
+            <p style="font-style: italic; color: #6c757d; margin-top: 10px;">
+                OR manually enter all details below
+            </p>
+        </div>
+
+        <!-- Site Information Section -->
+        <div class="section">
+            <h2>Site Information</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="siteAddress">Site Address:</label>
+                    <textarea id="siteAddress" rows="3" placeholder="Enter full site address..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="jobReference">Job Reference:</label>
+                    <input type="text" id="jobReference" placeholder="Enter job reference...">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="remedialDate">Remedial Date:</label>
+                    <input type="date" id="remedialDate">
+                </div>
+                <div class="form-group">
+                    <label for="remedialEngineer">Remedial Engineer Name:</label>
+                    <input type="text" id="remedialEngineer" placeholder="Enter remedial engineer name...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="siteStaffName">Site Staff Name:</label>
+                <input type="text" id="siteStaffName" placeholder="Enter site staff name...">
+            </div>
+
+            <!-- Site Staff Signature Section -->
+            <div class="form-group">
+                <label for="siteStaffSignature">Site Staff Signature:</label>
+                <div class="signature-container">
+                    <canvas id="siteStaffSignatureCanvas" width="300" height="120"></canvas>
+                    <div class="signature-controls">
+                        <button type="button" id="clearSiteStaffSignature" class="signature-btn clear-btn">Clear</button>
+                        <button type="button" id="saveSiteStaffSignature" class="signature-btn save-btn">Save</button>
+                    </div>
+                    <div id="siteStaffSignatureStatus" class="signature-status">Please sign above</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="buildingImage">Building Image:</label>
+                <div class="image-upload" onclick="document.getElementById('buildingImageFile').click()">
+                    <input type="file" id="buildingImageFile" accept="image/*" class="hidden-file-input" aria-label="Upload building image" onchange="handleImageUpload(this, 'buildingImagePreview')">
+                    <div id="buildingImagePreview">Click to upload building image</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Failures to Repair Section -->
+        <div class="section">
+            <h2>Add Failures to Repair</h2>
+            <div class="form-group standards-dropdown">
+                <label for="standard">Select Standard:</label>
+                <select id="standard" title="Select lightning protection standard" onchange="updateFailuresList()">
+                    <option value="">Select a standard...</option>
+                    <option value="BS EN 62305">BS EN 62305 (Current Standard)</option>
+                    <option value="BS 6651">BS 6651 (Legacy Standard)</option>
+                    <option value="CP 326">CP 326 (Historical Standard)</option>
+                    <option value="NF C 17-102">NF C 17-102:2011 (ESE Systems)</option>
+                </select>
+            </div>
+            <div id="failuresContainer" class="hidden">
+                <label>Available Failures for Selected Standard:</label>
+                <div id="failuresList" class="failures-list"></div>
+            </div>
+        </div>
+
+        <!-- Selected Failures to Repair Section -->
+        <div class="section">
+            <h2>⚠ Selected Failures to Repair</h2>
+            <div id="selectedFailures"></div>
+        </div>
+
+        <!-- Add Recommendations Section -->
+        <div class="section">
+            <h2>Add Recommendations to Complete</h2>
+            <div id="recommendationsContainer">
+                <div class="form-group">
+                    <label>Common Recommendations:</label>
+                    <div class="recommendations-list">
+                        <div class="recommendation-option" onclick="selectRecommendation('Install additional earth electrodes to reduce overall resistance', this)">
+                            Install additional earth electrodes to reduce overall resistance
+                        </div>
+                        <div class="recommendation-option" onclick="selectRecommendation('Improve equipotential bonding connections', this)">
+                            Improve equipotential bonding connections
+                        </div>
+                        <div class="recommendation-option" onclick="selectRecommendation('Install surge protection devices at main distribution board', this)">
+                            Install surge protection devices at main distribution board
+                        </div>
+                        <div class="recommendation-option" onclick="selectRecommendation('Clean and tighten all system connections', this)">
+                            Clean and tighten all system connections
+                        </div>
+                        <div class="recommendation-option" onclick="selectRecommendation('Install test clamps for future inspections', this)">
+                            Install test clamps for future inspections
+                        </div>
+                        <div class="recommendation-option" onclick="selectRecommendation('Replace corroded system components', this)">
+                            Replace corroded system components
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="customRecommendation">Custom Recommendation:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="customRecommendation" placeholder="Enter custom recommendation...">
+                        <button type="button" onclick="addCustomRecommendation()" class="add-btn">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div id="selectedRecommendations"></div>
+        </div>
+
+        <!-- Additional Work Section -->
+        <div class="section">
+            <h2>Additional Repairs Required</h2>
+            <div class="form-group">
+                <label for="additionalRepairs">Additional Repairs:</label>
+                <textarea id="additionalRepairs" rows="4" placeholder="Enter any additional repairs discovered during remedial work (if any)..."></textarea>
+            </div>
+        </div>
+
+        <!-- Completion Notes Section -->
+        <div class="section">
+            <h2>Completion Notes</h2>
+            <div class="form-group">
+                <label for="completionNotes">General Comments:</label>
+                <textarea id="completionNotes" rows="4" placeholder="Enter general comments about the remedial work, completion status, recommendations..."></textarea>
+            </div>
+        </div>
+
+        <!-- Remedial Images Section -->
+        <div class="section">
+            <h2>Remedial Work Images</h2>
+            <div class="form-group">
+                <label for="remedialImages">Remedial Photos:</label>
+                <div class="image-upload" onclick="document.getElementById('remedialImagesFile').click()">
+                    <input type="file" id="remedialImagesFile" accept="image/*" multiple class="hidden-file-input" aria-label="Upload remedial work photos" onchange="handleMultipleImageUpload(this, 'remedialImagesPreview')">
+                    <div id="remedialImagesPreview">Click to upload remedial work photos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Report Button -->
+        <button id="generateRemedialReport" onclick="generateRemedialPDF()">Generate Remedial Report PDF</button>
+        <button id="newRemedialReport" onclick="clearRemedialData()" class="new-report-button">New Remedial Report</button>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- JavaScript Files -->
+    <script src="js/exif.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/pdf-generator-shared.js"></script>
+    <script src="js/touch-signature.js"></script>
+    <script src="js/remedial-report.js"></script>
+    <script src="js/remedial-pdf.js"></script>
+
+    <style>
+        /* Navigation styles */
+        .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .nav-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+        .back-button {
+            background-color: #95a5a6;
+        }
+
+        .back-button:hover {
+            background-color: #7f8c8d;
+        }
+
+        .page-title {
+            font-size: 28px;
+            color: white;
+            margin: 0;
+        }
+
+        /* Recommendations styles */
+        .recommendations-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background: white;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-option {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .recommendation-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .recommendation-option.selected {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+
+        .recommendation-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-item h4 {
+            color: #2196f3;
+            margin-bottom: 10px;
+        }
+
+        /* Compact Touch Signature Styles */
+        .signature-container {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        #siteStaffSignatureCanvas {
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background: white;
+            cursor: crosshair;
+            width: 100%;
+            max-width: 300px;
+            height: 120px;
+            display: block;
+            margin: 0 auto;
+            touch-action: none;
+        }
+
+        .signature-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .signature-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background-color: #c82333;
+        }
+
+        .save-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #218838;
+        }
+
+        .signature-status {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .signature-status.saved {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .new-report-button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .new-report-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+
+            #siteStaffSignatureCanvas {
+                width: 100%;
+                height: 100px;
+            }
+
+            .signature-controls {
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .signature-btn {
+                flex: 1;
+            }
+        }
+    </style>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/tool/service-worker.js', {
+            scope: '/tool/'
+          }).then(registration => {
+            console.log('SW registered:', registration.scope);
+          }).catch(error => {
+            console.log('SW registration failed:', error);
+          });
+        }
+    </script>
+
+    <script>
+        // Initialize remedial report specific components
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date as default
+            document.getElementById('remedialDate').valueAsDate = new Date();
+            
+            // Initialize site staff signature
+            if (document.getElementById('siteStaffSignatureCanvas')) {
+                const siteStaffSignature = new TouchSignature(
+                    'siteStaffSignatureCanvas',
+                    'clearSiteStaffSignature',
+                    'saveSiteStaffSignature',
+                    'siteStaffSignatureStatus'
+                );
+        
+                // Store reference for access
+                window.siteStaffSignature = siteStaffSignature;
+            }
+        });
+    </script>
+</body>
+</html>
