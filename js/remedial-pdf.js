@@ -170,7 +170,7 @@ function generateRemedialPDF() {
             
             yPosition += 10;
         });
-
+        
         yPosition += 10;
     }
 
