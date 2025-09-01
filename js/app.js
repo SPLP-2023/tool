@@ -584,6 +584,185 @@ function rebuildSystemDetailsFromDOM() {
 
   window.systemDetails = rebuilt;
 }
+// T&I Report Data Export Function
+// Add this function to js/app.js
+
+function exportTIReportData() {
+    // Get all form data
+    const siteAddress = document.getElementById('siteAddress')?.value || '';
+    const testDate = document.getElementById('testDate')?.value || '';
+    const engineerName = document.getElementById('engineerName')?.value || '';
+    const testKitRef = document.getElementById('testKitRef')?.value || '';
+    const jobReference = document.getElementById('jobReference')?.value || '';
+    const siteStaffName = document.getElementById('siteStaffName')?.value || '';
+    const standard = document.getElementById('standard')?.value || '';
+    const generalComments = document.getElementById('generalComments')?.value || '';
+    const finalComments = document.getElementById('finalComments')?.value || '';
+    
+    // Get structure details
+    const structureHeight = document.getElementById('structureHeight')?.value || '';
+    const structurePerimeter = document.getElementById('structurePerimeter')?.value || '';
+    const structureUse = document.getElementById('structureUse')?.value || '';
+    const structureOccupancy = document.getElementById('structureOccupancy')?.value || '';
+    const structureAge = document.getElementById('structureAge')?.value || '';
+    const previousInspections = document.getElementById('previousInspections')?.value || '';
+    
+    // Get system details dropdowns
+    const earthArrangement = document.getElementById('earthArrangement')?.value || '';
+    const mainEquipotentialBond = document.getElementById('mainEquipotentialBond')?.value || '';
+    const surgeInstalled = document.getElementById('surgeInstalled')?.value || '';
+    const surgeType = document.getElementById('surgeType')?.value || '';
+    const surgeSafe = document.getElementById('surgeSafe')?.value || '';
+    
+    // Build export content
+    let exportContent = '=== LIGHTNING PROTECTION T&I REPORT DATA ===\n';
+    exportContent += `JOB_REF: ${jobReference}\n`;
+    exportContent += `SITE_ADDRESS: ${siteAddress}\n`;
+    exportContent += `TEST_DATE: ${testDate}\n`;
+    exportContent += `ENGINEER: ${engineerName}\n`;
+    exportContent += `TEST_KIT_REF: ${testKitRef}\n`;
+    exportContent += `SITE_STAFF: ${siteStaffName}\n`;
+    exportContent += `STANDARD: ${standard}\n`;
+    exportContent += '\n';
+    
+    // Structure details section
+    exportContent += '=== STRUCTURE DETAILS ===\n';
+    exportContent += `HEIGHT: ${structureHeight}\n`;
+    exportContent += `PERIMETER: ${structurePerimeter}\n`;
+    exportContent += `USE: ${structureUse}\n`;
+    exportContent += `OCCUPANCY: ${structureOccupancy}\n`;
+    exportContent += `AGE: ${structureAge}\n`;
+    exportContent += `PREVIOUS_INSPECTIONS: ${previousInspections}\n`;
+    exportContent += '\n';
+    
+    // System details section
+    exportContent += '=== SYSTEM DETAILS ===\n';
+    exportContent += `EARTH_ARRANGEMENT: ${earthArrangement}\n`;
+    exportContent += `MAIN_EQUIPOTENTIAL_BOND: ${mainEquipotentialBond}\n`;
+    exportContent += `SURGE_INSTALLED: ${surgeInstalled}\n`;
+    exportContent += `SURGE_TYPE: ${surgeType}\n`;
+    exportContent += `SURGE_SAFE: ${surgeSafe}\n`;
+    exportContent += '\n';
+    
+    // Failures section
+    exportContent += '=== FAILURES ===\n';
+    if (selectedFailuresList && selectedFailuresList.length > 0) {
+        selectedFailuresList.forEach((failure, index) => {
+            exportContent += `FAILURE: ${failure.failure}\n`;
+            exportContent += `REF: ${failure.reference}\n`;
+            exportContent += `REQ: ${failure.requirement}\n`;
+            if (failure.comment) {
+                exportContent += `COMMENT: ${failure.comment}\n`;
+            }
+            exportContent += '---\n';
+        });
+    } else {
+        exportContent += 'No failures recorded\n';
+    }
+    exportContent += '\n';
+    
+    // Recommendations section
+    exportContent += '=== RECOMMENDATIONS ===\n';
+    if (generalComments) {
+        exportContent += `${generalComments}\n`;
+    } else {
+        exportContent += 'No recommendations recorded\n';
+    }
+    exportContent += '\n';
+    
+    // Final comments section
+    exportContent += '=== FINAL COMMENTS ===\n';
+    if (finalComments) {
+        exportContent += `${finalComments}\n`;
+    } else {
+        exportContent += 'No final comments recorded\n';
+    }
+    exportContent += '\n';
+    
+    // Earth resistance data if available
+    if (typeof earthTableData !== 'undefined' && earthTableData.length > 0) {
+        exportContent += '=== EARTH RESISTANCE DATA ===\n';
+        earthTableData.forEach((earth, index) => {
+            exportContent += `EARTH_${index + 1}_RESISTANCE: ${earth.resistance}\n`;
+            exportContent += `EARTH_${index + 1}_TEST_CLAMP: ${earth.testClamp}\n`;
+            exportContent += `EARTH_${index + 1}_PIT_TYPE: ${earth.pitType}\n`;
+            exportContent += `EARTH_${index + 1}_TEST_TYPE: ${earth.testType}\n`;
+            exportContent += `EARTH_${index + 1}_GROUND_TYPE: ${earth.groundType}\n`;
+            exportContent += `EARTH_${index + 1}_EARTH_TYPE: ${earth.earthType}\n`;
+            if (earth.comment) {
+                exportContent += `EARTH_${index + 1}_COMMENT: ${earth.comment}\n`;
+            }
+            exportContent += '---\n';
+        });
+        
+        // Overall resistance if calculated
+        const earthData = getEarthTableData();
+        if (earthData && earthData.overallResistance > 0) {
+            exportContent += `OVERALL_RESISTANCE: ${earthData.overallResistance.toFixed(3)}\n`;
+        }
+    }
+    
+    exportContent += '\n=== END OF REPORT DATA ===\n';
+    
+    // Create and download file
+    const blob = new Blob([exportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `TI_Report_Data_${jobReference || 'Export'}_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    console.log('T&I Report data exported successfully');
+    alert('T&I Report data exported successfully!\n\nThis file can now be imported into a Remedial Report.');
+}
+
+// Function to add export button to T&I report page
+function addExportButtonToTIReport() {
+    const generateButton = document.getElementById('generateReport');
+    if (generateButton) {
+        const exportButton = document.createElement('button');
+        exportButton.id = 'exportTIData';
+        exportButton.textContent = 'Export T&I Data for Remedial Report';
+        exportButton.className = 'export-button';
+        exportButton.onclick = exportTIReportData;
+        exportButton.style.cssText = `
+            background-color: #17a2b8;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        `;
+        exportButton.onmouseover = function() {
+            this.style.backgroundColor = '#138496';
+        };
+        exportButton.onmouseout = function() {
+            this.style.backgroundColor = '#17a2b8';
+        };
+        
+        // Insert before the new report button
+        const newReportButton = document.getElementById('newReport');
+        if (newReportButton) {
+            generateButton.parentNode.insertBefore(exportButton, newReportButton);
+        } else {
+            generateButton.insertAdjacentElement('afterend', exportButton);
+        }
+    }
+}
+
+// Initialize export functionality when T&I page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Only add export button if we're on the T&I report page
+    if (document.getElementById('generateReport') && document.getElementById('standard')) {
+        setTimeout(addExportButtonToTIReport, 1000); // Small delay to ensure other scripts have loaded
+    }
+});
 
 
 
