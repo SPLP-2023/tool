@@ -182,7 +182,7 @@ function populateFromTIData(data) {
         recommendations.forEach(rec => {
             if (rec.trim()) {
                 selectedRecommendationsList.push({
-                    recommendation: recommendation,
+                    recommendation: rec,
                     completed: false,
                     comment: ''
                 });
