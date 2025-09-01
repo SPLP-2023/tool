@@ -173,11 +173,8 @@ function generateRemedialPDF() {
         
         yPosition += 10;
     }
-    
-yPosition += 10;
-    }
-    
-    // Add recommendations within the same section
+
+        // Add recommendations within the same section
     if (remedialData.selectedRecommendations.length > 0) {
         remedialData.selectedRecommendations.forEach((recommendation, index) => {
             // Check if we need a new page
@@ -224,6 +221,11 @@ yPosition += 10;
     }
     
     yPosition += 10;
+}
+    
+yPosition += 10;
+    }
+    
 
     
     // Additional Repairs Section
