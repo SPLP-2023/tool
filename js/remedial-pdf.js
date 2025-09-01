@@ -174,25 +174,15 @@ function generateRemedialPDF() {
         yPosition += 10;
     }
     
-    // Recommendations Section
+yPosition += 10;
+    }
+    
+    // Add recommendations within the same section
     if (remedialData.selectedRecommendations.length > 0) {
-        // Check if we need a new page
-        if (yPosition + 100 > pageBottom) {
-            pdf.addPage();
-            yPosition = addPageHeader(pdf, 'REMEDIAL REPAIRS (CONTINUED)');
-            addFooterToPage(pdf, footer);
-        }
-        
-        pdf.setFontSize(14);
-        pdf.setFont(undefined, 'bold');
-        pdf.setTextColor(0, 0, 0); 
-        pdf.text('RECOMMENDED REMEDIAL WORKS COMPLETED', leftColumnX, yPosition);
-        pdf.setTextColor(0, 0, 0);
-        yPosition += 15;
-        
         remedialData.selectedRecommendations.forEach((recommendation, index) => {
             // Check if we need a new page
-            if (yPosition + 30 > pageBottom) {
+            const estimatedHeight = 40 + (recommendation.comment ? 20 : 0);
+            if (yPosition + estimatedHeight > pageBottom) {
                 pdf.addPage();
                 yPosition = addPageHeader(pdf, 'REMEDIAL REPAIRS (CONTINUED)');
                 addFooterToPage(pdf, footer);
@@ -201,28 +191,40 @@ function generateRemedialPDF() {
             // Completion checkbox
             const checkboxSymbol = recommendation.completed ? '[X]' : '[ ]';
             
-            pdf.setFontSize(10);
-            pdf.setFont(undefined, 'normal');
-            const recText = `${checkboxSymbol} ${index + 1}. ${recommendation.recommendation}`;
-            const recLines = pdf.splitTextToSize(recText, 170);
-            pdf.text(recLines, leftColumnX, yPosition);
-            yPosition += recLines.length * 4 + 5;
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            const recTitle = `${checkboxSymbol} R${index + 1}. ${recommendation.recommendation}`;
+            const titleLines = pdf.splitTextToSize(recTitle, 170);
+            pdf.text(titleLines, leftColumnX, yPosition);
+            yPosition += titleLines.length * 5 + 3;
+            
+            // Repair comment if provided
+            if (recommendation.comment) {
+                pdf.setFont(undefined, 'normal');
+                pdf.setFontSize(9);
+                pdf.setTextColor(0, 100, 200);
+                const commentLines = pdf.splitTextToSize('Repair Details: ' + recommendation.comment, 170);
+                pdf.text(commentLines, leftColumnX, yPosition);
+                yPosition += commentLines.length * 4 + 5;
+                pdf.setTextColor(0, 0, 0);
+            }
             
             // Custom label if applicable
             if (recommendation.custom) {
                 pdf.setFont(undefined, 'italic');
-                pdf.setFontSize(10);
+                pdf.setFontSize(7);
                 pdf.setTextColor(100, 100, 100);
                 pdf.text('(Custom recommendation)', leftColumnX, yPosition);
                 yPosition += 8;
                 pdf.setTextColor(0, 0, 0);
             }
             
-            yPosition += 5;
+            yPosition += 10;
         });
-        
-        yPosition += 10;
     }
+    
+    yPosition += 10;
+}
     
     // Additional Repairs Section
     if (remedialData.additionalRepairs) {
