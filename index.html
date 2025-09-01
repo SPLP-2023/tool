@@ -13,6 +13,93 @@
     <meta name="mobile-web-app-capable" content="yes">    
     <meta name="apple-mobile-web-app-title" content="StrikeR">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    // ============================================================================
+// AUTHENTICATION PROTECTION CODE
+// Add this script to ALL HTML pages (except login.html)
+// Place it in the <head> section, before any other scripts
+// ============================================================================
+
+<script>
+(function() {
+    // GitHub OAuth configuration
+    const AUTHORIZED_USERS = ['SPLP-2023', 'LK-SPLP', 'JB-SPLP'];
+
+    // Check authentication immediately when page loads
+    function checkAuthentication() {
+        const token = localStorage.getItem('github_token');
+        const user = localStorage.getItem('github_user');
+
+        // If no token or user, redirect to login
+        if (!token || !user) {
+            window.location.href = 'login.html';
+            return false;
+        }
+
+        // If user is not in authorized list, redirect to login
+        if (!AUTHORIZED_USERS.includes(user)) {
+            localStorage.removeItem('github_token');
+            localStorage.removeItem('github_user');
+            window.location.href = 'login.html';
+            return false;
+        }
+
+        return true;
+    }
+
+    // Add logout functionality
+    function addLogoutButton() {
+        const user = localStorage.getItem('github_user');
+        if (!user) return;
+
+        // Create logout button
+        const logoutBtn = document.createElement('button');
+        logoutBtn.innerHTML = '🔓 Logout (' + user + ')';
+        logoutBtn.className = 'logout-btn';
+        logoutBtn.onclick = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('github_token');
+                localStorage.removeItem('github_user');
+                window.location.href = 'login.html';
+            }
+        };
+
+        // Style the logout button
+        logoutBtn.style.cssText = `
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        `;
+
+        logoutBtn.onmouseover = function() { this.style.background = '#c0392b'; };
+        logoutBtn.onmouseout = function() { this.style.background = '#e74c3c'; };
+
+        // Add to page
+        document.body.appendChild(logoutBtn);
+    }
+
+    // Run authentication check immediately
+    if (!checkAuthentication()) {
+        return; // Stop execution if not authenticated
+    }
+
+    // Add logout button when page loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', addLogoutButton);
+    } else {
+        addLogoutButton();
+    }
+})();
+</script>
     </head>
 <body>
     <div class="container">
