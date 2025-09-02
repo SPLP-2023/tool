@@ -86,19 +86,20 @@ function generateRemedialPDF() {
     
     // RIGHT COLUMN
     let rightY = detailsY;
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Site Staff Name:', rightX, rightY);
-    pdf.setFont(undefined, 'normal');
-    pdf.text(remedialData.siteStaffName || 'N/A', rightX, rightY + valueGap);
+
+    // Only add Site Staff details if they exist
+    if (siteStaffName && siteStaffName.trim()) {
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Site Staff Name:', rightX, rightY);
+        pdf.setFont(undefined, 'normal');
+        pdf.text(siteStaffName, rightX, rightY + valueGap);
+        rightY += sectionGap;
+    }
     
-    rightY += sectionGap;
-    pdf.setFont(undefined, 'bold');
-    pdf.text('Site Staff Signature:', rightX, rightY);
-    if (remedialData.signatureData) {
-        pdf.addImage(remedialData.signatureData, 'PNG', rightX, rightY + valueGap, 60, 20);
-    } else {
-        pdf.setFont(undefined, 'italic');
-        pdf.text('Not signed', rightX, rightY + valueGap + 1);
+    if (siteStaffSignature) {
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Site Staff Signature:', rightX, rightY);
+        pdf.addImage(siteStaffSignature, 'PNG', rightX, rightY + valueGap, 60, 20);
     }
     
     // ==================== REMEDIAL REPAIRS SECTION ====================
