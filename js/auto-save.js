@@ -72,7 +72,7 @@ function setupAutoSave() {
             console.log('Failure option selected:', e.target);
             setTimeout(saveFormData, 200);
         }
-});
+    });
 
     // Auto-save when failure comments are updated
     document.addEventListener('change', function(e) {
@@ -189,13 +189,6 @@ function restoreFormData() {
             window.siteStaffSignature.updateStatus('Signature restored');
         }
 
-        // Restore site staff signature data
-        if (formData.siteStaffSignature && window.siteStaffSignature) {
-            window.siteStaffSignature.signatureData = formData.siteStaffSignature;
-            window.siteStaffSignature.updateStatus('Signature restored');
-        }
-
-        
         // Restore structure details
         setFieldValue('structureHeight', formData.structureHeight);
         setFieldValue('structurePerimeter', formData.structurePerimeter);
@@ -238,55 +231,53 @@ function restoreFormData() {
                                 });
                             });
             
-                        // Step 2: Rebuild the "Selected Failures" detailed view with comments
-                        if (typeof updateSelectedFailures === 'function') {
-                            updateSelectedFailures();
-                            console.log('Selected failures detailed view updated');
-                            
-                            // Step 3: Restore comments after the detailed view is created
-                            setTimeout(() => {
-                                formData.selectedFailures.forEach((failureObj, index) => {
-                                    if (failureObj.comment) {
-                                        const commentTextarea = document.querySelector(`textarea[onchange*="updateFailureComment(${index})"]`);
-                                        if (commentTextarea) {
-                                            commentTextarea.value = failureObj.comment;
-                                            console.log(`Restored comment for failure ${index}:`, failureObj.comment);
+                            // Step 2: Rebuild the "Selected Failures" detailed view with comments
+                            if (typeof updateSelectedFailures === 'function') {
+                                updateSelectedFailures();
+                                console.log('Selected failures detailed view updated');
+                                
+                                // Step 3: Restore comments after the detailed view is created
+                                setTimeout(() => {
+                                    formData.selectedFailures.forEach((failureObj, index) => {
+                                        if (failureObj.comment) {
+                                            const commentTextarea = document.querySelector(`textarea[onchange*="updateFailureComment(${index})"]`);
+                                            if (commentTextarea) {
+                                                commentTextarea.value = failureObj.comment;
+                                                console.log(`Restored comment for failure ${index}:`, failureObj.comment);
+                                            }
                                         }
-                                    }
-                                });
-                            }, 100); // Small delay to let the detailed view render
-                        }
+                                    });
+                                }, 100); // Small delay to let the detailed view render
+                            }
             
-                        console.log('Selected failures restoration complete:', formData.selectedFailures.length);
+                            console.log('Selected failures restoration complete:', formData.selectedFailures.length);
+                        }
                     }
-                }
-            }, 600); // Increased delay for failures restoration
+                }, 600); // Increased delay for failures restoration
+            }, 100);
         }
         
-                // Restore earth resistance testing
-                if (formData.numEarths) {
-                    setFieldValue('numEarths', formData.numEarths);
-                    setTimeout(() => {
-                        if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
-                            window.earthTableData = formData.earthTableData;
-                            if (typeof generateEarthTable === 'function') {
-                                generateEarthTable();
+        // Restore earth resistance testing
+        if (formData.numEarths) {
+            setFieldValue('numEarths', formData.numEarths);
+            setTimeout(() => {
+                if (formData.earthTableData && Array.isArray(formData.earthTableData)) {
+                    window.earthTableData = formData.earthTableData;
+                    if (typeof generateEarthTable === 'function') {
+                        generateEarthTable();
                         // Restore table data after generation
-                                setTimeout(() => {
-                                earthTableData = formData.earthTableData;
-                                    
-                                    // Populate the actual HTML form fields in the table
-                                    restoreEarthTableFields();
-                                    
-                                if (typeof calculateOverallResistance === 'function') {
-                                    calculateOverallResistance();
-                                }
-                            }, 500);
-                        }
+                        setTimeout(() => {
+                            earthTableData = formData.earthTableData;
+                            // Populate the actual HTML form fields in the table
+                            restoreEarthTableFields();
+                            if (typeof calculateOverallResistance === 'function') {
+                                calculateOverallResistance();
+                            }
+                        }, 500);
                     }
-                }, 100);
-            }
-                   
+                }
+            }, 100);
+        }
         
         // Restore system details selections
         if (formData.systemDetails) {
@@ -359,14 +350,12 @@ function restoreFormData() {
             console.log('Forced save after complete restoration');
         }, 2000); // 2 second delay to ensure all restoration is complete
         
-        } catch (error) {
-            console.error('Failed to restore form data:', error);
-        } finally {
-            isRestoring = false;
+    } catch (error) {
+        console.error('Failed to restore form data:', error);
+    } finally {
+        isRestoring = false;
     }
 }
-
-
 
 // Helper function to safely set field values
 function setFieldValue(id, value) {
@@ -396,7 +385,7 @@ function clearAllData() {
             window.systemDetails = {};
         }
         if (window.siteStaffSignature !== undefined) {
-        window.siteStaffSignature.clear();
+            window.siteStaffSignature.clear();
         }
         
         // Clear all form fields
@@ -554,18 +543,18 @@ function restoreEarthTableFields() {
     console.log('Earth table fields restoration complete');
 }
 
-    function saveSystemDetailsChanges() {
-        if (isRestoring) return;
-        
-        // Force update of systemDetails before saving
-        if (typeof rebuildSystemDetails === 'function') {
-            rebuildSystemDetails();
-            console.log('SystemDetails rebuilt:', window.systemDetails);
-        }
-        
-        // Trigger a save with debugging
-        setTimeout(() => {
-            console.log('Saving after system detail change...');
-            saveFormData();
-        }, 300);
+function saveSystemDetailsChanges() {
+    if (isRestoring) return;
+    
+    // Force update of systemDetails before saving
+    if (typeof rebuildSystemDetails === 'function') {
+        rebuildSystemDetails();
+        console.log('SystemDetails rebuilt:', window.systemDetails);
+    }
+    
+    // Trigger a save with debugging
+    setTimeout(() => {
+        console.log('Saving after system detail change...');
+        saveFormData();
+    }, 300);
 }
