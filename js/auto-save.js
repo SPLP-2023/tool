@@ -59,19 +59,19 @@ function setupAutoSave() {
     });
 
     // Enhanced auto-save for multi-select system details
-document.addEventListener('click', function(e) {
-    // System detail multi-select options
-    if (e.target.classList.contains('system-detail-option') || 
-        e.target.closest('.system-details-category')) {
-        console.log('System detail selected:', e.target);
-        setTimeout(saveSystemDetailsChanges, 200);
-    }
-    
-    // Failure option selections
-    if (e.target.classList.contains('failure-option')) {
-        console.log('Failure option selected:', e.target);
-        setTimeout(saveFormData, 200);
-    }
+    document.addEventListener('click', function(e) {
+        // Detect system detail selections by onclick function
+        if (e.target.onclick && e.target.onclick.toString().includes('selectSystemDetail')) {
+            console.log('System detail selected:', e.target.textContent);
+            setTimeout(saveSystemDetailsChanges, 200);
+        }
+        
+        // Regular failure option selections (for actual failures, not system details)
+        if (e.target.classList.contains('failure-option') && 
+            !e.target.onclick?.toString().includes('selectSystemDetail')) {
+            console.log('Failure option selected:', e.target);
+            setTimeout(saveFormData, 200);
+        }
 });
 
     // Auto-save when failure comments are updated
@@ -154,6 +154,10 @@ function saveFormData() {
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
         console.log('Form data auto-saved at', new Date().toLocaleTimeString());
+        console.log('Saved selectedFailures:', safeSelectedFailuresList.length);
+        console.log('Saved systemDetails keys:', Object.keys(safeSystemDetails));
+        console.log('SystemDetails content:', safeSystemDetails);
+        console.log('Saved clientSignature:', formData.clientSignature ? 'Yes' : 'No');
     } catch (error) {
         console.error('Failed to save form data:', error);
     }
@@ -267,14 +271,15 @@ function restoreFormData() {
                 Object.keys(formData.systemDetails).forEach(category => {
                     if (Array.isArray(formData.systemDetails[category])) {
                         formData.systemDetails[category].forEach(value => {
-                            // Try multiple selector approaches
-                            let option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${value.replace(/'/g, "\\'")}')"]`);
-                            if (!option) {
-                                option = document.querySelector(`[data-category="${category}"][data-value="${value}"]`);
-                            }
+                            // Find the option by onclick content
+                            const escapedValue = value.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                            let option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${escapedValue}')"]`);
+                            
                             if (option) {
                                 option.classList.add('selected');
                                 console.log(`Restored system detail: ${category} - ${value}`);
+                            } else {
+                                console.warn(`Could not find system detail option: ${category} - ${value}`);
                             }
                         });
                     }
@@ -307,12 +312,22 @@ function restoreFormData() {
         }
 
         console.log('Form data restored from', formData.savedAt);
-    } catch (error) {
-        console.error('Failed to restore form data:', error);
-    } finally {
-        isRestoring = false;
+
+        // Force a save after ALL restoration completes to ensure data persists
+        setTimeout(() => {
+            isRestoring = false;
+            saveFormData();
+            console.log('Forced save after complete restoration');
+        }, 2000); // 2 second delay to ensure all restoration is complete
+        
+        } catch (error) {
+            console.error('Failed to restore form data:', error);
+        } finally {
+            isRestoring = false;
     }
 }
+
+
 
 // Helper function to safely set field values
 function setFieldValue(id, value) {
@@ -498,27 +513,20 @@ function restoreEarthTableFields() {
     });
     
     console.log('Earth table fields restoration complete');
-
-    // Force a save after restoration to ensure restored data persists
-        setTimeout(() => {
-            if (isRestoring) {
-                isRestoring = false;
-                saveFormData();
-                isRestoring = false; // Ensure it stays false
-                console.log('Forced save after restoration completed');
-            }
-        }, 1000); // 1 second delay to ensure all restoration is complete
 }
 
-        // Enhanced auto-save specifically for multi-select system details
-        function saveSystemDetailsChanges() {
-            if (isRestoring) return;
-            
-            // Force update of systemDetails before saving
-            if (typeof rebuildSystemDetails === 'function') {
-                rebuildSystemDetails();
-            }
-            
-            // Trigger a save
-            setTimeout(saveFormData, 100);
+    function saveSystemDetailsChanges() {
+        if (isRestoring) return;
+        
+        // Force update of systemDetails before saving
+        if (typeof rebuildSystemDetails === 'function') {
+            rebuildSystemDetails();
+            console.log('SystemDetails rebuilt:', window.systemDetails);
+        }
+        
+        // Trigger a save with debugging
+        setTimeout(() => {
+            console.log('Saving after system detail change...');
+            saveFormData();
+        }, 300);
 }
