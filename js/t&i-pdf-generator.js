@@ -253,19 +253,21 @@ function generatePDF() {
         
         // RIGHT COLUMN
         let rightY = detailsY;
-        pdf.setFont(undefined, 'bold');
-        pdf.text('Site Staff Name:', rightX, rightY);
-        pdf.setFont(undefined, 'normal');
-        pdf.text(siteStaffName || 'N/A', rightX, rightY + valueGap);
+
+        // Only add Site Staff Name if provided
+        if (siteStaffName && siteStaffName.trim()) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Site Staff Name:', rightX, rightY);
+            pdf.setFont(undefined, 'normal');
+            pdf.text(siteStaffName, rightX, rightY + valueGap);
+            rightY += sectionGap;
+        }
         
-        rightY += sectionGap;
-        pdf.setFont(undefined, 'bold');
-        pdf.text('Site Staff Signature:', rightX, rightY);
+        // Only add Site Staff Signature if provided
         if (siteStaffSignature) {
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Site Staff Signature:', rightX, rightY);
             pdf.addImage(siteStaffSignature, 'PNG', rightX, rightY + valueGap, 60, 20);
-        } else {
-            pdf.setFont(undefined, 'italic');
-            pdf.text('Not signed', rightX, rightY + valueGap + 1);
         }
     
     // ==================== INSPECTION SUMMARY SECTION ====================
