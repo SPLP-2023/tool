@@ -1,4 +1,4 @@
-// Auto-Save System - Saves form progress automatically 
+// Auto-Save System - Saves form progress automatically
 // Prevents data loss from page refresh, browser crash, accidental navigation
 
 const STORAGE_KEY = 'splp_report_autosave';
@@ -187,6 +187,9 @@ function restoreFormData() {
         if (formData.siteStaffSignature && window.siteStaffSignature) {
             window.siteStaffSignature.signatureData = formData.siteStaffSignature;
             window.siteStaffSignature.updateStatus('Signature restored');
+            if (typeof window.siteStaffSignature.redraw === 'function') {
+                window.siteStaffSignature.redraw();
+            }
         }
 
         // Restore structure details
@@ -281,42 +284,29 @@ function restoreFormData() {
         
         // Restore system details selections
         if (formData.systemDetails) {
-            setTimeout(() => {
-                if (window.systemDetails !== undefined) {
-                    window.systemDetails = formData.systemDetails;
-                }
-                
-                // Re-apply visual selections with better selectors
-                Object.keys(formData.systemDetails).forEach(category => {
-                    if (Array.isArray(formData.systemDetails[category])) {
-                        formData.systemDetails[category].forEach(value => {
-                            // Find the option by onclick content (simplified)
-                            let option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${value}')"]`);
-                            
-                            // If that fails, try searching through all options manually
-                            if (!option) {
-                                const allOptions = document.querySelectorAll(`#${category}List .failure-option`);
-                                option = Array.from(allOptions).find(opt => 
-                                    opt.textContent.trim() === value && 
-                                    opt.onclick && 
-                                    opt.onclick.toString().includes(`selectSystemDetail('${category}', '${value}')`)
-                                );
-                            }
-                            
-                            if (option) {
+            Object.keys(formData.systemDetails).forEach(category => {
+                if (Array.isArray(formData.systemDetails[category])) {
+                    formData.systemDetails[category].forEach(value => {
+                        let matchValue = value.startsWith('Other: ') ? value.slice(7) : value;
+                        const options = document.querySelectorAll(`#${category}List .failure-option`);
+                        options.forEach(option => {
+                            if (
+                                option.textContent.trim() === value ||
+                                (option.textContent.trim() === 'Other' && value.startsWith('Other: '))
+                            ) {
                                 option.classList.add('selected');
-                                console.log(`Restored system detail: ${category} - ${value}`);
-                            } else {
-                                console.warn(`Could not find system detail option: ${category} - ${value}`);
-                                console.log(`Looking in container: #${category}List`);
-                                console.log(`Available options:`, Array.from(document.querySelectorAll(`#${category}List .failure-option`)).map(o => o.textContent.trim()));
+                                if (option.textContent.trim() === 'Other') {
+                                    const otherInput = document.getElementById(category + 'Other');
+                                    if (otherInput) {
+                                        otherInput.classList.remove('hidden');
+                                        otherInput.value = matchValue;
+                                    }
+                                }
                             }
                         });
-                    }
-                });
-                
-                console.log('System details restoration complete');
-            }, 300);
+                    });
+                }
+            });
         }
         
         // Restore uploaded images
