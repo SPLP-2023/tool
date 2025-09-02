@@ -57,6 +57,30 @@ function setupAutoSave() {
             debouncedSave();
         }
     });
+
+    // Enhanced auto-save for multi-select system details
+document.addEventListener('click', function(e) {
+    // System detail multi-select options
+    if (e.target.classList.contains('system-detail-option') || 
+        e.target.closest('.system-details-category')) {
+        console.log('System detail selected:', e.target);
+        setTimeout(saveSystemDetailsChanges, 200);
+    }
+    
+    // Failure option selections
+    if (e.target.classList.contains('failure-option')) {
+        console.log('Failure option selected:', e.target);
+        setTimeout(saveFormData, 200);
+    }
+});
+
+    // Auto-save when failure comments are updated
+    document.addEventListener('change', function(e) {
+        if (e.target.closest('#selectedFailures')) {
+            console.log('Failure comment changed:', e.target);
+            debouncedSave();
+        }
+    });
 }
 
 // Debounced save function - waits for user to stop typing
@@ -90,6 +114,7 @@ function saveFormData() {
             jobReference: document.getElementById('jobReference')?.value || '',
             siteStaffName: document.getElementById('siteStaffName')?.value || '',
             siteStaffSignature: window.siteStaffSignature?.signatureData || null,
+            clientSignature: window.clientSignature?.signatureData || null,
             generalComments: document.getElementById('generalComments')?.value || '',
             finalComments: document.getElementById('finalComments')?.value || '',
             recommendations: document.getElementById('recommendations')?.value || '',
@@ -161,6 +186,12 @@ function restoreFormData() {
             window.siteStaffSignature.updateStatus('Signature restored');
         }
 
+        // Restore client signature
+        if (formData.clientSignature && window.clientSignature) {
+            window.clientSignature.signatureData = formData.clientSignature;
+            window.clientSignature.updateStatus('Signature restored');
+        }
+
         
         // Restore structure details
         setFieldValue('structureHeight', formData.structureHeight);
@@ -185,16 +216,19 @@ function restoreFormData() {
                     updateFailuresList();
                 }
                 
-                // Restore selected failures
-                if (formData.selectedFailures && Array.isArray(formData.selectedFailures)) {
-                    if (window.selectedFailuresList !== undefined) {
-                        window.selectedFailuresList = formData.selectedFailures;
-                        if (typeof updateSelectedFailures === 'function') {
-                            updateSelectedFailures();
+                // Restore selected failures with better timing
+                setTimeout(() => {
+                    if (formData.selectedFailures && Array.isArray(formData.selectedFailures)) {
+                        if (window.selectedFailuresList !== undefined) {
+                            window.selectedFailuresList = formData.selectedFailures;
+                            if (typeof updateSelectedFailures === 'function') {
+                                updateSelectedFailures();
+                                console.log('Selected failures restored:', formData.selectedFailures.length);
+                            }
                         }
                     }
-                }
-            }, 300);
+                }, 200); // Additional delay for failures restoration
+            }, 500); // Increased main timeout
         }
         
                 // Restore earth resistance testing
@@ -224,20 +258,30 @@ function restoreFormData() {
         
         // Restore system details selections
         if (formData.systemDetails) {
-            if (window.systemDetails !== undefined) {
-                window.systemDetails = formData.systemDetails;
-            }
-            // Re-apply visual selections
-            Object.keys(formData.systemDetails).forEach(category => {
-                if (Array.isArray(formData.systemDetails[category])) {
-                    formData.systemDetails[category].forEach(value => {
-                        const option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${value}'"]`);
-                        if (option) {
-                            option.classList.add('selected');
-                        }
-                    });
+            setTimeout(() => {
+                if (window.systemDetails !== undefined) {
+                    window.systemDetails = formData.systemDetails;
                 }
-            });
+                
+                // Re-apply visual selections with better selectors
+                Object.keys(formData.systemDetails).forEach(category => {
+                    if (Array.isArray(formData.systemDetails[category])) {
+                        formData.systemDetails[category].forEach(value => {
+                            // Try multiple selector approaches
+                            let option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${value.replace(/'/g, "\\'")}')"]`);
+                            if (!option) {
+                                option = document.querySelector(`[data-category="${category}"][data-value="${value}"]`);
+                            }
+                            if (option) {
+                                option.classList.add('selected');
+                                console.log(`Restored system detail: ${category} - ${value}`);
+                            }
+                        });
+                    }
+                });
+                
+                console.log('System details restoration complete');
+            }, 300);
         }
         
         // Restore uploaded images
@@ -454,4 +498,27 @@ function restoreEarthTableFields() {
     });
     
     console.log('Earth table fields restoration complete');
+
+    // Force a save after restoration to ensure restored data persists
+        setTimeout(() => {
+            if (isRestoring) {
+                isRestoring = false;
+                saveFormData();
+                isRestoring = false; // Ensure it stays false
+                console.log('Forced save after restoration completed');
+            }
+        }, 1000); // 1 second delay to ensure all restoration is complete
+}
+
+        // Enhanced auto-save specifically for multi-select system details
+        function saveSystemDetailsChanges() {
+            if (isRestoring) return;
+            
+            // Force update of systemDetails before saving
+            if (typeof rebuildSystemDetails === 'function') {
+                rebuildSystemDetails();
+            }
+            
+            // Trigger a save
+            setTimeout(saveFormData, 100);
 }
