@@ -42,6 +42,21 @@ function setupAutoSave() {
             saveFormData();
         }
     });
+
+    // Enhanced auto-save for dynamically created earth table fields
+    document.addEventListener('change', function(e) {
+        if (e.target.closest('#earthTableContainer')) {
+            console.log('Earth table field changed:', e.target);
+            debouncedSave();
+        }
+    });
+    
+    document.addEventListener('input', function(e) {
+        if (e.target.closest('#earthTableContainer')) {
+            console.log('Earth table field input:', e.target);
+            debouncedSave();
+        }
+    });
 }
 
 // Debounced save function - waits for user to stop typing
@@ -180,10 +195,14 @@ function restoreFormData() {
                         // Restore table data after generation
                                 setTimeout(() => {
                                 earthTableData = formData.earthTableData;
+                                    
+                                    // Populate the actual HTML form fields in the table
+                                    restoreEarthTableFields();
+                                    
                                 if (typeof calculateOverallResistance === 'function') {
                                     calculateOverallResistance();
                                 }
-                            }, 200);
+                            }, 500);
                         }
                     }
                 }, 100);
@@ -355,3 +374,71 @@ function clearAutoSaveAfterPDF() {
 
 // Export function for use in other scripts
 window.clearAutoSaveAfterPDF = clearAutoSaveAfterPDF;
+
+// Restore earth table field values to HTML form elements
+function restoreEarthTableFields() {
+    if (!earthTableData || earthTableData.length === 0) return;
+    
+    const tableBody = document.getElementById('earthTableBody');
+    if (!tableBody) return;
+    
+    console.log('Restoring earth table fields for', earthTableData.length, 'rows');
+    
+    earthTableData.forEach((earthData, index) => {
+        const row = tableBody.children[index];
+        if (!row) return;
+        
+        console.log(`Restoring row ${index + 1}:`, earthData);
+        
+        // Restore resistance value (column 1)
+        const resistanceInput = row.children[1]?.querySelector('input[type="number"]');
+        if (resistanceInput && earthData.resistance) {
+            resistanceInput.value = earthData.resistance;
+            console.log(`Set resistance: ${earthData.resistance}`);
+        }
+        
+        // Restore Test Clamp (column 2)
+        const testClampSelect = row.children[2]?.querySelector('select');
+        if (testClampSelect && earthData.testClamp) {
+            testClampSelect.value = earthData.testClamp;
+            console.log(`Set testClamp: ${earthData.testClamp}`);
+        }
+        
+        // Restore Pit Type (column 3)
+        const pitTypeSelect = row.children[3]?.querySelector('select');
+        if (pitTypeSelect && earthData.pitType) {
+            pitTypeSelect.value = earthData.pitType;
+            console.log(`Set pitType: ${earthData.pitType}`);
+        }
+        
+        // Restore Test Type (column 4)
+        const testTypeSelect = row.children[4]?.querySelector('select');
+        if (testTypeSelect && earthData.testType) {
+            testTypeSelect.value = earthData.testType;
+            console.log(`Set testType: ${earthData.testType}`);
+        }
+        
+        // Restore Ground Type (column 5)
+        const groundTypeSelect = row.children[5]?.querySelector('select');
+        if (groundTypeSelect && earthData.groundType) {
+            groundTypeSelect.value = earthData.groundType;
+            console.log(`Set groundType: ${earthData.groundType}`);
+        }
+        
+        // Restore Earth Type (column 6)
+        const earthTypeSelect = row.children[6]?.querySelector('select');
+        if (earthTypeSelect && earthData.earthType) {
+            earthTypeSelect.value = earthData.earthType;
+            console.log(`Set earthType: ${earthData.earthType}`);
+        }
+        
+        // Restore Comment (column 7)
+        const commentInput = row.children[7]?.querySelector('input[type="text"]');
+        if (commentInput && earthData.comment) {
+            commentInput.value = earthData.comment;
+            console.log(`Set comment: ${earthData.comment}`);
+        }
+    });
+    
+    console.log('Earth table fields restoration complete');
+}
