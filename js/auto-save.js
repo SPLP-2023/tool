@@ -299,15 +299,26 @@ function restoreFormData() {
                 Object.keys(formData.systemDetails).forEach(category => {
                     if (Array.isArray(formData.systemDetails[category])) {
                         formData.systemDetails[category].forEach(value => {
-                            // Find the option by onclick content
-                            const escapedValue = value.replace(/'/g, "\\'").replace(/"/g, '\\"');
-                            let option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${escapedValue}')"]`);
+                            // Find the option by onclick content (simplified)
+                            let option = document.querySelector(`[onclick*="selectSystemDetail('${category}', '${value}')"]`);
+                            
+                            // If that fails, try searching through all options manually
+                            if (!option) {
+                                const allOptions = document.querySelectorAll(`#${category}List .failure-option`);
+                                option = Array.from(allOptions).find(opt => 
+                                    opt.textContent.trim() === value && 
+                                    opt.onclick && 
+                                    opt.onclick.toString().includes(`selectSystemDetail('${category}', '${value}')`)
+                                );
+                            }
                             
                             if (option) {
                                 option.classList.add('selected');
                                 console.log(`Restored system detail: ${category} - ${value}`);
                             } else {
                                 console.warn(`Could not find system detail option: ${category} - ${value}`);
+                                console.log(`Looking in container: #${category}List`);
+                                console.log(`Available options:`, Array.from(document.querySelectorAll(`#${category}List .failure-option`)).map(o => o.textContent.trim()));
                             }
                         });
                     }
