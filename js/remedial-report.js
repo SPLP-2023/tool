@@ -647,14 +647,6 @@ function validateRemedialData() {
         errors.push('Remedial Engineer Name is required');
     }
     
-    if (!data.siteStaffName.trim()) {
-        errors.push('Site Staff Name is required');
-    }
-    
-    if (!window.siteStaffSignature || !window.siteStaffSignature.isSaved()) {
-        errors.push('Site Staff signature is required');
-    }
-    
     if (data.selectedFailures.length === 0 && data.selectedRecommendations.length === 0) {
         errors.push('At least one failure or recommendation must be selected');
     }
