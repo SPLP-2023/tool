@@ -475,32 +475,19 @@ function validateEarthTable() {
 function handleImageUpload(input, previewId) {
     if (input.files[0]) {
         const file = input.files[0];
-        
-        // Show loading message
         const preview = document.getElementById(previewId);
-        if (preview) {
-            preview.textContent = 'Processing image...';
-        }
-        
-        // Fix orientation and compress
+        if (preview) preview.textContent = 'Processing image...';
+
         fixImageOrientation(file).then(correctedImageData => {
-            uploadedImages[previewId] = file;
-            uploadedImages[previewId + '_data'] = correctedImageData;
-            if (preview) {
-                preview.textContent = 'Image uploaded successfully';
-            }
+            // Compress the image before saving
+            compressImage(correctedImageData, 1200, 1200, 0.7).then(compressedData => {
+                uploadedImages[previewId] = file;
+                uploadedImages[previewId + '_data'] = compressedData;
+                if (preview) preview.textContent = 'Image uploaded successfully';
+            });
         }).catch(error => {
-            console.error('Error processing image:', error);
-            // Fallback to original method
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedImages[previewId + '_data'] = e.target.result;
-            };
-            reader.readAsDataURL(file);
-            uploadedImages[previewId] = file;
-            if (preview) {
-                preview.textContent = 'Image uploaded (orientation may need manual correction)';
-            }
+            if (preview) preview.textContent = 'Image upload failed';
+            console.error('Image processing error:', error);
         });
     }
 }
@@ -511,40 +498,56 @@ function handleMultipleImageUpload(input, previewId) {
         const files = Array.from(input.files);
         uploadedImages[previewId] = files;
         uploadedImages[previewId + '_data'] = [];
-        
-        // Show processing message
         const preview = document.getElementById(previewId);
-        if (preview) {
-            preview.textContent = 'Processing images...';
-        }
-        
+        if (preview) preview.textContent = 'Processing images...';
         let processedCount = 0;
-        
+
         files.forEach((file, index) => {
             fixImageOrientation(file).then(correctedImageData => {
-                uploadedImages[previewId + '_data'][index] = correctedImageData;
-                processedCount++;
-                
-                // Update preview when all images are processed
-                if (processedCount === files.length && preview) {
-                    preview.textContent = `${files.length} image(s) uploaded`;
-                }
+                compressImage(correctedImageData, 1200, 1200, 0.7).then(compressedData => {
+                    uploadedImages[previewId + '_data'][index] = compressedData;
+                    processedCount++;
+                    if (processedCount === files.length && preview) {
+                        preview.textContent = `${files.length} image(s) uploaded`;
+                    }
+                });
             }).catch(error => {
-                console.error('Error processing image:', error);
-                // Fallback for this image
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedImages[previewId + '_data'][index] = e.target.result;
-                };
-                reader.readAsDataURL(file);
-                processedCount++;
-                
-                if (processedCount === files.length && preview) {
-                    preview.textContent = `${files.length} image(s) uploaded (some may need manual rotation)`;
-                }
+                if (preview) preview.textContent = 'Image upload failed';
+                console.error('Image processing error:', error);
             });
         });
     }
+}
+
+// Compress an image (base64) to a max size and quality
+function compressImage(base64Str, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            let { width, height } = img;
+            const aspectRatio = width / height;
+
+            // Scale down if too big
+            if (width > maxWidth) {
+                width = maxWidth;
+                height = maxWidth / aspectRatio;
+            }
+            if (height > maxHeight) {
+                height = maxHeight;
+                width = maxHeight * aspectRatio;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Always save as JPEG for efficiency
+            resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = base64Str;
+    });
 }
 
 // Register service worker
@@ -763,12 +766,3 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(addExportButtonToTIReport, 1000); // Small delay to ensure other scripts have loaded
     }
 });
-
-
-
-
-
-
-
-
-
