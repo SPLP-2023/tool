@@ -1,4 +1,4 @@
-// Auto-Save System - Saves form progress automatically
+// Auto-Save System - Saves form progress automatically 
 // Prevents data loss from page refresh, browser crash, accidental navigation
 
 const STORAGE_KEY = 'splp_report_autosave';
