@@ -114,7 +114,6 @@ function saveFormData() {
             jobReference: document.getElementById('jobReference')?.value || '',
             siteStaffName: document.getElementById('siteStaffName')?.value || '',
             siteStaffSignature: window.siteStaffSignature?.signatureData || null,
-            clientSignature: window.clientSignature?.signatureData || null,
             generalComments: document.getElementById('generalComments')?.value || '',
             finalComments: document.getElementById('finalComments')?.value || '',
             recommendations: document.getElementById('recommendations')?.value || '',
@@ -157,7 +156,7 @@ function saveFormData() {
         console.log('Saved selectedFailures:', safeSelectedFailuresList.length);
         console.log('Saved systemDetails keys:', Object.keys(safeSystemDetails));
         console.log('SystemDetails content:', safeSystemDetails);
-        console.log('Saved clientSignature:', formData.clientSignature ? 'Yes' : 'No');
+        console.log('Saved siteStaffSignature:', formData.siteStaffSignature ? 'Yes' : 'No');
     } catch (error) {
         console.error('Failed to save form data:', error);
     }
@@ -190,10 +189,10 @@ function restoreFormData() {
             window.siteStaffSignature.updateStatus('Signature restored');
         }
 
-        // Restore client signature
-        if (formData.clientSignature && window.clientSignature) {
-            window.clientSignature.signatureData = formData.clientSignature;
-            window.clientSignature.updateStatus('Signature restored');
+        // Restore site staff signature data
+        if (formData.siteStaffSignature && window.siteStaffSignature) {
+            window.siteStaffSignature.signatureData = formData.siteStaffSignature;
+            window.siteStaffSignature.updateStatus('Signature restored');
         }
 
         
@@ -220,19 +219,48 @@ function restoreFormData() {
                     updateFailuresList();
                 }
                 
-                // Restore selected failures with better timing
+                // Restore selected failures with complete restoration
                 setTimeout(() => {
                     if (formData.selectedFailures && Array.isArray(formData.selectedFailures)) {
                         if (window.selectedFailuresList !== undefined) {
                             window.selectedFailuresList = formData.selectedFailures;
-                            if (typeof updateSelectedFailures === 'function') {
-                                updateSelectedFailures();
-                                console.log('Selected failures restored:', formData.selectedFailures.length);
-                            }
+                    
+                            // Step 1: Restore visual selections in "Available Failures" list
+                            console.log('Restoring visual selections for', formData.selectedFailures.length, 'failures');
+                            formData.selectedFailures.forEach(failureObj => {
+                                // Look for failure options in the Available Failures list
+                                const failureElements = document.querySelectorAll('#failuresList .failure-option');
+                                failureElements.forEach(element => {
+                                    if (element.textContent.trim() === failureObj.failure) {
+                                        element.classList.add('selected');
+                                        console.log('Restored visual selection:', failureObj.failure);
+                                    }
+                                });
+                            });
+            
+                        // Step 2: Rebuild the "Selected Failures" detailed view with comments
+                        if (typeof updateSelectedFailures === 'function') {
+                            updateSelectedFailures();
+                            console.log('Selected failures detailed view updated');
+                            
+                            // Step 3: Restore comments after the detailed view is created
+                            setTimeout(() => {
+                                formData.selectedFailures.forEach((failureObj, index) => {
+                                    if (failureObj.comment) {
+                                        const commentTextarea = document.querySelector(`textarea[onchange*="updateFailureComment(${index}"]`);
+                                        if (commentTextarea) {
+                                            commentTextarea.value = failureObj.comment;
+                                            console.log(`Restored comment for failure ${index}:`, failureObj.comment);
+                                        }
+                                    }
+                                });
+                            }, 100); // Small delay to let the detailed view render
                         }
+            
+                        console.log('Selected failures restoration complete:', formData.selectedFailures.length);
                     }
-                }, 200); // Additional delay for failures restoration
-            }, 500); // Increased main timeout
+                }
+            }, 600); // Increased delay for failures restoration
         }
         
                 // Restore earth resistance testing
