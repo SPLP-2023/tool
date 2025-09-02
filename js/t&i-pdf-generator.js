@@ -1,4 +1,3 @@
-// =============================================================================
 // T&I PDF GENERATOR - COMPLETE STANDALONE FILE
 // Create as: js/t&i-pdf-generator.js
 // Replaces: pdf-generator.js + pdf-generator-shared.js for T&I reports only
