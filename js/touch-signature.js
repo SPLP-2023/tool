@@ -154,6 +154,20 @@ class TouchSignature {
     reset() {
         this.clear();
     }
+    
+    // Method to redraw the signature
+    redraw() {
+        if (this.signatureData) {
+            const img = new Image();
+            img.onload = () => {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+                this.updateStatus('Signature restored');
+                this.status.classList.add('saved');
+            };
+            img.src = this.signatureData;
+        }
+    }
 }
 
 // Global function to create signature instances easily
