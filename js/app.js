@@ -8,11 +8,13 @@ window.systemDetails = systemDetails;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    // Set today's date as default
-    const testDateElement = document.getElementById('testDate');
-    if (testDateElement) {
-        testDateElement.valueAsDate = new Date();
-    }
+    // Initialize the signature pad first!
+    window.siteStaffSignature = createTouchSignature('signatureCanvas', 'clearSignature', 'saveSignature', 'signatureStatus');
+    
+    // Now restore form data and setup auto-save
+    restoreFormData();
+    setupAutoSave();
+    addNewReportButton();
 });
 
 // Function to fix EXIF orientation (smart detection for portrait vs landscape)
