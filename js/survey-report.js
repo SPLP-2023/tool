@@ -265,14 +265,6 @@ function validateSurveyData() {
         errors.push('Surveyor Name is required');
     }
     
-    if (!data.clientRepName.trim()) {
-        errors.push('Site Representative Name is required');
-    }
-    
-    if (!clientSignature || !clientSignature.isSaved()) {
-        errors.push('Site Representative signature is required');
-    }
-    
     if (errors.length > 0) {
         alert('Please complete the following required fields:\n\n' + errors.join('\n'));
         return false;
