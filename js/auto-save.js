@@ -92,13 +92,18 @@ function saveFormData() {
             siteStaffSignature: window.siteStaffSignature?.signatureData || null,
             generalComments: document.getElementById('generalComments')?.value || '',
             finalComments: document.getElementById('finalComments')?.value || '',
+            recommendations: document.getElementById('recommendations')?.value || '',
             
             // Structure details
             structureHeight: document.getElementById('structureHeight')?.value || '',
             structurePerimeter: document.getElementById('structurePerimeter')?.value || '',
+            structureUse: document.getElementById('structureUse')?.value || '',
+            structureOccupancy: document.getElementById('structureOccupancy')?.value || '',
+            structureAge: document.getElementById('structureAge')?.value || '',
+            previousInspections: document.getElementById('previousInspections')?.value || '',
             
             // System dropdowns
-            earthPits: document.getElementById('earthPits')?.value || '',
+            earthArrangement: document.getElementById('earthArrangement')?.value || '',
             mainEquipotentialBond: document.getElementById('mainEquipotentialBond')?.value || '',
             surgeInstalled: document.getElementById('surgeInstalled')?.value || '',
             surgeType: document.getElementById('surgeType')?.value || '',
@@ -145,6 +150,10 @@ function restoreFormData() {
         setFieldValue('testKitRef', formData.testKitRef);
         setFieldValue('jobReference', formData.jobReference);
         setFieldValue('siteStaffName', formData.siteStaffName);
+        // Restore comments and recommendations
+        setFieldValue('generalComments', formData.generalComments);
+        setFieldValue('finalComments', formData.finalComments);
+        setFieldValue('recommendations', formData.recommendations);
 
         // Restore site staff signature
         if (formData.siteStaffSignature && window.siteStaffSignature) {
@@ -156,9 +165,13 @@ function restoreFormData() {
         // Restore structure details
         setFieldValue('structureHeight', formData.structureHeight);
         setFieldValue('structurePerimeter', formData.structurePerimeter);
+        setFieldValue('structureUse', formData.structureUse);
+        setFieldValue('structureOccupancy', formData.structureOccupancy);
+        setFieldValue('structureAge', formData.structureAge);
+        setFieldValue('previousInspections', formData.previousInspections);
         
         // Restore system dropdowns
-        setFieldValue('earthPits', formData.earthPits);
+        setFieldValue('earthArrangement', formData.earthArrangement);
         setFieldValue('mainEquipotentialBond', formData.mainEquipotentialBond);
         setFieldValue('surgeInstalled', formData.surgeInstalled);
         setFieldValue('surgeType', formData.surgeType);
@@ -181,7 +194,7 @@ function restoreFormData() {
                         }
                     }
                 }
-            }, 100);
+            }, 300);
         }
         
                 // Restore earth resistance testing
