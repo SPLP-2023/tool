@@ -247,7 +247,7 @@ function restoreFormData() {
                             setTimeout(() => {
                                 formData.selectedFailures.forEach((failureObj, index) => {
                                     if (failureObj.comment) {
-                                        const commentTextarea = document.querySelector(`textarea[onchange*="updateFailureComment(${index}"]`);
+                                        const commentTextarea = document.querySelector(`textarea[onchange*="updateFailureComment(${index})"]`);
                                         if (commentTextarea) {
                                             commentTextarea.value = failureObj.comment;
                                             console.log(`Restored comment for failure ${index}:`, failureObj.comment);
