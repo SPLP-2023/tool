@@ -235,6 +235,7 @@ function clearSurveyData() {
 function getSurveyData() {
     return {
         // Basic information
+        jobReference: document.getElementById('jobReference')?.value || '',
         siteAddress: document.getElementById('siteAddress')?.value || '',
         surveyDate: document.getElementById('surveyDate')?.value || '',
         surveyorName: document.getElementById('surveyorName')?.value || '',
