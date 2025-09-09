@@ -149,11 +149,6 @@ function generateAutoDescription() {
         description += ' No existing lightning protection system is visible.';
     }
     
-    // Electrical systems
-    if (electricalSystems.length > 0) {
-        description += ` Connected electrical systems include ${electricalSystems.join(', ')}, indicating comprehensive surge protection requirements.`;
-    }
-    
     return description.trim();
 }
 
