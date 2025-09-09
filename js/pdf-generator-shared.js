@@ -15,9 +15,6 @@ const COLUMN_WIDTH = 85;
 // Company footer text
 const COMPANY_FOOTER = "Strike Point Lightning Protection Ltd Registered office: Atkinson Evans, 10 Arnot Hill Road, Nottingham NG5 6LJ. Company No. 15114852, Registered in England and Wales. @: info@strikepoint.uk Tel: 01159903220";
 
-// Global images storage
-let uploadedImages = {};
-
 // Enhanced image handling with aspect ratio preservation
 function addImageToPDF(pdf, imageData, x, y, maxWidth, maxHeight, centerAlign = false) {
     if (imageData) {
