@@ -248,7 +248,7 @@ function generatePDF() {
         pdf.setFont(undefined, 'bold');
         pdf.text('Date:', leftX, leftY);
         pdf.setFont(undefined, 'normal');
-        pdf.text(testDate || 'N/A', leftX, leftY + valueGap);
+        pdf.text(formatDate(testDate) || 'N/A', leftX, leftY + valueGap);
         
         // RIGHT COLUMN
         let rightY = detailsY;
