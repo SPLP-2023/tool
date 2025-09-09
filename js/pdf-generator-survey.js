@@ -34,7 +34,15 @@ function generateSurveyPDF() {
         yPosition += imageHeight + 15;
     }
     
-    // Site address under building image
+    // Job Reference under building image (NEW)
+    if (surveyData.jobReference) {
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('Job Reference: ' + surveyData.jobReference, 105, yPosition, { align: 'center' });
+        yPosition += 10;
+    }
+    
+    // Site address under job reference
     if (surveyData.siteAddress) {
         pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
@@ -357,7 +365,17 @@ function generateSurveyPDF() {
         yPosition += 5;
     });
     
-    // Generate filename and save
-    const filename = generateFilename('Survey_Report');
-    pdf.save(filename);
+    // Generate filename with job reference and date format: DD-MM-YY
+    let filename = 'Lightning Protection Survey Report';
+    if (surveyData.jobReference) {
+        filename += ' - ' + surveyData.jobReference;
+    }
+    // Format date as DD-MM-YY  
+    const dateObj = new Date(surveyData.surveyDate);
+    const dd = String(dateObj.getDate()).padStart(2, '0');
+    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const yy = String(dateObj.getFullYear()).slice(-2);
+    filename += ` ${dd}-${mm}-${yy}`;
+    
+    pdf.save(filename + '.pdf');
 }
