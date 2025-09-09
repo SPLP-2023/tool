@@ -124,8 +124,8 @@ function generateAutoDescription() {
         if (numberOfOccupants) buildingDetails.push(`accommodates a maximum of ${numberOfOccupants} occupants`);
         
         let roofDetails = [];
-        if (roofType) roofDetails.push(`${roofType} roofing`);
-        if (roofAccess) roofDetails.push(`${roofAccess}`);
+        if (roofType) roofDetails.push(`${roofType.toLowerCase()} roofing`);
+        if (roofAccess) roofDetails.push(`${roofAccess.toLowerCase()}`);
         
         if (buildingDetails.length > 0 || roofDetails.length > 0) {
             description += 'The ';
