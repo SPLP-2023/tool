@@ -38,14 +38,14 @@ function generateSurveyPDF() {
     if (surveyData.jobReference) {
         pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
-        pdf.text('Job Reference: ' + surveyData.jobReference, 105, yPosition, { align: 'center' });
+        pdf.text(surveyData.jobReference, 105, yPosition, { align: 'center' });
         yPosition += 10;
     }
     
     // Site address under job reference
     if (surveyData.siteAddress) {
         pdf.setFontSize(12);
-        pdf.setFont(undefined, 'bold');
+        pdf.setFont(undefined, 'normal');
         pdf.text('Site Address:', 105, yPosition, { align: 'center' });
         yPosition += 8;
         
