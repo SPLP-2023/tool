@@ -108,6 +108,12 @@ function generateSurveyPDF() {
         yPosition += 20;
     }
 
+    // After the auto-description paragraph ends
+    yPosition += 15;
+    
+    // ==================== START NEW PAGE FOR SURVEY BREAKDOWN ====================
+    yPosition = startNewSection(pdf, 'SURVEY BREAKDOWN', COMPANY_FOOTER);
+
     // Two-column layout starts here
     const columnStartY = yPosition;
 
@@ -117,31 +123,31 @@ function generateSurveyPDF() {
     pdf.setFont(undefined, 'bold');
     pdf.text('SYSTEM OVERVIEW', LEFT_COLUMN_X, yPosition);
     let leftColumnY = yPosition + 10;
-
+    
     pdf.setFont(undefined, 'normal');
     pdf.setFontSize(10);
-
+    
     const systemOverview = [];
     if (surveyData.existingSystem) systemOverview.push('System Status: ' + surveyData.existingSystem);
     if (surveyData.systemCondition) systemOverview.push('Overall Condition: ' + surveyData.systemCondition);
     if (surveyData.lastTested) systemOverview.push('Last Tested: ' + surveyData.lastTested);
     if (surveyData.standardInstalled) systemOverview.push('Installed Standard: ' + surveyData.standardInstalled);
-
+    
     systemOverview.forEach((item, index) => {
         pdf.text(item, LEFT_COLUMN_X, leftColumnY + (index * 6));
     });
-
+    
     leftColumnY += systemOverview.length * 6 + 15;
-
-    // Structure Overview (renamed from Physical Characteristics)
+    
+    // Structure Overview
     pdf.setFont(undefined, 'bold');
     pdf.setFontSize(12);
     pdf.text('STRUCTURE OVERVIEW', LEFT_COLUMN_X, leftColumnY);
     leftColumnY += 10;
-
+    
     pdf.setFont(undefined, 'normal');
     pdf.setFontSize(10);
-
+    
     const structureDetails = [];
     if (surveyData.structureType) structureDetails.push('Type: ' + surveyData.structureType);
     if (surveyData.structureHeight) structureDetails.push('Height: ' + surveyData.structureHeight + ' m');
@@ -149,25 +155,25 @@ function generateSurveyPDF() {
     if (surveyData.numberOfOccupants) structureDetails.push('Occupants: ' + surveyData.numberOfOccupants);
     if (surveyData.buildingAge) structureDetails.push('Age: ' + surveyData.buildingAge + ' years');
     if (surveyData.hasBasement) structureDetails.push('Basement: ' + surveyData.hasBasement);
-
+    
     structureDetails.forEach((detail, index) => {
         pdf.text(detail, LEFT_COLUMN_X, leftColumnY + (index * 6));
     });
-
+    
     leftColumnY += structureDetails.length * 6 + 15;
-
+    
     // ==================== RIGHT COLUMN ====================
     let rightColumnY = columnStartY;
-
+    
     // Visible System Components
     pdf.setFont(undefined, 'bold');
     pdf.setFontSize(12);
     pdf.text('VISIBLE SYSTEM COMPONENTS', RIGHT_COLUMN_X, rightColumnY);
     rightColumnY += 10;
-
+    
     pdf.setFont(undefined, 'normal');
     pdf.setFontSize(10);
-
+    
     if (surveyData.systemComponents.length > 0) {
         surveyData.systemComponents.forEach((component, index) => {
             pdf.text('• ' + component, RIGHT_COLUMN_X, rightColumnY + (index * 6));
@@ -177,8 +183,8 @@ function generateSurveyPDF() {
         pdf.text('No visible components identified', RIGHT_COLUMN_X, rightColumnY);
         rightColumnY += 20;
     }
-
-    // Structure Fabrics (renamed from Materials & Conditions)
+    
+    // Structure Fabrics - using the compact format you approved
     pdf.setFont(undefined, 'bold');
     pdf.setFontSize(12);
     pdf.text('STRUCTURE FABRICS', RIGHT_COLUMN_X, rightColumnY);
@@ -198,20 +204,16 @@ function generateSurveyPDF() {
     });
     
     rightColumnY += structureFabrics.length * 6 + 15;
-
+    
     // Set yPosition to continue after both columns
-    yPosition = Math.max(leftColumnY, rightColumnY) + 10;
-
-    // ==================== CONNECTED ELECTRICAL SYSTEMS SECTION ====================
+    yPosition = Math.max(leftColumnY, rightColumnY) + 20;
+    
+    // ==================== CONNECTED ELECTRICAL SYSTEMS (SAME PAGE) ====================
     if (surveyData.electricalSystems.length > 0) {
-        if (yPosition > PAGE_BOTTOM - 60) {
-            yPosition = startNewSection(pdf, 'CONNECTED ELECTRICAL SYSTEMS', COMPANY_FOOTER);
-        } else {
-            pdf.setFontSize(12);
-            pdf.setFont(undefined, 'bold');
-            pdf.text('CONNECTED ELECTRICAL SYSTEMS', LEFT_COLUMN_X, yPosition);
-            yPosition += 15;
-        }
+        pdf.setFontSize(12);
+        pdf.setFont(undefined, 'bold');
+        pdf.text('CONNECTED ELECTRICAL SYSTEMS', LEFT_COLUMN_X, yPosition);
+        yPosition += 15;
         
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(10);
@@ -226,16 +228,6 @@ function generateSurveyPDF() {
         surveyData.electricalSystems.forEach((system, index) => {
             const currentX = currentColumn === 'left' ? LEFT_COLUMN_X : RIGHT_COLUMN_X;
             let currentY = currentColumn === 'left' ? leftElecY : rightElecY;
-            
-            // Check if we need a new page
-            if (currentY > PAGE_BOTTOM - 15) {
-                pdf.addPage();
-                yPosition = addPageHeader(pdf, 'CONNECTED ELECTRICAL SYSTEMS (CONTINUED)');
-                addFooterToPage(pdf, COMPANY_FOOTER);
-                leftElecY = yPosition;
-                rightElecY = yPosition;
-                currentY = yPosition;
-            }
             
             pdf.text('• ' + system, currentX, currentY);
             
