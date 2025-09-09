@@ -7,6 +7,16 @@
         const COMPANY_LOGO_URL = "./assets/Color logo - no background (px reduction).png";
         const FOOTER_IMAGE_URL = "./assets/es12.png";
         const HEADER_IMAGE_URL = "./assets/SP Bolt 400x400.png";
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
         
         // Ensure systemDetails is populated before PDF generation
         if (!window.systemDetails || Object.keys(window.systemDetails).length === 0) {
