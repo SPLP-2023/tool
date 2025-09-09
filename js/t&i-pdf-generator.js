@@ -677,10 +677,10 @@ function generatePDF() {
                 pdf.setFont(undefined, 'normal');
                 if (earthData.overallResistance <= 10) {
                     pdf.setTextColor(34, 139, 34);
-                    pdf.text('Overall Below 10Ohms', 105, yPosition, { align: 'center' });
+                    pdf.text('Overall Below 10Ohms' + additionalText, 105, yPosition, { align: 'center' });
                 } else {
                     pdf.setTextColor(220, 20, 60);
-                    pdf.text('Overall Exceeds 10Ohms - Reduction Required', 105, yPosition, { align: 'center' });
+                    pdf.text('Overall Exceeds 10Ohms' + additionalText, 105, yPosition, { align: 'center' });
                 }
                 pdf.setTextColor(0, 0, 0);
                 yPosition += 20;
@@ -749,10 +749,10 @@ function generatePDF() {
             pdf.setFont(undefined, 'normal');
             if (overallResistance <= 10) {
                 pdf.setTextColor(34, 139, 34);
-                pdf.text('Overall Below 10Ohms', 105, yPosition, { align: 'center' });
+                pdf.text('Overall Below 10Ohms' + additionalText, 105, yPosition, { align: 'center' });
             } else {
                 pdf.setTextColor(220, 20, 60);
-                pdf.text('Overall Exceeds 10Ohms - Reduction Required', 105, yPosition, { align: 'center' });
+                pdf.text('Overall Exceeds 10Ohms' + additionalText, 105, yPosition, { align: 'center' });
             }
             pdf.setTextColor(0, 0, 0);
         }
