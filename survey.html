@@ -87,25 +87,25 @@
                 <label for="structureType">Structure Type:</label>
                 <select id="structureType">
                     <option value="">Select structure type...</option>
-                    <option value="Residential - Single Family">Residential - Single Family</option>
-                    <option value="Residential - Multi-Family">Residential - Multi-Family</option>
-                    <option value="Commercial - Office">Commercial - Office</option>
-                    <option value="Commercial - Retail">Commercial - Retail</option>
-                    <option value="Commercial - Warehouse">Commercial - Warehouse</option>
-                    <option value="Industrial - Manufacturing">Industrial - Manufacturing</option>
-                    <option value="Industrial - Chemical Processing">Industrial - Chemical Processing</option>
-                    <option value="Agricultural - Farm Building">Agricultural - Farm Building</option>
-                    <option value="Educational - School">Educational - School</option>
-                    <option value="Educational - University">Educational - University</option>
-                    <option value="Healthcare - Hospital">Healthcare - Hospital</option>
-                    <option value="Healthcare - Care Home">Healthcare - Care Home</option>
-                    <option value="Heritage - Historic Building">Heritage - Historic Building</option>
-                    <option value="Telecommunications - Mast/Tower">Telecommunications - Mast/Tower</option>
-                    <option value="Telecommunications - Data Center">Telecommunications - Data Center</option>
-                    <option value="Utilities - Power Station">Utilities - Power Station</option>
-                    <option value="Utilities - Water Treatment">Utilities - Water Treatment</option>
-                    <option value="Entertainment - Sports Stadium">Entertainment - Sports Stadium</option>
-                    <option value="Transport - Airport Terminal">Transport - Airport Terminal</option>
+                    <option value="Residential Single Family Home">Residential Single Family Home</option>
+                    <option value="Residential Multi-Family Home">Residential Multi-Family Home</option>
+                    <option value="Office Building">Office Building</option>
+                    <option value="Retail Store">Retail Store</option>
+                    <option value="Warehouse">Warehouse</option>
+                    <option value="Manufacturing Plant">Manufacturing Plant</option>
+                    <option value="Chemical Processing Plant">Chemical Processing Plant</option>
+                    <option value="Agricultural Farm Building">Agricultural Farm Building</option>
+                    <option value="School">School</option>
+                    <option value="University">University</option>
+                    <option value="Hospital">Hospital</option>
+                    <option value="Care Home">Care Home</option>
+                    <option value="Historic Building">Historic Building</option>
+                    <option value="Telecommunications Mast/Tower">Telecommunications Mast/Tower</option>
+                    <option value="Telecommunications Data Center">Telecommunications Data Center</option>
+                    <option value="Power Station">Power Station</option>
+                    <option value="Water Treatment">Water Treatment Plant</option>
+                    <option value="Sports Stadium">Sports Stadium</option>
+                    <option value="Airport Terminal">Airport Terminal</option>
                     <option value="Other">Other</option>
                 </select>
             </div>
@@ -224,12 +224,12 @@
                     <label for="roofType">Roof Type:</label>
                     <select id="roofType">
                         <option value="">Select roof type...</option>
-                        <option value="Flat - Membrane">Flat - Membrane</option>
-                        <option value="Flat - Concrete">Flat - Concrete</option>
-                        <option value="Pitched - Tiles">Pitched - Tiles</option>
-                        <option value="Pitched - Slate">Pitched - Slate</option>
-                        <option value="Pitched - Metal">Pitched - Metal</option>
-                        <option value="Complex - Multiple Levels">Complex - Multiple Levels</option>
+                        <option value="Flat Membrane">Flat Membrane</option>
+                        <option value="Flat Concrete">Flat Concrete</option>
+                        <option value="Pitched Tiles">Pitched Tiles</option>
+                        <option value="Pitched Slate">Pitched Slate</option>
+                        <option value="Pitched Metal">Pitched Metal</option>
+                        <option value="Complex Multiple Levels">Complex Multiple Levels</option>
                         <option value="Dome">Dome</option>
                         <option value="Green Roof">Green Roof</option>
                         <option value="Thatch">Thatch</option>
@@ -239,10 +239,10 @@
                     <label for="roofAccess">Roof Access:</label>
                     <select id="roofAccess">
                         <option value="">Select...</option>
-                        <option value="Full Access - Internal Stairs">Full Access - Internal Stairs</option>
-                        <option value="Full Access - External Ladder">Full Access - External Ladder</option>
-                        <option value="Limited Access - Hatch Only">Limited Access - Hatch Only</option>
-                        <option value="No Safe Access">No Safe Access</option>
+                        <option value="Internal Stairs">Internal Stairs</option>
+                        <option value="Internal Ladder with Roof Hatch">Internal Ladder with Roof Hatch</option>    
+                        <option value="External Ladder">External Ladder</option>
+                        <option value="No Access">No Access</option>
                         <option value="Requires Special Equipment">Requires Special Equipment</option>
                     </select>
                 </div>
@@ -258,9 +258,9 @@
                     <label for="existingSystem">Lightning Protection System:</label>
                     <select id="existingSystem">
                         <option value="None Visible">None Visible</option>
-                        <option value="Complete System">Complete System Present</option>
-                        <option value="Partial System">Partial System Present</option>
-                        <option value="Damaged System">Damaged System Present</option>
+                        <option value="Full System">Full System Present</option>
+                        <option value="Partial System">Partial System</option>
+                        <option value="Visibly Damaged System">Visibly Damaged System</option>
                         <option value="System Unknown">System Present - Condition Unknown</option>
                     </select>
                 </div>
@@ -284,7 +284,7 @@
                 <div class="checkbox-grid">
                     <div class="checkbox-item">
                         <input type="checkbox" id="airTerminalsPresent" class="system-checkbox">
-                        <label for="airTerminalsPresent">Air Terminals Present</label>
+                        <label for="airTerminalsPresent">Air Termination Present</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="downConductorsVisible" class="system-checkbox">
