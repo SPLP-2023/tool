@@ -183,47 +183,21 @@ function generateSurveyPDF() {
     pdf.setFontSize(12);
     pdf.text('STRUCTURE FABRICS', RIGHT_COLUMN_X, rightColumnY);
     rightColumnY += 10;
-
+    
     pdf.setFont(undefined, 'normal');
     pdf.setFontSize(10);
-
-    const fabricDetails = [];
-
-    // Wall Types
-    if (surveyData.wallTypes.length > 0) {
-        fabricDetails.push('Wall Types:');
-        surveyData.wallTypes.forEach(type => fabricDetails.push('  • ' + type));
-    }
-
-    // Ground Types  
-    if (surveyData.groundTypes.length > 0) {
-        fabricDetails.push('Ground Types:');
-        surveyData.groundTypes.forEach(type => fabricDetails.push('  • ' + type));
-    }
-
-    // Roof Type (moved from Structure Overview)
-    if (surveyData.roofType) {
-        fabricDetails.push('Roof Type:');
-        fabricDetails.push('  • ' + surveyData.roofType);
-    }
-
-    // Roof Access (moved from Structure Overview)
-    if (surveyData.roofAccess) {
-        fabricDetails.push('Roof Access:');
-        fabricDetails.push('  • ' + surveyData.roofAccess);
-    }
-
-    fabricDetails.forEach((detail, index) => {
-        if (detail.startsWith('  •')) {
-            pdf.text(detail, RIGHT_COLUMN_X + 5, rightColumnY + (index * 6));
-        } else {
-            pdf.setFont(undefined, 'bold');
-            pdf.text(detail, RIGHT_COLUMN_X, rightColumnY + (index * 6));
-            pdf.setFont(undefined, 'normal');
-        }
+    
+    const structureFabrics = [];
+    if (surveyData.wallTypes.length > 0) structureFabrics.push('Wall Types: ' + surveyData.wallTypes.join(', '));
+    if (surveyData.groundTypes.length > 0) structureFabrics.push('Ground Types: ' + surveyData.groundTypes.join(', '));
+    if (surveyData.roofType) structureFabrics.push('Roof Type: ' + surveyData.roofType);
+    if (surveyData.roofAccess) structureFabrics.push('Roof Access: ' + surveyData.roofAccess);
+    
+    structureFabrics.forEach((item, index) => {
+        pdf.text(item, RIGHT_COLUMN_X, rightColumnY + (index * 6));
     });
-
-    rightColumnY += fabricDetails.length * 6 + 15;
+    
+    rightColumnY += structureFabrics.length * 6 + 15;
 
     // Set yPosition to continue after both columns
     yPosition = Math.max(leftColumnY, rightColumnY) + 10;
