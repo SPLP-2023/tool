@@ -82,7 +82,7 @@ function generateSurveyPDF() {
     
     // ==================== SURVEY SUMMARY SECTION ====================
     yPosition = startNewSection(pdf, 'SURVEY SUMMARY', COMPANY_FOOTER);
-    
+
     // Auto-generated description
     if (surveyData.autoDescription) {
         pdf.setFontSize(12);
@@ -105,9 +105,129 @@ function generateSurveyPDF() {
             yPosition += 5;
         });
         
-        yPosition += 15;
+        yPosition += 20;
     }
-    
+
+    // Two-column layout starts here
+    const columnStartY = yPosition;
+
+    // ==================== LEFT COLUMN ====================
+    // System Overview
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('SYSTEM OVERVIEW', LEFT_COLUMN_X, yPosition);
+    let leftColumnY = yPosition + 10;
+
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(10);
+
+    const systemOverview = [];
+    if (surveyData.existingSystem) systemOverview.push('System Status: ' + surveyData.existingSystem);
+    if (surveyData.systemCondition) systemOverview.push('Overall Condition: ' + surveyData.systemCondition);
+    if (surveyData.lastTested) systemOverview.push('Last Tested: ' + surveyData.lastTested);
+    if (surveyData.standardInstalled) systemOverview.push('Installed Standard: ' + surveyData.standardInstalled);
+
+    systemOverview.forEach((item, index) => {
+        pdf.text(item, LEFT_COLUMN_X, leftColumnY + (index * 6));
+    });
+
+    leftColumnY += systemOverview.length * 6 + 15;
+
+    // Structure Overview (renamed from Physical Characteristics)
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(12);
+    pdf.text('STRUCTURE OVERVIEW', LEFT_COLUMN_X, leftColumnY);
+    leftColumnY += 10;
+
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(10);
+
+    const structureDetails = [];
+    if (surveyData.structureType) structureDetails.push('Type: ' + surveyData.structureType);
+    if (surveyData.structureHeight) structureDetails.push('Height: ' + surveyData.structureHeight + ' m');
+    if (surveyData.numberOfFloors) structureDetails.push('Floors: ' + surveyData.numberOfFloors);
+    if (surveyData.numberOfOccupants) structureDetails.push('Occupants: ' + surveyData.numberOfOccupants);
+    if (surveyData.buildingAge) structureDetails.push('Age: ' + surveyData.buildingAge + ' years');
+    if (surveyData.hasBasement) structureDetails.push('Basement: ' + surveyData.hasBasement);
+
+    structureDetails.forEach((detail, index) => {
+        pdf.text(detail, LEFT_COLUMN_X, leftColumnY + (index * 6));
+    });
+
+    leftColumnY += structureDetails.length * 6 + 15;
+
+    // ==================== RIGHT COLUMN ====================
+    let rightColumnY = columnStartY;
+
+    // Visible System Components
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(12);
+    pdf.text('VISIBLE SYSTEM COMPONENTS', RIGHT_COLUMN_X, rightColumnY);
+    rightColumnY += 10;
+
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(10);
+
+    if (surveyData.systemComponents.length > 0) {
+        surveyData.systemComponents.forEach((component, index) => {
+            pdf.text('• ' + component, RIGHT_COLUMN_X, rightColumnY + (index * 6));
+        });
+        rightColumnY += surveyData.systemComponents.length * 6 + 15;
+    } else {
+        pdf.text('No visible components identified', RIGHT_COLUMN_X, rightColumnY);
+        rightColumnY += 20;
+    }
+
+    // Structure Fabrics (renamed from Materials & Conditions)
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(12);
+    pdf.text('STRUCTURE FABRICS', RIGHT_COLUMN_X, rightColumnY);
+    rightColumnY += 10;
+
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(10);
+
+    const fabricDetails = [];
+
+    // Wall Types
+    if (surveyData.wallTypes.length > 0) {
+        fabricDetails.push('Wall Types:');
+        surveyData.wallTypes.forEach(type => fabricDetails.push('  • ' + type));
+    }
+
+    // Ground Types  
+    if (surveyData.groundTypes.length > 0) {
+        fabricDetails.push('Ground Types:');
+        surveyData.groundTypes.forEach(type => fabricDetails.push('  • ' + type));
+    }
+
+    // Roof Type (moved from Structure Overview)
+    if (surveyData.roofType) {
+        fabricDetails.push('Roof Type:');
+        fabricDetails.push('  • ' + surveyData.roofType);
+    }
+
+    // Roof Access (moved from Structure Overview)
+    if (surveyData.roofAccess) {
+        fabricDetails.push('Roof Access:');
+        fabricDetails.push('  • ' + surveyData.roofAccess);
+    }
+
+    fabricDetails.forEach((detail, index) => {
+        if (detail.startsWith('  •')) {
+            pdf.text(detail, RIGHT_COLUMN_X + 5, rightColumnY + (index * 6));
+        } else {
+            pdf.setFont(undefined, 'bold');
+            pdf.text(detail, RIGHT_COLUMN_X, rightColumnY + (index * 6));
+            pdf.setFont(undefined, 'normal');
+        }
+    });
+
+    rightColumnY += fabricDetails.length * 6 + 15;
+
+    // Set yPosition to continue after both columns
+    yPosition = Math.max(leftColumnY, rightColumnY) + 10;
+
     // ==================== CONNECTED ELECTRICAL SYSTEMS SECTION ====================
     if (surveyData.electricalSystems.length > 0) {
         if (yPosition > PAGE_BOTTOM - 60) {
@@ -157,110 +277,10 @@ function generateSurveyPDF() {
         
         yPosition = Math.max(leftElecY, rightElecY) + 15;
     }
-    
-    // ==================== DETAILED STRUCTURE INFORMATION ====================
-    yPosition = startNewSection(pdf, 'DETAILED STRUCTURE INFORMATION', COMPANY_FOOTER);
-    
-    // Left column - Physical Details
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('PHYSICAL CHARACTERISTICS', LEFT_COLUMN_X, yPosition);
-    let leftDetailY = yPosition + 10;
-    pdf.setFont(undefined, 'normal');
-    pdf.setFontSize(10);
-    
-    const leftDetails = [];
-    if (surveyData.structureType) leftDetails.push('Type: ' + surveyData.structureType);
-    if (surveyData.structureHeight) leftDetails.push('Height: ' + surveyData.structureHeight + ' m');
-    if (surveyData.numberOfFloors) leftDetails.push('Floors: ' + surveyData.numberOfFloors);
-    if (surveyData.numberOfOccupants) leftDetails.push('Occupants: ' + surveyData.numberOfOccupants);
-    if (surveyData.buildingAge) leftDetails.push('Age: ' + surveyData.buildingAge + ' years');
-    if (surveyData.hasBasement) leftDetails.push('Basement: ' + surveyData.hasBasement);
-    if (surveyData.roofType) leftDetails.push('Roof: ' + surveyData.roofType);
-    if (surveyData.roofAccess) leftDetails.push('Access: ' + surveyData.roofAccess);
-    
-    leftDetails.forEach((detail, index) => {
-        pdf.text(detail, LEFT_COLUMN_X, leftDetailY + (index * 6));
-    });
-    
-    // Right column - Materials & Conditions
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('MATERIALS & CONDITIONS', RIGHT_COLUMN_X, yPosition);
-    let rightDetailY = yPosition + 10;
-    pdf.setFont(undefined, 'normal');
-    pdf.setFontSize(10);
-    
-    const rightDetails = [];
-    if (surveyData.wallTypes.length > 0) {
-        rightDetails.push('Wall Types:');
-        surveyData.wallTypes.forEach(type => rightDetails.push('  • ' + type));
-    }
-    if (surveyData.groundTypes.length > 0) {
-        rightDetails.push('Ground Types:');
-        surveyData.groundTypes.forEach(type => rightDetails.push('  • ' + type));
-    }
-    
-    rightDetails.forEach((detail, index) => {
-        if (detail.startsWith('  •')) {
-            pdf.text(detail, RIGHT_COLUMN_X + 5, rightDetailY + (index * 6));
-        } else {
-            pdf.setFont(undefined, 'bold');
-            pdf.text(detail, RIGHT_COLUMN_X, rightDetailY + (index * 6));
-            pdf.setFont(undefined, 'normal');
-        }
-    });
-    
-    yPosition = Math.max(leftDetailY + leftDetails.length * 6, rightDetailY + rightDetails.length * 6) + 20;
-    
-    // ==================== EXISTING SYSTEM DETAILED ASSESSMENT ====================
-    yPosition = startNewSection(pdf, 'EXISTING SYSTEM DETAILED ASSESSMENT', COMPANY_FOOTER);
-    
-    // System overview
-    pdf.setFontSize(12);
-    pdf.setFont(undefined, 'bold');
-    pdf.text('SYSTEM OVERVIEW', LEFT_COLUMN_X, yPosition);
-    yPosition += 10;
-    
-    pdf.setFont(undefined, 'normal');
-    pdf.setFontSize(10);
-    
-    const systemOverview = [];
-    if (surveyData.existingSystem) systemOverview.push('System Status: ' + surveyData.existingSystem);
-    if (surveyData.systemCondition) systemOverview.push('Overall Condition: ' + surveyData.systemCondition);
-    if (surveyData.lastTested) systemOverview.push('Last Tested: ' + surveyData.lastTested);
-    if (surveyData.standardInstalled) systemOverview.push('Installed Standard: ' + surveyData.standardInstalled);
-    
-    systemOverview.forEach((item, index) => {
-        pdf.text(item, LEFT_COLUMN_X, yPosition + (index * 6));
-    });
-    
-    yPosition += systemOverview.length * 6 + 15;
-    
-    // System components if any visible
-    if (surveyData.systemComponents.length > 0) {
-        pdf.setFont(undefined, 'bold');
-        pdf.text('VISIBLE SYSTEM COMPONENTS', LEFT_COLUMN_X, yPosition);
-        yPosition += 10;
-        
-        pdf.setFont(undefined, 'normal');
-        surveyData.systemComponents.forEach((component, index) => {
-            if (yPosition > PAGE_BOTTOM - 10) {
-                pdf.addPage();
-                yPosition = addPageHeader(pdf, 'EXISTING SYSTEM ASSESSMENT (CONTINUED)');
-                addFooterToPage(pdf, COMPANY_FOOTER);
-            }
-            
-            pdf.text('• ' + component, LEFT_COLUMN_X, yPosition);
-            yPosition += 6;
-        });
-        
-        yPosition += 10;
-    }
-    
+
     // ==================== DETAILED FINDINGS SECTION ====================
     if (surveyData.surveyFindings) {
-        yPosition = startNewSection(pdf, 'DETAILED SURVEY FINDINGS', COMPANY_FOOTER);
+        yPosition = startNewSection(pdf, 'ENGINEERS ADDITIONAL OBSERVATIONS', COMPANY_FOOTER);
         
         pdf.setFont(undefined, 'normal');
         pdf.setFontSize(10);
@@ -269,27 +289,7 @@ function generateSurveyPDF() {
         findingsLines.forEach((line, index) => {
             if (yPosition > PAGE_BOTTOM - 10) {
                 pdf.addPage();
-                yPosition = addPageHeader(pdf, 'DETAILED SURVEY FINDINGS (CONTINUED)');
-                addFooterToPage(pdf, COMPANY_FOOTER);
-            }
-            
-            pdf.text(line, LEFT_COLUMN_X, yPosition);
-            yPosition += 5;
-        });
-    }
-    
-    // ==================== RECOMMENDATIONS SECTION ====================
-    if (surveyData.recommendations) {
-        yPosition = startNewSection(pdf, 'RECOMMENDATIONS', COMPANY_FOOTER);
-        
-        pdf.setFont(undefined, 'normal');
-        pdf.setFontSize(10);
-        const recommendationLines = pdf.splitTextToSize(surveyData.recommendations, 170);
-        
-        recommendationLines.forEach((line, index) => {
-            if (yPosition > PAGE_BOTTOM - 10) {
-                pdf.addPage();
-                yPosition = addPageHeader(pdf, 'RECOMMENDATIONS (CONTINUED)');
+                yPosition = addPageHeader(pdf, 'ENGINEERS ADDITIONAL OBSERVATIONS (CONTINUED)');
                 addFooterToPage(pdf, COMPANY_FOOTER);
             }
             
@@ -345,11 +345,11 @@ function generateSurveyPDF() {
     // ==================== NEXT STEPS SECTION ====================
     yPosition = startNewSection(pdf, 'RECOMMENDED NEXT STEPS', COMPANY_FOOTER);
     
-    pdf.setFontSize(12);
+    pdf.setFontSize(14);
     pdf.setFont(undefined, 'normal');
     
     const nextSteps = [
-        'Based on this survey, the following actions are recommended:',
+        'Following this survey, the following actions are always recommended:',
         '',
         '1. Lightning Protection Risk Assessment',
         '   • Conduct detailed BS EN 62305-2 risk assessment',
