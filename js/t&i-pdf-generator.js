@@ -662,6 +662,9 @@ function generatePDF() {
         yPosition = startNewSection(pdf, 'EARTH RESISTANCE TESTING', footer);
         
         const earthData = getEarthTableData();
+        const partOfLargerSystem = document.getElementById('partOfLargerSystem')?.checked || false;
+        const additionalText = partOfLargerSystem ? ' - Part of a larger system' : '';
+        leftColumnY = yPosition;
         leftColumnY = yPosition;
         rightColumnY = yPosition;
         let earthTestColumn = 'left';
