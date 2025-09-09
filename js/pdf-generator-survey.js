@@ -253,7 +253,7 @@ function generateSurveyPDF() {
     }
 
     // ==================== DETAILED FINDINGS SECTION ====================
-    if (surveyData.surveyFindings) {
+    if (surveyData.surveyFindings && surveyData.surveyFindings.trim() !== '') {
         yPosition = startNewSection(pdf, 'ENGINEERS ADDITIONAL OBSERVATIONS', COMPANY_FOOTER);
         
         pdf.setFont(undefined, 'normal');
