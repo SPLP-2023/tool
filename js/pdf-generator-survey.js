@@ -206,7 +206,7 @@ function generateSurveyPDF() {
     rightColumnY += structureFabrics.length * 6 + 15;
     
     // Set yPosition to continue after both columns
-    yPosition = Math.max(leftColumnY, rightColumnY) + 20;
+    yPosition = Math.max(leftColumnY, rightColumnY) + 10;
     
     // ==================== CONNECTED ELECTRICAL SYSTEMS (SAME PAGE) ====================
     if (surveyData.electricalSystems.length > 0) {
