@@ -1,5 +1,5 @@
 // Update this version number whenever you make changes to force cache refresh
-const CACHE_NAME = 'strikeR-cache-v2.0.6';
+const CACHE_NAME = 'strikeR-cache-v2.0.7';
 
 const urlsToCache = [
   '/tool/',
