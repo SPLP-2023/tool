@@ -101,7 +101,7 @@ function generateAutoDescription() {
         }
         
         if (structureType) {
-            description += ` is utilised for ${structureType}.`;
+            description += ` is operated as a ${structureType}.`;
         } else {
             description += '.';
         }
@@ -130,7 +130,7 @@ function generateAutoDescription() {
         if (buildingDetails.length > 0 || roofDetails.length > 0) {
             description += 'The ';
             if (buildingDetails.length > 0) {
-                description += buildingDetails.join(' and ');
+                description += buildingDetails.join(' ');
             }
             if (roofDetails.length > 0) {
                 if (buildingDetails.length > 0) description += ' and ';
