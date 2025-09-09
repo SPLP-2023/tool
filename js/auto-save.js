@@ -140,6 +140,9 @@ function saveFormData() {
             // Enhanced earth resistance testing
             numEarths: document.getElementById('numEarths')?.value || '',
             earthTableData: (typeof earthTableData !== 'undefined') ? earthTableData : [],
+
+            // Include partOfLargerSystem checkbox state
+            partOfLargerSystem: document.getElementById('partOfLargerSystem')?.checked || false,
             
             // System details selections
             systemDetails: safeSystemDetails,
@@ -258,6 +261,13 @@ function restoreFormData() {
                     }
                 }, 600); // Increased delay for failures restoration
             }, 100);
+        }
+
+        if (formData.partOfLargerSystem !== undefined) {
+            const checkbox = document.getElementById('partOfLargerSystem');
+            if (checkbox) {
+                checkbox.checked = formData.partOfLargerSystem;
+            }
         }
         
         // Restore earth resistance testing
