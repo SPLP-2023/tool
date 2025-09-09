@@ -198,8 +198,8 @@ function clearSurveyData() {
         }
         
         // Clear uploaded images
-        if (window.uploadedImages) {
-            window.uploadedImages = {};
+        if (typeof uploadedImages !== 'undefined') {
+            uploadedImages = {};
         }
         document.getElementById('buildingImagePreview').textContent = 'Click to upload building photo';
         document.getElementById('additionalPhotosPreview').textContent = 'Click to upload additional photos';
