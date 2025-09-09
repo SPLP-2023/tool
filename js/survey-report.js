@@ -71,6 +71,7 @@ function generateAutoDescription() {
     const buildingAge = document.getElementById('buildingAge')?.value || '';
     const numberOfFloors = document.getElementById('numberOfFloors')?.value || '';
     const numberOfOccupants = document.getElementById('numberOfOccupants')?.value || '';
+    const roofType = document.getElementById('roofType')?.value || '';
     const roofAccess = document.getElementById('roofAccess')?.value || '';
     const existingSystem = document.getElementById('existingSystem')?.value || '';
     const systemCondition = document.getElementById('systemCondition')?.value || '';
@@ -81,77 +82,105 @@ function generateAutoDescription() {
     const wallTypes = getSelectedWallTypes();
     const groundTypes = getSelectedGroundTypes();
     const systemComponents = getSelectedSystemComponents();
-    const riskFactors = getSelectedRiskFactors();
     const electricalSystems = getSelectedElectricalSystems();
     
-    // Structure information
-    if (structureType) {
-        description += `The surveyed structure is a ${structureType} building`;
-        
-        if (structureHeight) {
-            description += ` of approximately ${structureHeight}m height`;
-        }
-        
-        if (wallTypes.length > 0) {
-            description += ` with ${wallTypes.join(' and ')} construction`;
-        }
+    // Helper function to format lists with proper grammar
+    function formatList(items) {
+        if (items.length === 0) return '';
+        if (items.length === 1) return items[0];
+        if (items.length === 2) return items.join(' and ');
+        return items.slice(0, -1).join(', ') + ', and ' + items[items.length - 1];
+    }
+    
+    // ==================== STRUCTURE INFORMATION ====================
+    if (structureType || structureHeight || wallTypes.length > 0 || groundTypes.length > 0 || buildingAge || numberOfFloors || numberOfOccupants || roofType || roofAccess) {
+        description += 'The surveyed structure';
         
         if (buildingAge) {
-            description += `, built approximately ${buildingAge} years ago`;
+            description += `, built approximately ${buildingAge} years ago,`;
         }
         
-        description += '.';
+        if (structureType) {
+            description += ` is utilised for ${structureType}.`;
+        } else {
+            description += '.';
+        }
         
-        // Additional structure details
-        const structureDetails = [];
-        if (numberOfFloors) structureDetails.push(`${numberOfFloors} floors`);
-        if (numberOfOccupants) structureDetails.push(`${numberOfOccupants} occupants`);
-        if (roofAccess) structureDetails.push(`${roofAccess.toLowerCase()} roof access`);
+        // Second sentence of structure paragraph
+        let structureDetails = [];
+        if (structureHeight) structureDetails.push(`approximately ${structureHeight}m in height`);
+        if (wallTypes.length > 0) structureDetails.push(`${formatList(wallTypes)} construction`);
+        if (groundTypes.length > 0) structureDetails.push(`the surrounding ground consisting of ${formatList(groundTypes)}`);
         
         if (structureDetails.length > 0) {
-            description += ` The building has ${structureDetails.join(', ')}.`;
+            description += ` The structure is ${structureDetails.join(' with ')}.`;
+        }
+        
+        description += '\n\n';
+        
+        // Third sentence - floors, occupants, roof
+        let buildingDetails = [];
+        if (numberOfFloors) buildingDetails.push(`${numberOfFloors}-floor building`);
+        if (numberOfOccupants) buildingDetails.push(`accommodates a maximum of ${numberOfOccupants} occupants`);
+        
+        let roofDetails = [];
+        if (roofType) roofDetails.push(`${roofType} roofing`);
+        if (roofAccess) roofDetails.push(`${roofAccess}`);
+        
+        if (buildingDetails.length > 0 || roofDetails.length > 0) {
+            description += 'The ';
+            if (buildingDetails.length > 0) {
+                description += buildingDetails.join(' and ');
+            }
+            if (roofDetails.length > 0) {
+                if (buildingDetails.length > 0) description += ' and ';
+                description += `features ${roofDetails.join(' with ')}.`;
+            } else if (buildingDetails.length > 0) {
+                description += '.';
+            }
         }
     }
     
-    // Ground conditions
-    if (groundTypes.length > 0) {
-        description += ` The surrounding ground consists of ${groundTypes.join(', ').toLowerCase()}.`;
+    // ==================== SYSTEM INFORMATION ====================
+    if (existingSystem || systemCondition || lastTested || standardInstalled || systemComponents.length > 0) {
+        if (description.length > 0) description += '\n\n';
+        
+        if (existingSystem) {
+            description += `The existing lightning protection system is assessed as ${existingSystem}`;
+            
+            if (systemCondition) {
+                description += ` with ${systemCondition.toLowerCase()} overall condition`;
+            }
+            
+            if (lastTested) {
+                description += `, which was last tested ${lastTested.toLowerCase()}.`;
+            } else {
+                description += '.';
+            }
+            
+            description += '\n\n';
+            
+            if (standardInstalled) {
+                description += `The system was installed to ${standardInstalled} standard.`;
+            }
+            
+            if (systemComponents.length > 0) {
+                if (standardInstalled) description += ' ';
+                description += `Visible system components include ${formatList(systemComponents.map(c => c.toLowerCase()))}.`;
+            }
+        }
     }
     
-    // Risk factors
-    if (riskFactors.length > 0) {
-        description += ` Risk factors identified include ${riskFactors.join(', ')}.`;
-    }
-    
-    // Existing system
-    if (existingSystem && existingSystem !== 'None Visible') {
-        description += ` The existing lightning protection system is assessed as ${existingSystem}`;
+    // ==================== CONNECTED ELECTRICAL EQUIPMENT ====================
+    if (electricalSystems.length > 0) {
+        if (description.length > 0) description += '\n\n';
         
-        if (systemCondition && systemCondition !== '') {
-            description += ` with ${systemCondition.toLowerCase()} overall condition`;
-        }
-        
-        if (lastTested && lastTested !== '') {
-            description += `, last tested ${lastTested.toLowerCase()}`;
-        }
-        
-        if (standardInstalled && standardInstalled !== '') {
-            description += ` and installed to ${standardInstalled}`;
-        }
-        
-        description += '.';
-        
-        // System components
-        if (systemComponents.length > 0) {
-            description += ` Visible system components include ${systemComponents.join(', ').toLowerCase()}.`;
-        }
-    } else {
-        description += ' No existing lightning protection system is visible.';
+        description += `The electrical infrastructure comprises of ${formatList(electricalSystems)}.\n\n`;
+        description += 'This indicates that comprehensive surge protection measures for coordinated system protection are highly recommended.';
     }
     
     return description.trim();
 }
-
 // Clear all survey data
 function clearSurveyData() {
     if (confirm('Are you sure you want to clear all survey data and start a new report?')) {
