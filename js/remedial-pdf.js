@@ -88,18 +88,18 @@ function generateRemedialPDF() {
     let rightY = detailsY;
 
     // Only add Site Staff details if they exist
-    if (siteStaffName) {
+    if (remedialData.siteStaffName) {
         pdf.setFont(undefined, 'bold');
         pdf.text('Site Staff Name:', rightX, rightY);
         pdf.setFont(undefined, 'normal');
-        pdf.text(siteStaffName, rightX, rightY + valueGap);
+        pdf.text(remedialData.siteStaffName, rightX, rightY + valueGap);
         rightY += sectionGap;
     }
     
-    if (siteStaffSignature) {
+    if (remedialData.signatureData) {
         pdf.setFont(undefined, 'bold');
         pdf.text('Site Staff Signature:', rightX, rightY);
-        pdf.addImage(siteStaffSignature, 'PNG', rightX, rightY + valueGap, 60, 20);
+        pdf.addImage(remedialData.signatureData, 'PNG', rightX, rightY + valueGap, 60, 20);
     }
     
     // ==================== REMEDIAL REPAIRS SECTION ====================
