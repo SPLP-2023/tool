@@ -88,7 +88,7 @@ function generateRemedialPDF() {
     let rightY = detailsY;
 
     // Only add Site Staff details if they exist
-    if (siteStaffName && siteStaffName.trim()) {
+    if (siteStaffName) {
         pdf.setFont(undefined, 'bold');
         pdf.text('Site Staff Name:', rightX, rightY);
         pdf.setFont(undefined, 'normal');
