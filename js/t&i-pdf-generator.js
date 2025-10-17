@@ -295,10 +295,24 @@ function generatePDF() {
         yPosition += 6; // adjust spacing as needed
         if (hasFaults) {
             pdf.setTextColor(220, 20, 60); // red
-            pdf.text('FAIL - Action required', 105, yPosition, { align: 'center' });
+            pdf.text('FAIL', 105, yPosition, { align: 'center' });
+                // Line 3: Additional message for FAIL
+            yPosition += 6;
+            pdf.setFontSize(11);
+            pdf.setFont(undefined, 'normal');
+            pdf.setTextColor(0, 0, 0); // back to black
+            pdf.text('Action is required for this system to comply with the standard.', 105, yPosition, { align: 'center' });
+
         } else {
             pdf.setTextColor(34, 139, 34); // green
-            pdf.text('PASS - Valid for 12 months', 105, yPosition, { align: 'center' });
+            pdf.text('PASS', 105, yPosition, { align: 'center' });
+                // Line 3: Additional message for PASS
+            yPosition += 6;
+            pdf.setFontSize(11);
+            pdf.setFont(undefined, 'normal');
+            pdf.setTextColor(0, 0, 0); // back to black
+            pdf.text('This certificate is valid for 12 months from the date of issue.', 105, yPosition, { align: 'center' });
+
         
             if (generalComments) {
                 yPosition += 8;
