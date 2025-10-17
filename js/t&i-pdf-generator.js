@@ -293,6 +293,8 @@ function generatePDF() {
         
         // Line 2: PASS or FAIL (colored and centered)
         yPosition += 6; // adjust spacing as needed
+        pdf.setFontSize(18); // larger font for emphasis
+        pdf.setFont(undefined, 'bold');
         if (hasFaults) {
             pdf.setTextColor(220, 20, 60); // red
             pdf.text('FAIL', 105, yPosition, { align: 'center' });
