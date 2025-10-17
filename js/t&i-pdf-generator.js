@@ -384,6 +384,7 @@ function generatePDF() {
             // Add failure content
             pdf.setFontSize(10);
             pdf.setFont(undefined, 'bold');
+            pdf.setTextColor(220, 20, 60);
             const failureTitle = (index + 1) + '. ' + failure.failure;
             const titleLines = pdf.splitTextToSize(failureTitle, columnWidth);
             pdf.text(titleLines, currentX, currentY);
@@ -397,8 +398,8 @@ function generatePDF() {
             
             // Add minimum requirement
             pdf.setFont(undefined, 'bold');
-            pdf.setFontSize(8);
-            pdf.setTextColor(40, 167, 69);
+            pdf.setFontSize(10);
+            pdf.setTextColor(0, 0, 0);
             const reqLines = pdf.splitTextToSize('Requirement: ' + failure.requirement, columnWidth);
             pdf.text(reqLines, currentX, currentY);
             currentY += reqLines.length * 3 + 5;
@@ -406,7 +407,7 @@ function generatePDF() {
             
             if (failure.comment) {
                 pdf.setFont(undefined, 'normal');
-                pdf.setFontSize(9);
+                pdf.setFontSize(8);
                 pdf.text(commentLines, currentX, currentY);
                 currentY += commentLines.length * 4 + 5;
             }
