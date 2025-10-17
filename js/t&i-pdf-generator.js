@@ -291,7 +291,7 @@ function generatePDF() {
         pdf.text('COMPLIANCE RESULT: FAIL - Action required', 105, yPosition, { align: 'center' });
     } else {
         pdf.setTextColor(34, 139, 34);
-        pdf.text('COMPLIANCE RESULT: PASS - Valid for 12 months from the inspection date', 105, yPosition, { align: 'center' });
+        pdf.text('COMPLIANCE RESULT: PASS - Valid for 12 months', 105, yPosition, { align: 'center' });
         
         // Add "with recommendations" if applicable
         if (generalComments) {
@@ -309,7 +309,8 @@ function generatePDF() {
     yPosition += 20;
 
         pdf.setFontSize(10);
-        pdf.text('All tests are in accordance with BS EN 62305, BS6651, NF C 17-102:2011 and BS7430. Lightning protection systems should be tested annually under The Electricity At Work Act 1989', 105, yPosition, { align: 'center' });
+        pdf.text('All tests are in accordance with BS EN 62305, BS6651, NF C 17-102:2011 and BS7430.', 105, yPosition, { align: 'center' });
+        pdf.text('Lightning protection systems should be tested annually under The Electricity At Work Act 1989', 105, yPosition, { align: 'center' });
         yPosition +=18
     
     // Two-column layout for failures
