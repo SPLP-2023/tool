@@ -12,6 +12,11 @@ const standardFailures = {
             req: "All connections should be cleaned, tightened, and tested to ensure continuity below 0.2ohms"
         },
         { 
+            failure: "Conductor fixings are inadequate with Table E.1", 
+            ref: "BS EN 62305-3, Section 5.5.2 & Table E.1",
+            req: "Air-terminations and down conductors shall be firmly fixed so that the electrodynamic or accidental mechanical forces will not cause conductors to break or loosen."
+        },
+        { 
             failure: "Air terminals not meeting LPL requirements", 
             ref: "BS EN 62305-3, Section 5.2.2, Table 2",
             req: "Air terminals must be replaced or supplemented to meet the specified Lightning Protection Level"
@@ -360,4 +365,5 @@ const standardFailures = {
     ]
 
 };
+
 
