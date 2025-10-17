@@ -284,26 +284,21 @@ function generatePDF() {
     
     // Result status spanning both columns
         const hasFaults = selectedFailuresList.length > 0;
-        pdf.setFontSize(14);
+        pdf.setFontSize(12);
         pdf.setFont(undefined, 'bold');
         
-        // Draw "COMPLIANCE RESULT:" in black
-        pdf.setTextColor(0, 0, 0); // black
-        pdf.text('COMPLIANCE RESULT:', 105, yPosition, { align: 'left' });
+        // Line 1: COMPLIANCE RESULT (always black and centered)
+        pdf.setTextColor(0, 0, 0);
+        pdf.text('COMPLIANCE RESULT', 105, yPosition, { align: 'center' });
         
-        // Measure width of "COMPLIANCE RESULT:" to offset the next word
-        const resultLabelWidth = pdf.getTextWidth('COMPLIANCE RESULT:');
-        
-        // Adjust x-position to place colored word next to it
-        const centerX = 105;
-        const startX = centerX - resultLabelWidth / 2;
-        
+        // Line 2: PASS or FAIL (colored and centered)
+        yPosition += 12; // adjust spacing as needed
         if (hasFaults) {
             pdf.setTextColor(220, 20, 60); // red
-            pdf.text(' FAIL - Action required', startX + resultLabelWidth, yPosition);
+            pdf.text('FAIL - Action required', 105, yPosition, { align: 'center' });
         } else {
             pdf.setTextColor(34, 139, 34); // green
-            pdf.text(' PASS - Valid for 12 months', startX + resultLabelWidth, yPosition);
+            pdf.text('PASS - Valid for 12 months', 105, yPosition, { align: 'center' });
         
             if (generalComments) {
                 yPosition += 8;
