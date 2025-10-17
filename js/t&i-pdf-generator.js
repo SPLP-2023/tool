@@ -288,10 +288,10 @@ function generatePDF() {
     pdf.setFont(undefined, 'bold');
     if (hasFaults) {
         pdf.setTextColor(220, 20, 60);
-        pdf.text('RESULT: FAIL', 105, yPosition, { align: 'center' });
+        pdf.text('COMPLIANCE RESULT: FAIL - Action required', 105, yPosition, { align: 'center' });
     } else {
         pdf.setTextColor(34, 139, 34);
-        pdf.text('RESULT: PASS', 105, yPosition, { align: 'center' });
+        pdf.text('COMPLIANCE RESULT: PASS - Valid for 12 months from the inspection date', 105, yPosition, { align: 'center' });
         
         // Add "with recommendations" if applicable
         if (generalComments) {
