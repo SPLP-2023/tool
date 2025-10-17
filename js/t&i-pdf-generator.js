@@ -349,6 +349,17 @@ function generatePDF() {
     const maxImagesSubsequentPage = 6;
     
     if (selectedFailuresList.length > 0) {
+                // Add "Defects" subtitle aligned to the left
+            pdf.setFontSize(12);
+            pdf.setFont(undefined, 'bold');
+            pdf.setTextColor(0, 0, 0); // black
+            pdf.text('Defects', leftColumnX, yPosition); // left-aligned
+            yPosition += 10;
+        
+            // Sync column starting positions
+            leftColumnY = yPosition;
+            rightColumnY = yPosition;
+
         selectedFailuresList.forEach((failure, index) => {
             const currentX = failureColumn === 'left' ? leftColumnX : rightColumnX;
             let currentY = failureColumn === 'left' ? leftColumnY : rightColumnY;
