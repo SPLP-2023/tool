@@ -399,7 +399,7 @@ function generatePDF() {
             // Add minimum requirement
             pdf.setFont(undefined, 'bold');
             pdf.setFontSize(10);
-            pdf.setTextColor(0, 0, 0);
+            pdf.setTextColor(65, 105, 225);
             const reqLines = pdf.splitTextToSize('Requirement: ' + failure.requirement, columnWidth);
             pdf.text(reqLines, currentX, currentY);
             currentY += reqLines.length * 3 + 5;
