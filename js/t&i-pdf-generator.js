@@ -307,6 +307,10 @@ function generatePDF() {
     pdf.setFontSize(12);
     pdf.text('Standard Applied: ' + standard, 105, yPosition, { align: 'center' });
     yPosition += 20;
+
+        pdf.setFontSize(10);
+        pdf.text('All tests are in accordance with BS EN 62305, BS6651, NF C 17-102:2011 and BS7430. Lightning protection systems should be tested annually under The Electricity At Work Act 1989', 105, yPosition, { align: 'center' });
+        yPosition +=5
     
     // Two-column layout for failures
     let leftColumnY = yPosition;
