@@ -332,7 +332,7 @@ function generatePDF() {
     pdf.text('Standard Applied: ' + standard, 105, yPosition, { align: 'center' });
     yPosition += 6;
 
-        pdf.setFontSize(10);
+        pdf.setFontSize(8);
         pdf.setFont(undefined, 'italic');
         pdf.text('All tests are in accordance with BS EN 62305, BS6651, NF C 17-102:2011 and BS7430.', 105, yPosition, { align: 'center' });
         yPosition +=6
