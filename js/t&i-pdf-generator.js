@@ -292,7 +292,7 @@ function generatePDF() {
         pdf.text('COMPLIANCE RESULT', 105, yPosition, { align: 'center' });
         
         // Line 2: PASS or FAIL (colored and centered)
-        yPosition += 12; // adjust spacing as needed
+        yPosition += 6; // adjust spacing as needed
         if (hasFaults) {
             pdf.setTextColor(220, 20, 60); // red
             pdf.text('FAIL - Action required', 105, yPosition, { align: 'center' });
