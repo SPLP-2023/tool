@@ -328,6 +328,7 @@ function generatePDF() {
     yPosition += 15;
     
     pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
     pdf.text('Standard Applied: ' + standard, 105, yPosition, { align: 'center' });
     yPosition += 6;
 
