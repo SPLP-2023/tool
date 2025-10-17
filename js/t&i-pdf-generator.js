@@ -382,9 +382,9 @@ function generatePDF() {
             }
             
             // Add failure content
-            pdf.setFontSize(10);
+            pdf.setFontSize(12);
             pdf.setFont(undefined, 'bold');
-            pdf.setTextColor(220, 20, 60);
+            pdf.setTextColor(0, 0, 0);
             const failureTitle = (index + 1) + '. ' + failure.failure;
             const titleLines = pdf.splitTextToSize(failureTitle, columnWidth);
             pdf.text(titleLines, currentX, currentY);
