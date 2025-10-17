@@ -289,7 +289,7 @@ function generatePDF() {
         
         // Draw "COMPLIANCE RESULT:" in black
         pdf.setTextColor(0, 0, 0); // black
-        pdf.text('COMPLIANCE RESULT:', 105, yPosition, { align: 'center' });
+        pdf.text('COMPLIANCE RESULT:', 105, yPosition, { align: 'left' });
         
         // Measure width of "COMPLIANCE RESULT:" to offset the next word
         const resultLabelWidth = pdf.getTextWidth('COMPLIANCE RESULT:');
