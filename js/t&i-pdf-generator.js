@@ -283,36 +283,48 @@ function generatePDF() {
     yPosition = startNewSection(pdf, 'INSPECTION SUMMARY', footer);
     
     // Result status spanning both columns
-    const hasFaults = selectedFailuresList.length > 0;
-    pdf.setFontSize(14);
-    pdf.setFont(undefined, 'bold');
-    if (hasFaults) {
-        pdf.setTextColor(220, 20, 60);
-        pdf.text('COMPLIANCE RESULT: FAIL - Action required', 105, yPosition, { align: 'center' });
-    } else {
-        pdf.setTextColor(34, 139, 34);
-        pdf.text('COMPLIANCE RESULT: PASS - Valid for 12 months', 105, yPosition, { align: 'center' });
+        const hasFaults = selectedFailuresList.length > 0;
+        pdf.setFontSize(14);
+        pdf.setFont(undefined, 'bold');
         
-        // Add "with recommendations" if applicable
-        if (generalComments) {
-            yPosition += 8;
-            pdf.setFontSize(11);
-            pdf.setFont(undefined, 'italic');
-            pdf.text('with recommendations', 105, yPosition, { align: 'center' });
+        // Draw "COMPLIANCE RESULT:" in black
+        pdf.setTextColor(0, 0, 0); // black
+        pdf.text('COMPLIANCE RESULT:', 105, yPosition, { align: 'center' });
+        
+        // Measure width of "COMPLIANCE RESULT:" to offset the next word
+        const resultLabelWidth = pdf.getTextWidth('COMPLIANCE RESULT:');
+        
+        // Adjust x-position to place colored word next to it
+        const centerX = 105;
+        const startX = centerX - resultLabelWidth / 2;
+        
+        if (hasFaults) {
+            pdf.setTextColor(220, 20, 60); // red
+            pdf.text(' FAIL - Action required', startX + resultLabelWidth, yPosition);
+        } else {
+            pdf.setTextColor(34, 139, 34); // green
+            pdf.text(' PASS - Valid for 12 months', startX + resultLabelWidth, yPosition);
+        
+            if (generalComments) {
+                yPosition += 8;
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'italic');
+                pdf.setTextColor(0, 0, 0); // back to black
+                pdf.text('with recommendations', 105, yPosition, { align: 'center' });
+            }
         }
-    }
     pdf.setTextColor(0, 0, 0);
     yPosition += 15;
     
     pdf.setFontSize(12);
     pdf.text('Standard Applied: ' + standard, 105, yPosition, { align: 'center' });
-    yPosition += 12;
+    yPosition += 6;
 
         pdf.setFontSize(10);
         pdf.text('All tests are in accordance with BS EN 62305, BS6651, NF C 17-102:2011 and BS7430.', 105, yPosition, { align: 'center' });
         yPosition +=6
         pdf.text('Lightning protection systems should be tested annually under The Electricity At Work Act 1989', 105, yPosition, { align: 'center' });
-        yPosition +=6
+        yPosition +=12
     
     // Two-column layout for failures
     let leftColumnY = yPosition;
