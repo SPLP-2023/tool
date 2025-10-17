@@ -545,7 +545,7 @@ function generatePDF() {
         // Previous Inspections
         if (previousInspections) {
             pdf.setFont(undefined, 'bold');
-            pdf.text('Previous Inspections:', leftColumnX, leftColumnY);
+            pdf.text('Records of Previous Inspections:', leftColumnX, leftColumnY);
             pdf.setFont(undefined, 'normal');
             pdf.text(previousInspections, leftColumnX, leftColumnY + 5);
             leftColumnY += 12;
