@@ -4,11 +4,26 @@
 // 6-page report: Cover | Summary | Zone Details | Calc Breakdown | Methodology | Comments
 // ============================================================
 
-function generateRiskAssessmentPDF() {
+async function generateRiskAssessmentPDF() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF('p', 'mm', 'a4');
 
     const d = getRACalculationData();
+
+    // ── Fetch logo as base64 ──
+    let logoBase64 = null;
+    try {
+        const resp = await fetch('https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/Color%20logo%20-%20no%20background%20(px%20reduction).png');
+        const blob = await resp.blob();
+        logoBase64 = await new Promise((res, rej) => {
+            const r = new FileReader();
+            r.onload = () => res(r.result);
+            r.onerror = rej;
+            r.readAsDataURL(blob);
+        });
+    } catch (e) {
+        console.warn('Logo fetch failed:', e);
+    }
 
     const BLUE   = [41, 128, 185];
     const DARK   = [44, 62, 80];
@@ -122,82 +137,67 @@ function generateRiskAssessmentPDF() {
     const TOTAL_PAGES = 6;
     const isPass = d.passFail && d.passFail.toLowerCase().includes('pass');
 
-    // Shared cover row helper — white text on dark bg
-    function coverRow(label, value, y) {
-        setFont(8, 'bold', [149, 165, 166]);
-        pdf.text(safe(label), ML + 6, y);
-        setFont(9, 'normal', WHITE);
-        const val = safe(String(value || '-'));
-        const vLines = pdf.splitTextToSize(val, CW * 0.56);
-        pdf.text(vLines[0], ML + CW * 0.42, y);
-        return y + 10;
-    }
-
     // ════════════════════════════════════════════════
-    // PAGE 1 — COVER (styled dark cover page)
+    // PAGE 1 — COVER
+    // White background, accent stripe, logo, title, badge, site address, date
     // ════════════════════════════════════════════════
 
     // Top accent stripe
     fillRect(0, 0, PW, 3, BLUE);
 
-    // Company name
-    setFont(26, 'bold', BLUE);
-    pdf.text('STRIKE POINT', PW / 2, 32, { align: 'center' });
-    setFont(10, 'normal', [149, 165, 166]);
-    pdf.text('Lightning Protection Ltd', PW / 2, 41, { align: 'center' });
+    // Standard header bar (dark, matches all other pages)
+    fillRect(0, 3, PW, 17, DARK);
+    setFont(10, 'bold', BLUE);
+    pdf.text('STRIKE POINT', ML, 12);
+    setFont(8, 'normal', LGREY);
+    pdf.text('Lightning Protection Ltd', ML, 17.5);
+    setFont(10, 'bold', WHITE);
+    pdf.text('RISK ASSESSMENT REPORT', PW / 2, 13, { align: 'center' });
+    setFont(7, 'normal', LGREY);
+    pdf.text('CONFIDENTIAL - SITE ASSESSMENT DOCUMENT', PW - MR, 13, { align: 'right' });
 
-    // Title block
-    fillRect(ML, 52, CW, 36, [30, 55, 85]);
-    setFont(17, 'bold', WHITE);
-    pdf.text('LIGHTNING PROTECTION', PW / 2, 66, { align: 'center' });
-    setFont(14, 'bold', GOLD);
-    pdf.text('RISK ASSESSMENT REPORT', PW / 2, 78, { align: 'center' });
-
-    // Standard badge
-    fillRect(ML, 92, CW, 9, BLUE);
-    setFont(8, 'bold', WHITE);
-    pdf.text('BS EN IEC 62305-2:2024  |  Phase 1: R1 Loss of Human Life', PW / 2, 98, { align: 'center' });
-
-    // Site info block
-    fillRect(ML, 106, CW, 90, [30, 55, 85]);
-    let cy = 118;
-    cy = coverRow('Site Address',    d.siteAddress, cy);
-    cy = coverRow('Structure Ref',   d.structureRef, cy);
-    cy = coverRow('Structure Type',  d.structureType, cy);
-    cy = coverRow('Assessment Date', d.assessmentDate, cy);
-    cy = coverRow('Assessor',        d.surveyorName, cy);
-    cy = coverRow('UK Region',       d.ukRegion, cy);
-    cy = coverRow('NSG Value',       d.nsg + ' strikes/km2/yr', cy);
-    cy = coverRow('Location Factor', 'CD = ' + d.cd, cy);
-
-    // Pass/Fail banner
-    fillRect(ML, 202, CW, 20, isPass ? GREEN : RED);
-    setFont(13, 'bold', WHITE);
-    pdf.text(
-        isPass ? 'PASS  -  Risk Acceptable. No LPS Required.'
-               : 'FAIL  -  LPS Required. See Recommendations.',
-        PW / 2, 215, { align: 'center' }
-    );
-
-    // Key results block
-    fillRect(ML, 228, CW, 44, [30, 55, 85]);
-    setFont(8, 'bold', BLUE);
-    pdf.text('KEY CALCULATION RESULTS', ML + 6, 236);
-    let ky = 244;
-    ky = coverRow('Collection Area AD',         d.AD, ky);
-    ky = coverRow('Annual Dangerous Events ND',  d.ND, ky);
-    ky = coverRow('Total Risk R1',               d.R1, ky);
-    ky = coverRow('Tolerable Risk RT',           '1 x 10^-5 per year', ky);
-
-    if (!isPass && d.lplClass && d.lplClass !== 'N/A') {
-        fillRect(ML, 276, CW, 9, [160, 40, 30]);
-        setFont(9, 'bold', WHITE);
-        pdf.text('Recommended LPS: ' + safe(d.lplClass) + '   |   ' + safe(d.spdReq), ML + 3, 282);
+    // Logo — centred, large
+    if (logoBase64) {
+        const logoW = 100;
+        const logoH = 40; // maintain approx aspect ratio
+        pdf.addImage(logoBase64, 'PNG', (PW - logoW) / 2, 32, logoW, logoH);
+    } else {
+        // Fallback text if logo fails to load
+        setFont(22, 'bold', BLUE);
+        pdf.text('STRIKE POINT', PW / 2, 52, { align: 'center' });
+        setFont(10, 'normal', GREY);
+        pdf.text('Lightning Protection Ltd', PW / 2, 62, { align: 'center' });
     }
 
-    // Bottom bar
-    fillRect(0, PH - 14, PW, 14, [10, 20, 35]);
-    setFont(8, 'normal', [149, 165, 166]);
+    // Title block
+    fillRect(ML, 82, CW, 34, DARK);
+    setFont(16, 'bold', WHITE);
+    pdf.text('LIGHTNING PROTECTION', PW / 2, 95, { align: 'center' });
+    setFont(13, 'bold', GOLD);
+    pdf.text('RISK ASSESSMENT REPORT', PW / 2, 107, { align: 'center' });
+
+    // Standard badge
+    fillRect(ML, 120, CW, 9, BLUE);
+    setFont(8, 'bold', WHITE);
+    pdf.text('BS EN IEC 62305-2:2024  |  Phase 1: R1 Loss of Human Life', PW / 2, 126, { align: 'center' });
+
+    // Site address & date info block
+    fillRect(ML, 138, CW, 26, LIGHT);
+    pdf.setDrawColor(...BLUE);
+    pdf.setLineWidth(0.5);
+    pdf.rect(ML, 138, CW, 26);
+    setFont(8, 'bold', GREY);
+    pdf.text('SITE ADDRESS', ML + 4, 146);
+    pdf.text('DATE', ML + CW * 0.65, 146);
+    setFont(10, 'normal', DARK);
+    const addrLines = pdf.splitTextToSize(safe(d.siteAddress || '-'), CW * 0.55);
+    pdf.text(addrLines[0], ML + 4, 155);
+    if (addrLines[1]) pdf.text(addrLines[1], ML + 4, 161);
+    pdf.text(safe(d.assessmentDate || '-'), ML + CW * 0.65, 155);
+
+    // Standard footer bar
+    fillRect(0, PH - 14, PW, 14, DARK);
+    setFont(8, 'normal', WHITE);
     pdf.text('Strike Point Lightning Protection Ltd', ML, PH - 6);
     pdf.text('BS EN IEC 62305-2:2024', PW / 2, PH - 6, { align: 'center' });
     pdf.text('Page 1 of ' + TOTAL_PAGES, PW - MR, PH - 6, { align: 'right' });
