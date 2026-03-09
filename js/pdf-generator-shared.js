@@ -2,7 +2,7 @@
 // Common functions used across all report types
 
 // Company branding URLs
-const COMPANY_LOGO_URL = "./assets/SP%20Bolt%20400x400.png";
+const COMPANY_LOGO_URL = "./assets/Color%20logo%20-%20no%20background%20(px%20reduction).png";
 const FOOTER_IMAGE_URL = "./assets/es12.png";
 const HEADER_IMAGE_URL = "./assets/SP%20Bolt%20400x400.png";
 
