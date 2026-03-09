@@ -75,15 +75,12 @@
     // Standard header — all pages including cover
     function addHeader(title) {
         fillRect(0, 0, PW, 20, DARK);
-        setFont(11, 'bold', BLUE);
-        pdf.text('STRIKE POINT', ML, 8);
-        setFont(8, 'normal', LGREY);
-        pdf.text('Lightning Protection Ltd', ML, 14.5);
+        addImageToPDF(pdf, 'https://raw.githubusercontent.com/SPLP-2023/tool/refs/heads/main/assets/Color%20logo%20-%20no%20background%20(px%20reduction).png', ML, 2, 45, 16, true);
         setFont(10, 'bold', WHITE);
         pdf.text(safe(title), PW / 2, 12, { align: 'center' });
         setFont(7, 'normal', LGREY);
-        pdf.text('CONFIDENTIAL - SITE ASSESSMENT DOCUMENT', PW - MR, 12, { align: 'right' });
-        return 28; // extra clearance below header
+        pdf.text('SITE ASSESSMENT DOCUMENT', PW - MR, 12, { align: 'right' });
+        return 28;
     }
 
     function addFooter(pageNum, total) {
