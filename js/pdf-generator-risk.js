@@ -86,7 +86,6 @@
     function addFooter(pageNum, total) {
         fillRect(0, PH - 14, PW, 14, DARK);
         setFont(8, 'normal', WHITE);
-        pdf.text('Strike Point Lightning Protection Ltd', ML, PH - 6);
         pdf.text('BS EN IEC 62305-2:2024', PW / 2, PH - 6, { align: 'center' });
         pdf.text('Page ' + pageNum + ' of ' + total, PW - MR, PH - 6, { align: 'right' });
     }
