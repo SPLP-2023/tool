@@ -41,7 +41,7 @@
         }
 
         // ==================== NEW SECTION: Image Compression Helper ====================
-        function compressImage(base64Str, maxWidth = 1200, maxHeight = 1200, quality = 0.85) {
+        function compressImage(base64Str, maxWidth = 800, maxHeight = 800, quality = 0.65) {
         return new Promise((resolve) => {
         const img = new Image();
         img.src = base64Str;
