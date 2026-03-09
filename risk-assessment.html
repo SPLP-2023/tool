@@ -14,39 +14,7 @@
     <meta name="apple-mobile-web-app-title" content="StrikeR">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
-        /* ── Page layout ── */
-        body { background: #1a1a2e; font-family: Arial, sans-serif; margin: 0; padding: 0; color: #2c3e50; }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
-
-        /* ── Nav header ── */
-        .nav-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 24px; padding: 16px 0; border-bottom: 2px solid #ecf0f1;
-        }
-        .nav-button {
-            background: #3498db; color: white; border: none;
-            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 15px;
-        }
-        .nav-button:hover { background: #2980b9; }
-        .back-button { background: #95a5a6; }
-        .back-button:hover { background: #7f8c8d; }
-        .page-title { font-size: 26px; color: #2c3e50; margin: 0; font-weight: 700; }
-
-        /* ── Standard reference badge ── */
-        .standard-badge {
-            background: #2c3e50; color: #ecf0f1; font-size: 12px;
-            padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 20px;
-        }
-
-        /* ── Section cards ── */
-        .section {
-            background: white; border-radius: 10px; padding: 24px;
-            margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .section h2 {
-            margin: 0 0 20px 0; font-size: 18px; color: #2c3e50;
-            border-bottom: 2px solid #3498db; padding-bottom: 8px;
-        }
+        /* ── RA-specific: Zone headers ── */
         .zone-header {
             background: #2c3e50; color: white;
             border-radius: 8px; padding: 10px 16px;
@@ -54,28 +22,16 @@
         }
         .zone-header.lpz1 { background: #8e44ad; }
 
-        /* ── Form layout ── */
-        .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
-        .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
-        .form-group.full { flex: 100%; }
-        label { font-size: 13px; font-weight: 600; color: #34495e; }
-        label small { font-weight: 400; color: #7f8c8d; display: block; margin-top: 2px; }
-        input[type=text], input[type=number], input[type=date], select, textarea {
-            padding: 10px 12px; border: 1.5px solid #dee2e6; border-radius: 6px;
-            font-size: 14px; color: #2c3e50; background: #fdfdfd;
-            transition: border-color 0.2s;
+        /* ── RA-specific: Standard badge ── */
+        .standard-badge {
+            background: #2c3e50; color: #ecf0f1; font-size: 12px;
+            padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 20px;
         }
-        input:focus, select:focus, textarea:focus {
-            outline: none; border-color: #3498db; background: #fff;
-        }
-        textarea { resize: vertical; }
 
-        /* ── Toggle switch ── */
+        /* ── RA-specific: Toggle switch ── */
         .toggle-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
         .toggle-row label { font-size: 14px; font-weight: 600; margin: 0; }
-        .toggle {
-            position: relative; display: inline-block; width: 46px; height: 24px;
-        }
+        .toggle { position: relative; display: inline-block; width: 46px; height: 24px; }
         .toggle input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer; inset: 0;
@@ -83,20 +39,18 @@
         }
         .slider:before {
             content: ''; position: absolute; height: 18px; width: 18px;
-            left: 3px; bottom: 3px; background: white; border-radius: 50%;
-            transition: 0.3s;
+            left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s;
         }
         input:checked + .slider { background: #27ae60; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* ── Live Results Panel ── */
+        /* ── RA-specific: Live Results Panel ── */
         .results-panel {
             background: #1a1a2e; color: white; border-radius: 10px;
             padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
             position: sticky; top: 10px; z-index: 10;
         }
         .results-panel h2 { color: #ecf0f1; border-bottom-color: #3498db; margin-bottom: 20px; }
-
         .pass-fail-banner {
             text-align: center; padding: 14px; border-radius: 8px;
             font-size: 16px; font-weight: bold; margin-bottom: 20px;
@@ -104,7 +58,6 @@
         .pass-fail-banner.pass    { background: #27ae60; color: white; }
         .pass-fail-banner.fail    { background: #e74c3c; color: white; }
         .pass-fail-banner.pending { background: #7f8c8d; color: white; }
-
         .results-grid {
             display: grid; grid-template-columns: repeat(3, 1fr);
             gap: 12px; margin-bottom: 16px;
@@ -114,7 +67,6 @@
         .result-value { font-size: 20px; font-weight: bold; color: #3498db; margin: 4px 0; }
         .result-value.r1 { font-size: 22px; color: #f1c40f; }
         .result-divider { border: none; border-top: 1px solid #34495e; margin: 16px 0; }
-
         .breakdown-title { font-size: 12px; color: #95a5a6; text-transform: uppercase; margin-bottom: 10px; }
         .breakdown-row {
             display: flex; justify-content: space-between; align-items: center;
@@ -126,13 +78,12 @@
         .breakdown-val { font-size: 13px; color: #ecf0f1; font-weight: bold; min-width: 80px; text-align: right; }
         .breakdown-pct { font-size: 12px; color: #95a5a6; min-width: 45px; text-align: right; }
 
-        /* ── LPL Recommendation ── */
+        /* ── RA-specific: LPL Recommendation ── */
         #lplRecommendation {
             background: #2c1a1a; border: 2px solid #e74c3c;
             border-radius: 8px; padding: 16px; margin-top: 16px;
         }
         #lplRecommendation h3 { color: #e74c3c; margin: 0 0 12px 0; font-size: 15px; }
-        .lpl-result { margin-bottom: 8px; }
         .lpl-class-badge {
             display: inline-block; background: #e74c3c; color: white;
             padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 15px;
@@ -140,7 +91,7 @@
         .lpl-detail { color: #ecf0f1; font-size: 13px; margin-top: 8px; line-height: 1.6; }
         #lplNoSolution { color: #f39c12; font-size: 13px; line-height: 1.6; }
 
-        /* ── Action buttons ── */
+        /* ── RA-specific: Action buttons ── */
         .action-buttons { display: flex; gap: 12px; margin-top: 20px; }
         .btn-generate {
             flex: 1; background: #27ae60; color: white; border: none;
@@ -155,11 +106,9 @@
         }
         .btn-clear:hover { background: #c0392b; }
 
-        /* ── Mobile ── */
+        /* ── RA-specific: Mobile overrides ── */
         @media (max-width: 680px) {
-            .nav-header { flex-direction: column; gap: 12px; text-align: center; }
             .results-grid { grid-template-columns: repeat(2, 1fr); }
-            .form-row { flex-direction: column; }
             .results-panel { position: static; }
         }
     </style>
