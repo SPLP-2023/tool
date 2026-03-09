@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk Assessment Report - Strike Tools</title>
+    <title>Risk Assessment — Strike Tools</title>
     <link rel="manifest" href="/tool/manifest.json">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
@@ -13,361 +13,531 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="StrikeR">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-</head>
-<body>
-    <div class="container">
-        <!-- Navigation Header -->
-        <div class="nav-header">
-            <button class="nav-button back-button" onclick="location.href='reports.html'">
-                ← Back to Reports
-            </button>
-            <h1 class="page-title">Risk Assessment Report</h1>
-            <button class="nav-button" onclick="location.href='tools.html'">
-                Tools
-            </button>
-        </div>
-
-        <!-- Basic Information Section -->
-        <div class="section">
-            <h2>Site Information</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="siteAddress">Site Address:</label>
-                    <textarea id="siteAddress" rows="3" placeholder="Enter full site address..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="assessmentDate">Assessment Date:</label>
-                    <input type="date" id="assessmentDate">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="surveyorName">Surveyor Name:</label>
-                    <input type="text" id="surveyorName" placeholder="Enter surveyor name...">
-                </div>
-                <div class="form-group">
-                    <label for="clientRepName">Client Representative Name:</label>
-                    <input type="text" id="clientRepName" placeholder="Enter client representative name...">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="clientSignature">Client Representative Signature:</label>
-                <div class="image-upload" onclick="document.getElementById('clientSignatureFile').click()">
-                    <input type="file" id="clientSignatureFile" accept="image/*" class="hidden-file-input" aria-label="Upload client signature" onchange="handleImageUpload(this, 'clientSignaturePreview')">
-                    <div id="clientSignaturePreview">Click to upload client signature</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Structure Details Section -->
-        <div class="section">
-            <h2>Structure Details</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="structureType">Structure Type:</label>
-                    <select id="structureType">
-                        <option value="">Select structure type...</option>
-                        <option value="Residential">Residential</option>
-                        <option value="Commercial">Commercial</option>
-                        <option value="Industrial">Industrial</option>
-                        <option value="Agricultural">Agricultural</option>
-                        <option value="Educational">Educational</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Heritage">Heritage</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="structureHeight">Structure Height (m):</label>
-                    <input type="number" id="structureHeight" step="0.1" min="0" placeholder="0.0">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="structureLength">Structure Length (m):</label>
-                    <input type="number" id="structureLength" step="0.1" min="0" placeholder="0.0">
-                </div>
-                <div class="form-group">
-                    <label for="structureWidth">Structure Width (m):</label>
-                    <input type="number" id="structureWidth" step="0.1" min="0" placeholder="0.0">
-                </div>
-            </div>
-        </div>
-
-        <!-- Environmental Factors Section -->
-        <div class="section">
-            <h2>Environmental Factors</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="groundFlashDensity">Ground Flash Density (Ng) - flashes/km²/year:</label>
-                    <input type="number" id="groundFlashDensity" step="0.1" min="0" placeholder="2.0" value="2.0">
-                    <small>Default: 2.0 for UK. Check local meteorological data for specific values.</small>
-                </div>
-                <div class="form-group">
-                    <label for="isolationFactor">Isolation Factor (Cd):</label>
-                    <select id="isolationFactor">
-                        <option value="0.25">0.25 - Structure surrounded by taller objects</option>
-                        <option value="0.5">0.5 - Structure surrounded by objects of same height</option>
-                        <option value="1" selected>1.0 - Isolated structure</option>
-                        <option value="2">2.0 - Structure on hilltop or prominent location</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Risk Assessment Parameters Section -->
-        <div class="section">
-            <h2>Risk Assessment Parameters</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="occupancyType">Occupancy Type:</label>
-                    <select id="occupancyType">
-                        <option value="">Select occupancy type...</option>
-                        <option value="no-panic">No panic (single family house)</option>
-                        <option value="low-panic">Low level of panic (house, small office)</option>
-                        <option value="panic-possible">Panic possible (public building, large office)</option>
-                        <option value="panic-with-consequences">Panic with physical consequences (hospital, school)</option>
-                        <option value="high-panic">High level of panic (emergency services, cultural heritage)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="specialHazard">Special Hazard:</label>
-                    <select id="specialHazard">
-                        <option value="none">None</option>
-                        <option value="low">Low (rural area, concrete/brick/stone structure)</option>
-                        <option value="ordinary">Ordinary (suburban area, ordinary structure)</option>
-                        <option value="high">High (high fire load, flammable materials)</option>
-                        <option value="very-high">Very High (explosion risk, toxic materials)</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Existing Protection Section -->
-        <div class="section">
-            <h2>Existing Lightning Protection</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="existingProtection">Existing Lightning Protection System:</label>
-                    <select id="existingProtection">
-                        <option value="none">None</option>
-                        <option value="partial">Partial protection</option>
-                        <option value="lpl-4">Complete system - LPL IV</option>
-                        <option value="lpl-3">Complete system - LPL III</option>
-                        <option value="lpl-2">Complete system - LPL II</option>
-                        <option value="lpl-1">Complete system - LPL I</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="surgeProtection">Surge Protection Devices:</label>
-                    <select id="surgeProtection">
-                        <option value="none">None</option>
-                        <option value="partial">Partial SPD protection</option>
-                        <option value="coordinated">Coordinated SPD system</option>
-                        <option value="complete">Complete SPD protection</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Risk Calculation Results Section -->
-        <div class="section">
-            <h2>Risk Calculation Results</h2>
-            <div class="calculation-results">
-                <div class="result-card">
-                    <h4>Annual Number of Lightning Strikes (N)</h4>
-                    <div id="lightningStrikes" class="result-value">-</div>
-                    <small>Calculated based on structure dimensions and location factors</small>
-                </div>
-                <div class="result-card">
-                    <h4>Risk of Loss of Human Life (R1)</h4>
-                    <div id="riskR1" class="result-value">-</div>
-                    <small>Acceptable limit: 10⁻⁵ per year</small>
-                </div>
-                <div class="result-card">
-                    <h4>Risk Assessment Result</h4>
-                    <div id="riskResult" class="result-status">Calculate to see result</div>
-                </div>
-            </div>
-            <div class="form-group">
-                <button type="button" id="calculateRisk" onclick="calculateRiskAssessment()" class="calculate-button">
-                    Calculate Risk Assessment
-                </button>
-            </div>
-        </div>
-
-        <!-- Comments Section -->
-        <div class="section">
-            <h2>Assessment Comments</h2>
-            <div class="form-group">
-                <label for="assessmentComments">Comments & Recommendations:</label>
-                <textarea id="assessmentComments" rows="6" placeholder="Enter assessment findings, recommendations, and any additional observations..."></textarea>
-            </div>
-        </div>
-
-        <!-- Generate Report Button -->
-        <button id="generateRiskReport" onclick="generateRiskAssessmentPDF()">Generate Risk Assessment PDF</button>
-        <button id="newRiskReport" onclick="clearRiskAssessmentData()" class="new-report-button">New Risk Assessment</button>
-    </div>
-
-    <!-- External Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- JavaScript Files -->
-    <script src="js/exif.js"></script>
-    <script src="js/pdf-generator-shared.js"></script>
-    <script src="js/pdf-generator-risk.js"></script>
-    <script src="js/risk-assessment.js"></script>
-
     <style>
-        /* Navigation styles */
+        /* ── Page layout ── */
+        body { background: #1a1a2e; font-family: Arial, sans-serif; margin: 0; padding: 0; color: #2c3e50; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        /* ── Nav header ── */
         .nav-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            border-bottom: 2px solid #ecf0f1;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px; padding: 16px 0; border-bottom: 2px solid #ecf0f1;
         }
-
         .nav-button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+            background: #3498db; color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 15px;
+        }
+        .nav-button:hover { background: #2980b9; }
+        .back-button { background: #95a5a6; }
+        .back-button:hover { background: #7f8c8d; }
+        .page-title { font-size: 26px; color: #2c3e50; margin: 0; font-weight: 700; }
+
+        /* ── Standard reference badge ── */
+        .standard-badge {
+            background: #2c3e50; color: #ecf0f1; font-size: 12px;
+            padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 20px;
         }
 
-        .nav-button:hover {
-            background-color: #2980b9;
+        /* ── Section cards ── */
+        .section {
+            background: white; border-radius: 10px; padding: 24px;
+            margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
-        .back-button {
-            background-color: #95a5a6;
+        .section h2 {
+            margin: 0 0 20px 0; font-size: 18px; color: #2c3e50;
+            border-bottom: 2px solid #3498db; padding-bottom: 8px;
         }
-
-        .back-button:hover {
-            background-color: #7f8c8d;
+        .zone-header {
+            background: #2c3e50; color: white;
+            border-radius: 8px; padding: 10px 16px;
+            margin-bottom: 16px; font-size: 15px; font-weight: bold;
         }
+        .zone-header.lpz1 { background: #8e44ad; }
 
-        .page-title {
-            font-size: 28px;
-            color: #2c3e50;
-            margin: 0;
+        /* ── Form layout ── */
+        .form-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+        .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { flex: 100%; }
+        label { font-size: 13px; font-weight: 600; color: #34495e; }
+        label small { font-weight: 400; color: #7f8c8d; display: block; margin-top: 2px; }
+        input[type=text], input[type=number], input[type=date], select, textarea {
+            padding: 10px 12px; border: 1.5px solid #dee2e6; border-radius: 6px;
+            font-size: 14px; color: #2c3e50; background: #fdfdfd;
+            transition: border-color 0.2s;
         }
-
-        /* Risk Assessment specific styles */
-        .calculation-results {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: #3498db; background: #fff;
         }
+        textarea { resize: vertical; }
 
-        .result-card {
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
+        /* ── Toggle switch ── */
+        .toggle-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+        .toggle-row label { font-size: 14px; font-weight: 600; margin: 0; }
+        .toggle {
+            position: relative; display: inline-block; width: 46px; height: 24px;
         }
-
-        .result-card h4 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            font-size: 16px;
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; inset: 0;
+            background: #ccc; border-radius: 24px; transition: 0.3s;
         }
-
-        .result-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2980b9;
-            margin: 10px 0;
+        .slider:before {
+            content: ''; position: absolute; height: 18px; width: 18px;
+            left: 3px; bottom: 3px; background: white; border-radius: 50%;
+            transition: 0.3s;
         }
+        input:checked + .slider { background: #27ae60; }
+        input:checked + .slider:before { transform: translateX(22px); }
 
-        .result-status {
-            font-size: 18px;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
+        /* ── Live Results Panel ── */
+        .results-panel {
+            background: #1a1a2e; color: white; border-radius: 10px;
+            padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            position: sticky; top: 10px; z-index: 10;
         }
+        .results-panel h2 { color: #ecf0f1; border-bottom-color: #3498db; margin-bottom: 20px; }
 
-        .result-status.pass {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .pass-fail-banner {
+            text-align: center; padding: 14px; border-radius: 8px;
+            font-size: 16px; font-weight: bold; margin-bottom: 20px;
         }
+        .pass-fail-banner.pass    { background: #27ae60; color: white; }
+        .pass-fail-banner.fail    { background: #e74c3c; color: white; }
+        .pass-fail-banner.pending { background: #7f8c8d; color: white; }
 
-        .result-status.fail {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .results-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 12px; margin-bottom: 16px;
         }
+        .result-item { text-align: center; }
+        .result-label { font-size: 11px; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px; }
+        .result-value { font-size: 20px; font-weight: bold; color: #3498db; margin: 4px 0; }
+        .result-value.r1 { font-size: 22px; color: #f1c40f; }
+        .result-divider { border: none; border-top: 1px solid #34495e; margin: 16px 0; }
 
-        .calculate-button {
-            background-color: #17a2b8;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            margin: 20px 0;
+        .breakdown-title { font-size: 12px; color: #95a5a6; text-transform: uppercase; margin-bottom: 10px; }
+        .breakdown-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 0; border-bottom: 1px solid #2c3e50;
         }
+        .breakdown-row:last-child { border-bottom: none; }
+        .breakdown-label { font-size: 13px; color: #bdc3c7; }
+        .breakdown-values { display: flex; gap: 16px; }
+        .breakdown-val { font-size: 13px; color: #ecf0f1; font-weight: bold; min-width: 80px; text-align: right; }
+        .breakdown-pct { font-size: 12px; color: #95a5a6; min-width: 45px; text-align: right; }
 
-        .calculate-button:hover {
-            background-color: #138496;
+        /* ── LPL Recommendation ── */
+        #lplRecommendation {
+            background: #2c1a1a; border: 2px solid #e74c3c;
+            border-radius: 8px; padding: 16px; margin-top: 16px;
         }
-
-        .new-report-button {
-            background-color: #e74c3c;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
+        #lplRecommendation h3 { color: #e74c3c; margin: 0 0 12px 0; font-size: 15px; }
+        .lpl-result { margin-bottom: 8px; }
+        .lpl-class-badge {
+            display: inline-block; background: #e74c3c; color: white;
+            padding: 4px 14px; border-radius: 20px; font-weight: bold; font-size: 15px;
         }
+        .lpl-detail { color: #ecf0f1; font-size: 13px; margin-top: 8px; line-height: 1.6; }
+        #lplNoSolution { color: #f39c12; font-size: 13px; line-height: 1.6; }
 
-        .new-report-button:hover {
-            background-color: #c0392b;
+        /* ── Action buttons ── */
+        .action-buttons { display: flex; gap: 12px; margin-top: 20px; }
+        .btn-generate {
+            flex: 1; background: #27ae60; color: white; border: none;
+            padding: 16px; border-radius: 8px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: background 0.2s;
         }
+        .btn-generate:hover { background: #219a52; }
+        .btn-clear {
+            background: #e74c3c; color: white; border: none;
+            padding: 16px 24px; border-radius: 8px; font-size: 15px;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .btn-clear:hover { background: #c0392b; }
 
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .nav-header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .page-title {
-                font-size: 24px;
-            }
-
-            .calculation-results {
-                grid-template-columns: 1fr;
-            }
+        /* ── Mobile ── */
+        @media (max-width: 680px) {
+            .nav-header { flex-direction: column; gap: 12px; text-align: center; }
+            .results-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-row { flex-direction: column; }
+            .results-panel { position: static; }
         }
     </style>
-        <script>
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/tool/service-worker.js', {
-            scope: '/tool/'
-          }).then(registration => {
-            console.log('SW registered:', registration.scope);
-          }).catch(error => {
-            console.log('SW registration failed:', error);
-          });
-        }
-    </script>
+</head>
+<body>
+<div class="container">
+
+    <!-- Navigation -->
+    <div class="nav-header">
+        <button class="nav-button back-button" onclick="location.href='reports.html'">← Back to Reports</button>
+        <h1 class="page-title">Risk Assessment Report</h1>
+        <button class="nav-button" onclick="location.href='tools.html'">Tools</button>
+    </div>
+
+    <div class="standard-badge">BS EN IEC 62305-2:2024 — Phase 1: R1 Loss of Human Life</div>
+
+    <!-- ═══════════════════════════════════════════
+         LIVE RESULTS PANEL (sticky)
+    ═══════════════════════════════════════════ -->
+    <div class="results-panel">
+        <h2>⚡ Live Risk Calculation</h2>
+
+        <div id="passFailBanner" class="pass-fail-banner pending">
+            Enter structure dimensions to begin
+        </div>
+
+        <div class="results-grid">
+            <div class="result-item">
+                <div class="result-label">Collection Area A<sub>D</sub></div>
+                <div class="result-value" id="resAD">—</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Annual Events N<sub>D</sub></div>
+                <div class="result-value" id="resND">—</div>
+            </div>
+            <div class="result-item">
+                <div class="result-label">Tolerable Risk R<sub>T</sub></div>
+                <div class="result-value" id="resRT">1 × 10⁻⁵</div>
+            </div>
+        </div>
+
+        <hr class="result-divider">
+        <div class="breakdown-title">Risk Component Breakdown</div>
+
+        <div class="breakdown-row">
+            <span class="breakdown-label">R<sub>AT</sub> — Touch/Step voltage (LPZ 0A)</span>
+            <div class="breakdown-values">
+                <span class="breakdown-val" id="resRAT">—</span>
+                <span class="breakdown-pct" id="pctRAT">—</span>
+            </div>
+        </div>
+        <div class="breakdown-row">
+            <span class="breakdown-label">R<sub>B</sub> — Physical damage / fire (both zones)</span>
+            <div class="breakdown-values">
+                <span class="breakdown-val" id="resRB">—</span>
+                <span class="breakdown-pct" id="pctRB">—</span>
+            </div>
+        </div>
+        <div class="breakdown-row">
+            <span class="breakdown-label">R<sub>C</sub> — Internal system failure (LPZ 1)</span>
+            <div class="breakdown-values">
+                <span class="breakdown-val" id="resRC">N/A</span>
+                <span class="breakdown-pct" id="pctRC">—</span>
+            </div>
+        </div>
+        <div class="breakdown-row" style="border-top: 2px solid #3498db; margin-top: 6px; padding-top: 10px;">
+            <span class="breakdown-label" style="color: #f1c40f; font-weight: bold;">R<sub>1</sub> — Total Risk</span>
+            <div class="breakdown-values">
+                <span class="breakdown-val r1" id="resR1">—</span>
+                <span class="breakdown-pct"></span>
+            </div>
+        </div>
+
+        <!-- LPL Recommendation -->
+        <div id="lplRecommendation" style="display:none;">
+            <h3>⚠ LPL Recommendation</h3>
+            <div id="lplSolution" class="lpl-result" style="display:none;">
+                <div>Minimum required: <span class="lpl-class-badge" id="lplClass">—</span></div>
+                <div class="lpl-detail">
+                    Achieves R<sub>1</sub> = <strong id="lplR1Achieved">—</strong><br>
+                    SPD Requirement: <span id="spdReqText">—</span>
+                </div>
+            </div>
+            <div id="lplNoSolution" style="display:none;">
+                ⚠ Risk cannot be reduced to tolerable level by structural LPS alone.
+                Consider a Thunderstorm Warning System (TWS) per IEC 62793.
+            </div>
+        </div>
+    </div><!-- /results-panel -->
+
+
+    <!-- ═══════════════════════════════════════════
+         STEP 1: SITE & PROJECT INFORMATION
+    ═══════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Step 1 — Site &amp; Project Information</h2>
+        <div class="form-row">
+            <div class="form-group full">
+                <label for="siteAddress">Site Address</label>
+                <textarea id="siteAddress" rows="2" placeholder="Full site address..."></textarea>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="structureNameRef">Structure Name / Reference
+                    <small>e.g. Main Building, Block A</small>
+                </label>
+                <input type="text" id="structureNameRef" placeholder="e.g. Main Building">
+            </div>
+            <div class="form-group">
+                <label for="assessmentDate">Assessment Date</label>
+                <input type="date" id="assessmentDate">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="surveyorName">Assessor Name</label>
+                <input type="text" id="surveyorName" placeholder="Full name">
+            </div>
+            <div class="form-group">
+                <label for="structureType">Structure Type</label>
+                <select id="structureType">
+                    <option value="">Select structure type...</option>
+                    <option>Residential Single Family Home</option>
+                    <option>Residential Multi-Family Home</option>
+                    <option>Residential Tower Block</option>
+                    <option>Residential Block of Flats</option>
+                    <option>Student Accommodation</option>
+                    <option>Hotel</option>
+                    <option>Office Building</option>
+                    <option>Retail Store</option>
+                    <option>Warehouse</option>
+                    <option>Manufacturing Plant</option>
+                    <option>Chemical Processing Plant</option>
+                    <option>Farm Building</option>
+                    <option>School</option>
+                    <option>University</option>
+                    <option>Hospital</option>
+                    <option>Care Home</option>
+                    <option>Church</option>
+                    <option>Telecommunications Mast/Tower</option>
+                    <option>Telecommunications Data Centre</option>
+                    <option>Power Station</option>
+                    <option>Water Treatment Plant</option>
+                    <option>Sports Stadium</option>
+                    <option>Airport Terminal</option>
+                    <option>Other</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         STEP 2: STRUCTURE DIMENSIONS
+    ═══════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Step 2 — Structure Dimensions</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="structureHeight">Height H (m)
+                    <small>Min: 1 m — used in A<sub>D</sub> formula</small>
+                </label>
+                <input type="number" id="structureHeight" step="0.1" min="1" placeholder="0.0">
+            </div>
+            <div class="form-group">
+                <label for="structureLength">Length L (m)</label>
+                <input type="number" id="structureLength" step="0.1" min="1" placeholder="0.0">
+            </div>
+            <div class="form-group">
+                <label for="structureWidth">Width W (m)</label>
+                <input type="number" id="structureWidth" step="0.1" min="1" placeholder="0.0">
+            </div>
+        </div>
+        <div style="background:#f0f8ff; border-left:4px solid #3498db; padding:10px 14px; border-radius:4px; font-size:13px; color:#2c3e50;">
+            <strong>Formula (Clause A.2.1.2 — 2024):</strong>
+            A<sub>D</sub> = L×W + 2×(3H)×(L+W) + π×(3H)²
+            &nbsp;|&nbsp; N<sub>D</sub> = N<sub>SG</sub> × A<sub>D</sub> × C<sub>D</sub> × 10⁻⁶
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         STEP 3: LOCATION & ENVIRONMENT
+    ═══════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Step 3 — Location &amp; Environment</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="ukRegion">UK Region
+                    <small>Pre-fills N<sub>SG</sub> — override below if needed</small>
+                </label>
+                <select id="ukRegion">
+                    <option value="">Select region...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nsgOverride">N<sub>SG</sub> Override (strikes/km²/yr)
+                    <small>Annex NG.2 — engineer may use site-specific value</small>
+                </label>
+                <input type="number" id="nsgOverride" step="0.005" min="0" placeholder="Auto-filled from region">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="locationFactor">Location Factor C<sub>D</sub> (Table A.1)</label>
+                <select id="locationFactor">
+                    <option value="0.25">0.25 — Surrounded by higher objects</option>
+                    <option value="0.5">0.5 — Surrounded by objects of same height</option>
+                    <option value="1" selected>1.0 — Isolated structure</option>
+                    <option value="2">2.0 — Hilltop / prominent location</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="totalPersons">Total Persons in Structure (n<sub>t</sub>)</label>
+                <input type="number" id="totalPersons" min="1" step="1" placeholder="Total occupancy">
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         STEP 4: LPZ 0A — EXTERNAL ZONE
+    ═══════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Step 4 — Zone Inputs</h2>
+        <div class="zone-header">LPZ 0A — External Zone</div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lpz0aNz">Persons in external zone (n<sub>z</sub>)
+                    <small>Grounds staff, visitors present outdoors</small>
+                </label>
+                <input type="number" id="lpz0aNz" min="0" step="1" value="0">
+            </div>
+            <div class="form-group">
+                <label for="lpz0aTz">Time present (t<sub>z</sub>) — Table E.2</label>
+                <select id="lpz0aTz">
+                    <option value="1.0">1.0 — Continuous (residences)</option>
+                    <option value="0.25" selected>0.25 — Working hours only</option>
+                    <option value="0.125">0.125 — Occasional / daytime</option>
+                    <option value="0.05">0.05 — Rare / intermittent</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lpz0aSurface">Surface type (r<sub>t</sub>) — Table B.2</label>
+                <select id="lpz0aSurface"></select>
+            </div>
+            <div class="form-group">
+                <label for="lpz0aPsType">Structure material (P<sub>S</sub>) — Table B.4</label>
+                <select id="lpz0aPsType"></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lpz0aLps">Existing LPS (P<sub>LPS</sub>) — Table B.3</label>
+                <select id="lpz0aLps"></select>
+            </div>
+            <div class="form-group">
+                <label for="lpz0aPam">Touch/Step protection (P<sub>am</sub>) — Table B.1</label>
+                <select id="lpz0aPam"></select>
+            </div>
+        </div>
+        <div class="toggle-row">
+            <label class="toggle">
+                <input type="checkbox" id="lpz0aTws">
+                <span class="slider"></span>
+            </label>
+            <label for="lpz0aTws">Thunderstorm Warning System (TWS) installed?
+                <small style="font-weight:400; color:#7f8c8d;">If yes: P<sub>TWS</sub> = 0.02</small>
+            </label>
+        </div>
+
+        <!-- LPZ 1 -->
+        <div class="zone-header lpz1" style="margin-top: 24px;">LPZ 1 — Internal Zone</div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lpz1Nz">Persons in internal zone (n<sub>z</sub>)
+                    <small>Leave blank to use total building occupancy</small>
+                </label>
+                <input type="number" id="lpz1Nz" min="0" step="1" placeholder="Defaults to nₜ">
+            </div>
+            <div class="form-group">
+                <label for="lpz1Tz">Time present (t<sub>z</sub>) — Table E.2</label>
+                <select id="lpz1Tz">
+                    <option value="1.0" selected>1.0 — Continuous (residences)</option>
+                    <option value="0.25">0.25 — Working hours only</option>
+                    <option value="0.125">0.125 — Occasional / daytime</option>
+                    <option value="0.05">0.05 — Rare / intermittent</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lpz1FireRisk">Fire risk level (r<sub>f</sub>) — Table B.6</label>
+                <select id="lpz1FireRisk"></select>
+            </div>
+            <div class="form-group">
+                <label for="lpz1FireProv">Fire provisions (r<sub>p</sub>) — Table B.5</label>
+                <select id="lpz1FireProv"></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lpz1PsType">Structure material (P<sub>S</sub>) — Table B.4</label>
+                <select id="lpz1PsType"></select>
+            </div>
+            <div class="form-group">
+                <label for="lpz1Lps">Existing LPS (P<sub>LPS</sub>) — Table B.3</label>
+                <select id="lpz1Lps"></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="lpz1LossCategory">Loss category — Table C.2
+                    <small>Determines L<sub>F1</sub>, L<sub>O1</sub></small>
+                </label>
+                <select id="lpz1LossCategory"></select>
+            </div>
+        </div>
+        <div class="toggle-row">
+            <label class="toggle">
+                <input type="checkbox" id="lpz1InternalSystems">
+                <span class="slider"></span>
+            </label>
+            <label for="lpz1InternalSystems">Internal systems failure could injure people (R<sub>C</sub>)
+                <small style="font-weight:400; color:#7f8c8d;">Enables R<sub>C</sub> = N<sub>D</sub> × P<sub>C</sub> × L<sub>C1</sub></small>
+            </label>
+        </div>
+        <div id="spdRow" class="form-row" style="display:none; margin-top:12px;">
+            <div class="form-group">
+                <label for="lpz1Spd">SPD protection (P<sub>SPD</sub>) — Table B.7</label>
+                <select id="lpz1Spd"></select>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         STEP 5: ASSESSMENT COMMENTS
+    ═══════════════════════════════════════════ -->
+    <div class="section">
+        <h2>Step 5 — Comments &amp; Recommendations</h2>
+        <div class="form-group">
+            <label for="assessmentComments">Assessor comments, site observations, recommendations</label>
+            <textarea id="assessmentComments" rows="5"
+                placeholder="Enter findings, recommendations, and additional observations..."></textarea>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ACTION BUTTONS
+    ═══════════════════════════════════════════ -->
+    <div class="action-buttons">
+        <button class="btn-generate" onclick="generateRiskAssessmentPDF()">
+            📄 Generate PDF Report
+        </button>
+        <button class="btn-clear" onclick="clearRiskAssessmentData()">
+            🗑 New Assessment
+        </button>
+    </div>
+
+</div><!-- /container -->
+
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- App scripts -->
+<script src="js/exif.js"></script>
+<script src="js/pdf-generator-shared.js"></script>
+<script src="js/pdf-generator-risk.js"></script>
+<script src="js/risk-assessment.js"></script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/tool/service-worker.js', { scope: '/tool/' })
+            .then(r => console.log('SW registered:', r.scope))
+            .catch(e => console.log('SW failed:', e));
+    }
+</script>
 </body>
 </html>
