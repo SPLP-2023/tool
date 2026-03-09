@@ -355,6 +355,7 @@ function getRACalculationData() {
         R1:             document.getElementById('resR1').textContent,
         passFail:       document.getElementById('passFailBanner').textContent,
         lplClass:       document.getElementById('lplClass')?.textContent || 'N/A',
+        lplR1Achieved:  document.getElementById('lplR1Achieved')?.textContent || '-',
         spdReq:         document.getElementById('spdReqText')?.textContent || 'N/A',
         pctRAT:         document.getElementById('pctRAT').textContent,
         pctRB:          document.getElementById('pctRB').textContent,
