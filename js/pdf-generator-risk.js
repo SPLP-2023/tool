@@ -131,14 +131,7 @@
 
     // Standard header bar (dark, matches all other pages)
     fillRect(0, 3, PW, 17, DARK);
-    setFont(10, 'bold', BLUE);
-    pdf.text('STRIKE POINT', ML, 12);
-    setFont(8, 'normal', LGREY);
-    pdf.text('Lightning Protection Ltd', ML, 17.5);
-    setFont(10, 'bold', WHITE);
-    pdf.text('RISK ASSESSMENT REPORT', PW / 2, 13, { align: 'center' });
-    setFont(7, 'normal', LGREY);
-    pdf.text('CONFIDENTIAL - SITE ASSESSMENT DOCUMENT', PW - MR, 13, { align: 'right' });
+
 
     // Logo — centred, large
     const logoHeight = addImageToPDF(pdf, COMPANY_LOGO_URL, 30, 20, 150, 60, true);
