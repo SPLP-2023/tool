@@ -254,7 +254,7 @@ function fixImageOrientation(file) {
                     ctx.drawImage(img, 0, 0);
                     
                     // Convert back with compression
-                    const correctedImageData = canvas.toDataURL('image/jpeg', 0.8);
+                    const correctedImageData = canvas.toDataURL('image/jpeg', 0.65);
                     resolve(correctedImageData);
                 };
                 img.src = e.target.result;
