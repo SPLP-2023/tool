@@ -504,8 +504,7 @@
     pdf.text('Signature: _____________________________________________', ML + 2, y);
 
     // ── Save ──
-    const datePart = d.assessmentDate ? d.assessmentDate.replace(/-/g, '') : 'undated';
-    const refPart  = (d.structureRef || d.siteAddress || 'RA')
-        .replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30);
-    pdf.save('Risk_Assessment_' + refPart + '_' + datePart + '.pdf');
+    const datePart = d.assessmentDate ? d.assessmentDate.split('-').reverse().join('-') : 'undated';
+    const sitePart = (d.siteAddress || 'Unknown Site').replace(/[^a-zA-Z0-9 ]/g, '').trim().substring(0, 40);
+    pdf.save('LPRA - ' + sitePart + ' ' + datePart + '.pdf');
 }
