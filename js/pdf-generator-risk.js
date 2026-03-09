@@ -122,72 +122,91 @@ function generateRiskAssessmentPDF() {
     const TOTAL_PAGES = 6;
     const isPass = d.passFail && d.passFail.toLowerCase().includes('pass');
 
+    // Shared cover row helper — white text on dark bg
+    function coverRow(label, value, y) {
+        setFont(8, 'bold', [149, 165, 166]);
+        pdf.text(safe(label), ML + 6, y);
+        setFont(9, 'normal', WHITE);
+        const val = safe(String(value || '-'));
+        const vLines = pdf.splitTextToSize(val, CW * 0.56);
+        pdf.text(vLines[0], ML + CW * 0.42, y);
+        return y + 10;
+    }
+
     // ════════════════════════════════════════════════
-    // PAGE 1 — COVER (white bg, standard header/footer)
+    // PAGE 1 — COVER (styled dark cover page)
     // ════════════════════════════════════════════════
-    let y = addHeader('RISK ASSESSMENT REPORT');
-    addFooter(1, TOTAL_PAGES);
+
+    // Top accent stripe
+    fillRect(0, 0, PW, 3, BLUE);
+
+    // Company name
+    setFont(26, 'bold', BLUE);
+    pdf.text('STRIKE POINT', PW / 2, 32, { align: 'center' });
+    setFont(10, 'normal', [149, 165, 166]);
+    pdf.text('Lightning Protection Ltd', PW / 2, 41, { align: 'center' });
 
     // Title block
-    fillRect(ML, y, CW, 28, DARK);
-    setFont(16, 'bold', WHITE);
-    pdf.text('LIGHTNING PROTECTION', PW / 2, y + 11, { align: 'center' });
-    setFont(13, 'bold', GOLD);
-    pdf.text('RISK ASSESSMENT REPORT', PW / 2, y + 22, { align: 'center' });
-    y += 32;
+    fillRect(ML, 52, CW, 36, [30, 55, 85]);
+    setFont(17, 'bold', WHITE);
+    pdf.text('LIGHTNING PROTECTION', PW / 2, 66, { align: 'center' });
+    setFont(14, 'bold', GOLD);
+    pdf.text('RISK ASSESSMENT REPORT', PW / 2, 78, { align: 'center' });
 
     // Standard badge
-    fillRect(ML, y, CW, 8, BLUE);
+    fillRect(ML, 92, CW, 9, BLUE);
     setFont(8, 'bold', WHITE);
-    pdf.text('BS EN IEC 62305-2:2024  |  Phase 1: R1 Loss of Human Life', PW / 2, y + 5.5, { align: 'center' });
-    y += 14;
+    pdf.text('BS EN IEC 62305-2:2024  |  Phase 1: R1 Loss of Human Life', PW / 2, 98, { align: 'center' });
 
-    // Site info table
-    y = secHead('SITE & PROJECT INFORMATION', y);
-    [
-        ['Site Address',    d.siteAddress],
-        ['Structure Ref',   d.structureRef],
-        ['Structure Type',  d.structureType],
-        ['Assessment Date', d.assessmentDate],
-        ['Assessor',        d.surveyorName],
-        ['UK Region',       d.ukRegion],
-        ['NSG Value',       d.nsg + ' strikes/km2/yr'],
-        ['Location Factor', 'CD = ' + d.cd]
-    ].forEach((r, i) => { y = row2(r[0], r[1], y, i % 2 === 0); });
-    y += 6;
+    // Site info block
+    fillRect(ML, 106, CW, 90, [30, 55, 85]);
+    let cy = 118;
+    cy = coverRow('Site Address',    d.siteAddress, cy);
+    cy = coverRow('Structure Ref',   d.structureRef, cy);
+    cy = coverRow('Structure Type',  d.structureType, cy);
+    cy = coverRow('Assessment Date', d.assessmentDate, cy);
+    cy = coverRow('Assessor',        d.surveyorName, cy);
+    cy = coverRow('UK Region',       d.ukRegion, cy);
+    cy = coverRow('NSG Value',       d.nsg + ' strikes/km2/yr', cy);
+    cy = coverRow('Location Factor', 'CD = ' + d.cd, cy);
 
     // Pass/Fail banner
-    fillRect(ML, y, CW, 16, isPass ? GREEN : RED);
-    setFont(12, 'bold', WHITE);
+    fillRect(ML, 202, CW, 20, isPass ? GREEN : RED);
+    setFont(13, 'bold', WHITE);
     pdf.text(
         isPass ? 'PASS  -  Risk Acceptable. No LPS Required.'
                : 'FAIL  -  LPS Required. See Recommendations.',
-        PW / 2, y + 11, { align: 'center' }
+        PW / 2, 215, { align: 'center' }
     );
-    y += 22;
 
-    // Key results
-    y = secHead('KEY CALCULATION RESULTS', y);
-    [
-        ['Collection Area AD',          d.AD],
-        ['Annual Dangerous Events ND',  d.ND],
-        ['Total Risk R1',               d.R1],
-        ['Tolerable Risk RT',           '1 x 10^-5 per year']
-    ].forEach((r, i) => { y = row2(r[0], r[1], y, i % 2 === 0); });
+    // Key results block
+    fillRect(ML, 228, CW, 44, [30, 55, 85]);
+    setFont(8, 'bold', BLUE);
+    pdf.text('KEY CALCULATION RESULTS', ML + 6, 236);
+    let ky = 244;
+    ky = coverRow('Collection Area AD',         d.AD, ky);
+    ky = coverRow('Annual Dangerous Events ND',  d.ND, ky);
+    ky = coverRow('Total Risk R1',               d.R1, ky);
+    ky = coverRow('Tolerable Risk RT',           '1 x 10^-5 per year', ky);
 
     if (!isPass && d.lplClass && d.lplClass !== 'N/A') {
-        y += 4;
-        fillRect(ML, y, CW, 8, [180, 50, 40]);
+        fillRect(ML, 276, CW, 9, [160, 40, 30]);
         setFont(9, 'bold', WHITE);
-        pdf.text('Recommended LPS: ' + safe(d.lplClass) + '   |   ' + safe(d.spdReq), ML + 3, y + 5.5);
-        y += 12;
+        pdf.text('Recommended LPS: ' + safe(d.lplClass) + '   |   ' + safe(d.spdReq), ML + 3, 282);
     }
+
+    // Bottom bar
+    fillRect(0, PH - 14, PW, 14, [10, 20, 35]);
+    setFont(8, 'normal', [149, 165, 166]);
+    pdf.text('Strike Point Lightning Protection Ltd', ML, PH - 6);
+    pdf.text('BS EN IEC 62305-2:2024', PW / 2, PH - 6, { align: 'center' });
+    pdf.text('Page 1 of ' + TOTAL_PAGES, PW - MR, PH - 6, { align: 'right' });
 
     // ════════════════════════════════════════════════
     // PAGE 2 — RISK ASSESSMENT SUMMARY
     // ════════════════════════════════════════════════
     pdf.addPage();
-    y = addHeader('RISK ASSESSMENT SUMMARY');
+    let y = addHeader('RISK ASSESSMENT SUMMARY');
     addFooter(2, TOTAL_PAGES);
 
     fillRect(ML, y, CW, 14, isPass ? GREEN : RED);
@@ -273,35 +292,55 @@ function generateRiskAssessmentPDF() {
     y = addHeader('STRUCTURE & ZONE DETAILS');
     addFooter(3, TOTAL_PAGES);
 
-    y = secHead('SITE & STRUCTURE', y);
+    // Safe row with page-break check
+    function safeRow(label, value, y, shade) {
+        if (y + 8 > PAGE_BOTTOM) {
+            pdf.addPage();
+            y = addHeader('STRUCTURE & ZONE DETAILS (CONTINUED)');
+            addFooter(3, TOTAL_PAGES);
+        }
+        return row2(label, value, y, shade);
+    }
+
+    // Safe section heading with page-break check
+    function safeSec(text, y) {
+        if (y + 14 > PAGE_BOTTOM) {
+            pdf.addPage();
+            y = addHeader('STRUCTURE & ZONE DETAILS (CONTINUED)');
+            addFooter(3, TOTAL_PAGES);
+        }
+        return secHead(text, y);
+    }
+
+    y = safeSec('SITE & STRUCTURE', y);
     [
         ['Site Address',    d.siteAddress],
         ['Structure Ref',   d.structureRef],
         ['Structure Type',  d.structureType],
         ['Assessor',        d.surveyorName],
         ['Assessment Date', d.assessmentDate]
-    ].forEach((r, i) => { y = row2(r[0], r[1], y, i % 2 === 0); });
+    ].forEach((r, i) => { y = safeRow(r[0], r[1], y, i % 2 === 0); });
     y += 4;
 
-    y = secHead('STRUCTURE DIMENSIONS', y);
+    y = safeSec('STRUCTURE DIMENSIONS', y);
     [
         ['Height H', d.H + ' m'],
         ['Length L', d.L + ' m'],
         ['Width W',  d.W + ' m'],
         ['Collection Area AD', d.AD]
-    ].forEach((r, i) => { y = row2(r[0], r[1], y, i % 2 === 0); });
+    ].forEach((r, i) => { y = safeRow(r[0], r[1], y, i % 2 === 0); });
     y += 4;
 
-    y = secHead('LOCATION & ENVIRONMENT', y);
+    y = safeSec('LOCATION & ENVIRONMENT', y);
     [
         ['UK Region',                    d.ukRegion],
         ['NSG (strikes/km2/yr)',         d.nsg],
         ['Location Factor CD',           d.cd],
         ['Annual Dangerous Events ND',   d.ND]
-    ].forEach((r, i) => { y = row2(r[0], r[1], y, i % 2 === 0); });
+    ].forEach((r, i) => { y = safeRow(r[0], r[1], y, i % 2 === 0); });
     y += 4;
 
-    y = secHead('LPZ 0A  -  EXTERNAL ZONE', y);
+    y = safeSec('LPZ 0A  -  EXTERNAL ZONE', y);
     [
         ['Persons in zone (nz)',                    d.lpz0aNz],
         ['Total persons (nt)',                      d.totalPersons],
@@ -310,10 +349,10 @@ function generateRiskAssessmentPDF() {
         ['Existing LPS (PLPS)  Table B.3',          d.lpz0aLps],
         ['Touch/step protection (Pam)  Table B.1',  d.lpz0aPam],
         ['TWS installed',                            d.lpz0aTws]
-    ].forEach((r, i) => { y = row2(r[0], r[1], y, i % 2 === 0); });
+    ].forEach((r, i) => { y = safeRow(r[0], r[1], y, i % 2 === 0); });
     y += 4;
 
-    y = secHead('LPZ 1  -  INTERNAL ZONE', y);
+    y = safeSec('LPZ 1  -  INTERNAL ZONE', y);
     [
         ['Persons in zone (nz)',                    d.lpz1Nz || (d.totalPersons + ' (= nt)')],
         ['Fire risk level (rf)  Table B.6',         d.lpz1FireRisk],
@@ -322,7 +361,7 @@ function generateRiskAssessmentPDF() {
         ['Existing LPS (PLPS)  Table B.3',          d.lpz1Lps],
         ['Loss category  Table C.2',                d.lpz1LossCat],
         ['Internal systems enabled (RC)',            d.internalSystems]
-    ].forEach((r, i) => { y = row2(r[0], r[1], y, i % 2 === 0); });
+    ].forEach((r, i) => { y = safeRow(r[0], r[1], y, i % 2 === 0); });
 
     // ════════════════════════════════════════════════
     // PAGE 4 — CALCULATION BREAKDOWN
