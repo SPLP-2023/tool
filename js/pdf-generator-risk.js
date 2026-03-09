@@ -154,19 +154,19 @@
     pdf.setLineWidth(0.5);
     pdf.rect(ML, titleY + 56, CW, 36);
     setFont(8, 'bold', GREY);
-    pdf.text('SITE ADDRESS', ML + 4, titleY + 64);
+    pdf.text('STRUCTURE REF', ML + 4, titleY + 64);
     pdf.text('DATE', ML + CW * 0.65, titleY + 64);
     setFont(10, 'normal', DARK);
-    const addrLines = pdf.splitTextToSize(safe(d.siteAddress || '-'), CW * 0.55);
-    pdf.text(addrLines[0], ML + 4, titleY + 73);
-    if (addrLines[1]) pdf.text(addrLines[1], ML + 4, titleY + 79);
+    pdf.text(safe(d.structureRef || '-'), ML + 4, titleY + 73);
     const [yyyy, mm, dd] = (d.assessmentDate || '').split('-');
     const coverDate = yyyy ? `${dd}-${mm}-${yyyy.slice(2)}` : '-';
     pdf.text(safe(coverDate), ML + CW * 0.65, titleY + 73);
     setFont(8, 'bold', GREY);
-    pdf.text('STRUCTURE REF', ML + 4, titleY + 84);
+    pdf.text('SITE ADDRESS', ML + 4, titleY + 84);
     setFont(10, 'normal', DARK);
-    pdf.text(safe(d.structureRef || '-'), ML + 4, titleY + 92);
+    const addrLines = pdf.splitTextToSize(safe(d.siteAddress || '-'), CW * 0.55);
+    pdf.text(addrLines[0], ML + 4, titleY + 92);
+    if (addrLines[1]) pdf.text(addrLines[1], ML + 4, titleY + 98);
 
     // Standard footer bar
     fillRect(0, PH - 14, PW, 14, DARK);
