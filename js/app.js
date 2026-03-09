@@ -482,7 +482,7 @@ function handleImageUpload(input, previewId) {
 
         fixImageOrientation(file).then(correctedImageData => {
             // Compress the image before saving
-            compressImage(correctedImageData, 1200, 1200, 0.7).then(compressedData => {
+            compressImage(correctedImageData, 800, 800, 0.65).then(compressedData => {
                 uploadedImages[previewId] = file;
                 uploadedImages[previewId + '_data'] = compressedData;
                 if (preview) preview.textContent = 'Image uploaded successfully';
@@ -506,7 +506,7 @@ function handleMultipleImageUpload(input, previewId) {
 
         files.forEach((file, index) => {
             fixImageOrientation(file).then(correctedImageData => {
-                compressImage(correctedImageData, 1200, 1200, 0.7).then(compressedData => {
+                compressImage(correctedImageData, 800, 800, 0.65).then(compressedData => {
                     uploadedImages[previewId + '_data'][index] = compressedData;
                     processedCount++;
                     if (processedCount === files.length && preview) {
@@ -522,7 +522,7 @@ function handleMultipleImageUpload(input, previewId) {
 }
 
 // Compress an image (base64) to a max size and quality
-function compressImage(base64Str, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+function compressImage(base64Str, maxWidth = 800, maxHeight = 800, quality = 0.65) {
     return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
@@ -768,3 +768,4 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(addExportButtonToTIReport, 1000); // Small delay to ensure other scripts have loaded
     }
 });
+
