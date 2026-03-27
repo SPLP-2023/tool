@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Risk Assessment — Strike Tools</title>
+    <title>Risk Assessment — StrikeR</title>
     <link rel="manifest" href="/tool/manifest.json">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/png" href="./assets/SP%20Bolt%20400x400.png">
@@ -14,21 +14,22 @@
     <meta name="apple-mobile-web-app-title" content="StrikeR">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
-        /* ── RA-specific: Zone headers ── */
+        /* ── Zone headers ── */
         .zone-header {
-            background: #2c3e50; color: white;
-            border-radius: 8px; padding: 10px 16px;
-            margin-bottom: 16px; font-size: 15px; font-weight: bold;
+            background: #2c3e50; color: white; border-radius: 8px;
+            padding: 10px 16px; margin-bottom: 16px; margin-top: 8px;
+            font-size: 15px; font-weight: bold;
         }
         .zone-header.lpz1 { background: #8e44ad; }
 
-        /* ── RA-specific: Standard badge ── */
+        /* ── Standard badge ── */
         .standard-badge {
             background: #2c3e50; color: #ecf0f1; font-size: 12px;
-            padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 20px;
+            padding: 4px 12px; border-radius: 20px;
+            display: inline-block; margin-bottom: 20px;
         }
 
-        /* ── RA-specific: Toggle switch ── */
+        /* ── Toggle switch ── */
         .toggle-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
         .toggle-row label { font-size: 14px; font-weight: 600; margin: 0; }
         .toggle { position: relative; display: inline-block; width: 46px; height: 24px; }
@@ -44,10 +45,11 @@
         input:checked + .slider { background: #27ae60; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* ── RA-specific: Live Results Panel ── */
+        /* ── Live Results Panel ── */
         .results-panel {
             background: #1a1a2e; color: white; border-radius: 10px;
-            padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            padding: 24px; margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
             position: sticky; top: 10px; z-index: 10;
         }
         .results-panel h2 { color: #ecf0f1; border-bottom-color: #3498db; margin-bottom: 20px; }
@@ -64,8 +66,8 @@
         }
         .result-item { text-align: center; }
         .result-label { font-size: 11px; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px; }
-        .result-value { font-size: 20px; font-weight: bold; color: #3498db; margin: 4px 0; }
-        .result-value.r1 { font-size: 22px; color: #f1c40f; }
+        .result-value { font-size: 18px; font-weight: bold; color: #3498db; margin: 4px 0; }
+        .result-value.r1 { font-size: 20px; color: #f1c40f; }
         .result-divider { border: none; border-top: 1px solid #34495e; margin: 16px 0; }
         .breakdown-title { font-size: 12px; color: #95a5a6; text-transform: uppercase; margin-bottom: 10px; }
         .breakdown-row {
@@ -78,7 +80,7 @@
         .breakdown-val { font-size: 13px; color: #ecf0f1; font-weight: bold; min-width: 80px; text-align: right; }
         .breakdown-pct { font-size: 12px; color: #95a5a6; min-width: 45px; text-align: right; }
 
-        /* ── RA-specific: LPL Recommendation ── */
+        /* ── LPL Recommendation ── */
         #lplRecommendation {
             background: #2c1a1a; border: 2px solid #e74c3c;
             border-radius: 8px; padding: 16px; margin-top: 16px;
@@ -91,7 +93,7 @@
         .lpl-detail { color: #ecf0f1; font-size: 13px; margin-top: 8px; line-height: 1.6; }
         #lplNoSolution { color: #f39c12; font-size: 13px; line-height: 1.6; }
 
-        /* ── RA-specific: Action buttons ── */
+        /* ── Action buttons ── */
         .action-buttons { display: flex; gap: 12px; margin-top: 20px; }
         .btn-generate {
             flex: 1; background: #27ae60; color: white; border: none;
@@ -106,7 +108,14 @@
         }
         .btn-clear:hover { background: #c0392b; }
 
-        /* ── RA-specific: Mobile overrides ── */
+        /* ── Info note ── */
+        .info-note {
+            background: #eaf4fb; border-left: 4px solid #3498db;
+            border-radius: 4px; padding: 10px 14px;
+            font-size: 12px; color: #2c3e50; margin-bottom: 12px;
+        }
+
+        /* ── Mobile ── */
         @media (max-width: 680px) {
             .results-grid { grid-template-columns: repeat(2, 1fr); }
             .results-panel { position: static; }
@@ -118,18 +127,18 @@
 
     <!-- Navigation -->
     <div class="nav-header">
-        <button class="nav-button back-button" onclick="location.href='reports.html'">← Back to Reports</button>
+        <button class="nav-button back-button" onclick="location.href='reports.html'">&#8592; Back to Reports</button>
         <h1 class="page-title">Risk Assessment Report</h1>
         <button class="nav-button" onclick="location.href='tools.html'">Tools</button>
     </div>
 
-    <div class="standard-badge">BS EN IEC 62305-2:2024 — Phase 1: R1 Loss of Human Life</div>
+    <div class="standard-badge">BS EN IEC 62305-2:2024 — UK National Annexes NB &amp; NC — R1: Loss of Human Life</div>
 
     <!-- ═══════════════════════════════════════════
-         LIVE RESULTS PANEL (sticky)
+         LIVE RESULTS PANEL
     ═══════════════════════════════════════════ -->
     <div class="results-panel">
-        <h2>⚡ Live Risk Calculation</h2>
+        <h2>&#9889; Live Risk Calculation</h2>
 
         <div id="passFailBanner" class="pass-fail-banner pending">
             Enter structure dimensions to begin
@@ -146,7 +155,7 @@
             </div>
             <div class="result-item">
                 <div class="result-label">Tolerable Risk R<sub>T</sub></div>
-                <div class="result-value" id="resRT">1 × 10⁻⁵</div>
+                <div class="result-value" id="resRT">1 x 10^-5</div>
             </div>
         </div>
 
@@ -174,49 +183,80 @@
                 <span class="breakdown-pct" id="pctRC">—</span>
             </div>
         </div>
-        <div class="breakdown-row" style="border-top: 2px solid #3498db; margin-top: 6px; padding-top: 10px;">
-            <span class="breakdown-label" style="color: #f1c40f; font-weight: bold;">R<sub>1</sub> — Total Risk</span>
+        <div class="breakdown-row" style="border-top: 1px solid #3d5166; margin-top: 4px; padding-top: 8px;">
+            <span class="breakdown-label" style="font-weight:bold; color: #f1c40f;">R<sub>1</sub> — TOTAL RISK</span>
             <div class="breakdown-values">
                 <span class="breakdown-val r1" id="resR1">—</span>
-                <span class="breakdown-pct"></span>
+                <span class="breakdown-pct" style="color:#95a5a6;">100%</span>
             </div>
         </div>
 
         <!-- LPL Recommendation -->
         <div id="lplRecommendation" style="display:none;">
-            <h3>⚠ LPL Recommendation</h3>
-            <div id="lplSolution" class="lpl-result" style="display:none;">
-                <div>Minimum required: <span class="lpl-class-badge" id="lplClass">—</span></div>
+            <h3>&#9888; LPS Required — Recommended Protection Class</h3>
+            <div id="lplSolution">
+                <div class="lpl-result">
+                    Minimum LPS Class: <span class="lpl-class-badge" id="lplClass">—</span>
+                </div>
                 <div class="lpl-detail">
-                    Achieves R<sub>1</sub> = <strong id="lplR1Achieved">—</strong><br>
+                    R<sub>1</sub> Achieved: <span id="lplR1Achieved">—</span><br>
                     SPD Requirement: <span id="spdReqText">—</span>
                 </div>
             </div>
             <div id="lplNoSolution" style="display:none;">
-                ⚠ Risk cannot be reduced to tolerable level by structural LPS alone.
+                Risk cannot be reduced to tolerable level by structural LPS alone.<br>
                 Consider a Thunderstorm Warning System (TWS) per IEC 62793.
             </div>
         </div>
-    </div><!-- /results-panel -->
-
+    </div>
 
     <!-- ═══════════════════════════════════════════
-         STEP 1: SITE & PROJECT INFORMATION
+         STEP 1 — SITE & PROJECT INFORMATION
     ═══════════════════════════════════════════ -->
     <div class="section">
         <h2>Step 1 — Site &amp; Project Information</h2>
         <div class="form-row">
-            <div class="form-group full">
+            <div class="form-group">
                 <label for="siteAddress">Site Address</label>
-                <textarea id="siteAddress" rows="2" placeholder="Full site address..."></textarea>
+                <textarea id="siteAddress" rows="2" placeholder="Enter full site address..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="structureNameRef">Structure Reference</label>
+                <input type="text" id="structureNameRef" placeholder="e.g. Main Building, Block A...">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="structureNameRef">Structure Name / Reference
-                    <small>e.g. Main Building, Block A</small>
-                </label>
-                <input type="text" id="structureNameRef" placeholder="e.g. Main Building">
+                <label for="structureType">Structure Type</label>
+                <select id="structureType">
+                    <option value="">Select structure type...</option>
+                    <option>Residential — Single Family Home</option>
+                    <option>Residential — Multi-Family / Block of Flats</option>
+                    <option>Residential — Tower Block</option>
+                    <option>Student Accommodation</option>
+                    <option>Hotel</option>
+                    <option>Office Building</option>
+                    <option>Retail Store / Supermarket</option>
+                    <option>Warehouse</option>
+                    <option>Manufacturing Plant</option>
+                    <option>Chemical / Processing Plant</option>
+                    <option>Farm Building</option>
+                    <option>School / College</option>
+                    <option>University</option>
+                    <option>Hospital — General Ward</option>
+                    <option>Hospital — ICU / Operating Theatre</option>
+                    <option>Care Home / Nursing Home</option>
+                    <option>Prison / Detention Centre</option>
+                    <option>Church / Place of Worship</option>
+                    <option>Museum / Cultural Heritage Building</option>
+                    <option>Telecommunications Mast / Tower</option>
+                    <option>Telecommunications Data Centre</option>
+                    <option>Power Station / Substation</option>
+                    <option>Water Treatment Plant</option>
+                    <option>Sports Stadium / Arena</option>
+                    <option>Airport Terminal</option>
+                    <option>Other</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="assessmentDate">Assessment Date</label>
@@ -226,100 +266,73 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="surveyorName">Assessor Name</label>
-                <input type="text" id="surveyorName" placeholder="Full name">
-            </div>
-            <div class="form-group">
-                <label for="structureType">Structure Type</label>
-                <select id="structureType">
-                    <option value="">Select structure type...</option>
-                    <option>Residential Single Family Home</option>
-                    <option>Residential Multi-Family Home</option>
-                    <option>Residential Tower Block</option>
-                    <option>Residential Block of Flats</option>
-                    <option>Student Accommodation</option>
-                    <option>Hotel</option>
-                    <option>Office Building</option>
-                    <option>Retail Store</option>
-                    <option>Warehouse</option>
-                    <option>Manufacturing Plant</option>
-                    <option>Chemical Processing Plant</option>
-                    <option>Farm Building</option>
-                    <option>School</option>
-                    <option>University</option>
-                    <option>Hospital</option>
-                    <option>Care Home</option>
-                    <option>Church</option>
-                    <option>Telecommunications Mast/Tower</option>
-                    <option>Telecommunications Data Centre</option>
-                    <option>Power Station</option>
-                    <option>Water Treatment Plant</option>
-                    <option>Sports Stadium</option>
-                    <option>Airport Terminal</option>
-                    <option>Other</option>
-                </select>
+                <input type="text" id="surveyorName" placeholder="Full name of assessor">
             </div>
         </div>
     </div>
 
     <!-- ═══════════════════════════════════════════
-         STEP 2: STRUCTURE DIMENSIONS
+         STEP 2 — STRUCTURE DIMENSIONS
     ═══════════════════════════════════════════ -->
     <div class="section">
         <h2>Step 2 — Structure Dimensions</h2>
+        <div class="info-note">
+            Collection area calculated using 2024 formula: A<sub>D</sub> = L&#215;W + 2&#215;(3H)&#215;(L+W) + &#960;&#215;(3H)&#178; — Clause A.2.1.2
+        </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="structureHeight">Height H (m)
-                    <small>Min: 1 m — used in A<sub>D</sub> formula</small>
-                </label>
-                <input type="number" id="structureHeight" step="0.1" min="1" placeholder="0.0">
+                <label for="structureHeight">Height H (m)</label>
+                <input type="number" id="structureHeight" min="0.1" step="0.1" placeholder="metres">
             </div>
             <div class="form-group">
                 <label for="structureLength">Length L (m)</label>
-                <input type="number" id="structureLength" step="0.1" min="1" placeholder="0.0">
+                <input type="number" id="structureLength" min="0.1" step="0.1" placeholder="metres">
             </div>
             <div class="form-group">
                 <label for="structureWidth">Width W (m)</label>
-                <input type="number" id="structureWidth" step="0.1" min="1" placeholder="0.0">
+                <input type="number" id="structureWidth" min="0.1" step="0.1" placeholder="metres">
             </div>
-        </div>
-        <div style="background:#f0f8ff; border-left:4px solid #3498db; padding:10px 14px; border-radius:4px; font-size:13px; color:#2c3e50;">
-            <strong>Formula (Clause A.2.1.2 — 2024):</strong>
-            A<sub>D</sub> = L×W + 2×(3H)×(L+W) + π×(3H)²
-            &nbsp;|&nbsp; N<sub>D</sub> = N<sub>SG</sub> × A<sub>D</sub> × C<sub>D</sub> × 10⁻⁶
         </div>
     </div>
 
     <!-- ═══════════════════════════════════════════
-         STEP 3: LOCATION & ENVIRONMENT
+         STEP 3 — LOCATION & ENVIRONMENT
     ═══════════════════════════════════════════ -->
     <div class="section">
         <h2>Step 3 — Location &amp; Environment</h2>
         <div class="form-row">
             <div class="form-group">
-                <label for="ukRegion">UK Region
-                    <small>Pre-fills N<sub>SG</sub> — override below if needed</small>
-                </label>
+                <label for="ukRegion">UK Region — Annex NG.2</label>
                 <select id="ukRegion">
                     <option value="">Select region...</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="nsgOverride">N<sub>SG</sub> Override (strikes/km²/yr)
-                    <small>Annex NG.2 — engineer may use site-specific value</small>
+                <label for="nsgOverride">N<sub>SG</sub> — Ground Strike Density (strikes/km&#178;/yr)
+                    <small>Auto-filled from region; override if exact LLS data available</small>
                 </label>
-                <input type="number" id="nsgOverride" step="0.005" min="0" placeholder="Auto-filled from region">
+                <input type="number" id="nsgOverride" min="0.001" step="0.001" placeholder="e.g. 0.4">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="locationFactor">Location Factor C<sub>D</sub> (Table A.1)</label>
+                <label for="environmentType">Environment Type (C<sub>E</sub>) — Table A.4
+                    <small>Reduces N<sub>D</sub> for sources S3/S4 due to surrounding protection</small>
+                </label>
+                <select id="environmentType"></select>
+            </div>
+            <div class="form-group">
+                <label for="locationFactor">Location Factor C<sub>D</sub> — Table A.1
+                    <small>1 = isolated / open; 0.25 = surrounded by taller objects</small>
+                </label>
                 <select id="locationFactor">
-                    <option value="0.25">0.25 — Surrounded by higher objects</option>
-                    <option value="0.5">0.5 — Surrounded by objects of same height</option>
-                    <option value="1" selected>1.0 — Isolated structure</option>
-                    <option value="2">2.0 — Hilltop / prominent location</option>
+                    <option value="1">1.0 — Isolated structure / open ground</option>
+                    <option value="0.5">0.5 — Surrounded by structures of same height</option>
+                    <option value="0.25">0.25 — Surrounded by taller objects</option>
                 </select>
             </div>
+        </div>
+        <div class="form-row">
             <div class="form-group">
                 <label for="totalPersons">Total Persons in Structure (n<sub>t</sub>)</label>
                 <input type="number" id="totalPersons" min="1" step="1" placeholder="Total occupancy">
@@ -328,46 +341,44 @@
     </div>
 
     <!-- ═══════════════════════════════════════════
-         STEP 4: LPZ 0A — EXTERNAL ZONE
+         STEP 4 — ZONE INPUTS
     ═══════════════════════════════════════════ -->
     <div class="section">
         <h2>Step 4 — Zone Inputs</h2>
-        <div class="zone-header">LPZ 0A — External Zone</div>
+
+        <!-- LPZ 0A -->
+        <div class="zone-header">LPZ 0A — External Zone (Source S1, unshielded)</div>
+        <div class="info-note">
+            L<sub>T</sub> = 10<sup>-2</sup> fixed per Table NC.2:2024 for all structures.
+            r<sub>p</sub> = 1.0 fixed for external zone (no fire provisions outdoors).
+            r<sub>f</sub> shared from LPZ 1 (property of the structure).
+        </div>
 
         <div class="form-row">
             <div class="form-group">
                 <label for="lpz0aNz">Persons in external zone (n<sub>z</sub>)
-                    <small>Grounds staff, visitors present outdoors</small>
+                    <small>Grounds staff, visitors present outdoors. Usually 0 for most buildings.</small>
                 </label>
                 <input type="number" id="lpz0aNz" min="0" step="1" value="0">
             </div>
             <div class="form-group">
-                <label for="lpz0aTz">Time present (t<sub>z</sub>) — Table E.2</label>
-                <select id="lpz0aTz">
-                    <option value="1.0">1.0 — Continuous (residences)</option>
-                    <option value="0.25" selected>0.25 — Working hours only</option>
-                    <option value="0.125">0.125 — Occasional / daytime</option>
-                    <option value="0.05">0.05 — Rare / intermittent</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="lpz0aSurface">Surface type (r<sub>t</sub>) — Table B.2</label>
+                <label for="lpz0aSurface">Surface type (r<sub>t</sub>) — Table NB.2</label>
                 <select id="lpz0aSurface"></select>
             </div>
+        </div>
+        <div class="form-row">
             <div class="form-group">
-                <label for="lpz0aPsType">Structure material (P<sub>S</sub>) — Table B.4</label>
+                <label for="lpz0aPsType">Structure material (P<sub>S</sub>) — Table NB.4</label>
                 <select id="lpz0aPsType"></select>
+            </div>
+            <div class="form-group">
+                <label for="lpz0aLps">Existing LPS (P<sub>LPS</sub>) — Table NB.3</label>
+                <select id="lpz0aLps"></select>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="lpz0aLps">Existing LPS (P<sub>LPS</sub>) — Table B.3</label>
-                <select id="lpz0aLps"></select>
-            </div>
-            <div class="form-group">
-                <label for="lpz0aPam">Touch/Step protection (P<sub>am</sub>) — Table B.1</label>
+                <label for="lpz0aPam">Touch/Step protection (P<sub>am</sub>) — Table NB.1</label>
                 <select id="lpz0aPam"></select>
             </div>
         </div>
@@ -377,84 +388,95 @@
                 <span class="slider"></span>
             </label>
             <label for="lpz0aTws">Thunderstorm Warning System (TWS) installed?
-                <small style="font-weight:400; color:#7f8c8d;">If yes: P<sub>TWS</sub> = 0.02</small>
+                <small style="font-weight:400; color:#7f8c8d;">If yes: P<sub>TWS</sub> = 0.02 — Clause NB.2</small>
             </label>
         </div>
 
         <!-- LPZ 1 -->
-        <div class="zone-header lpz1" style="margin-top: 24px;">LPZ 1 — Internal Zone</div>
+        <div class="zone-header lpz1">LPZ 1 — Internal Zone (shielded / inside structure)</div>
 
         <div class="form-row">
             <div class="form-group">
                 <label for="lpz1Nz">Persons in internal zone (n<sub>z</sub>)
-                    <small>Leave blank to use total building occupancy</small>
+                    <small>Leave blank to default to total occupancy (n<sub>t</sub>)</small>
                 </label>
-                <input type="number" id="lpz1Nz" min="0" step="1" placeholder="Defaults to nₜ">
+                <input type="number" id="lpz1Nz" min="0" step="1" placeholder="Defaults to nt">
             </div>
             <div class="form-group">
-                <label for="lpz1Tz">Time present (t<sub>z</sub>) — Table E.2</label>
-                <select id="lpz1Tz">
-                    <option value="1.0" selected>1.0 — Continuous (residences)</option>
-                    <option value="0.25">0.25 — Working hours only</option>
-                    <option value="0.125">0.125 — Occasional / daytime</option>
-                    <option value="0.05">0.05 — Rare / intermittent</option>
-                </select>
+                <label for="lpz1PsType">Structure material (P<sub>S</sub>) — Table NB.4</label>
+                <select id="lpz1PsType"></select>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="lpz1FireRisk">Fire risk level (r<sub>f</sub>) — Table B.6</label>
+                <label for="lpz1FireRisk">Fire / explosion risk (r<sub>f</sub>) — Table NB.6
+                    <small>Also applied to LPZ 0A external zone RB calculation</small>
+                </label>
                 <select id="lpz1FireRisk"></select>
             </div>
             <div class="form-group">
-                <label for="lpz1FireProv">Fire provisions (r<sub>p</sub>) — Table B.5</label>
+                <label for="lpz1FireProv">Fire provisions (r<sub>p</sub>) — Table NB.5
+                    <small>Applied to LPZ 1 internal zone only</small>
+                </label>
                 <select id="lpz1FireProv"></select>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="lpz1PsType">Structure material (P<sub>S</sub>) — Table B.4</label>
-                <select id="lpz1PsType"></select>
-            </div>
-            <div class="form-group">
-                <label for="lpz1Lps">Existing LPS (P<sub>LPS</sub>) — Table B.3</label>
+                <label for="lpz1Lps">Existing LPS (P<sub>LPS</sub>) — Table NB.3</label>
                 <select id="lpz1Lps"></select>
             </div>
         </div>
+
+        <!-- Loss values — separated per 2024 standard -->
+        <div class="info-note">
+            L<sub>F1</sub> and L<sub>O1</sub> are set independently per Table NC.2:2024.
+            L<sub>T</sub> = 10<sup>-2</sup> fixed. L<sub>O1</sub> = 0 for most structures — only non-zero for specific high-risk occupancies.
+        </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="lpz1LossCategory">Loss category — Table C.2
-                    <small>Determines L<sub>F1</sub>, L<sub>O1</sub></small>
+                <label for="lpz1LF1">L<sub>F1</sub> — Loss from fire/explosion (Table NC.2)
+                    <small>Persons injured by fire per dangerous event</small>
                 </label>
-                <select id="lpz1LossCategory"></select>
+                <select id="lpz1LF1"></select>
+            </div>
+            <div class="form-group">
+                <label for="lpz1LO1">L<sub>O1</sub> — Loss from internal systems failure (Table NC.2)
+                    <small>= 0 for most buildings; only non-zero for explosion risk / hospital ICU</small>
+                </label>
+                <select id="lpz1LO1"></select>
             </div>
         </div>
+
+        <!-- RC toggle -->
         <div class="toggle-row">
             <label class="toggle">
                 <input type="checkbox" id="lpz1InternalSystems">
                 <span class="slider"></span>
             </label>
-            <label for="lpz1InternalSystems">Internal systems failure could injure people (R<sub>C</sub>)
-                <small style="font-weight:400; color:#7f8c8d;">Enables R<sub>C</sub> = N<sub>D</sub> × P<sub>C</sub> × L<sub>C1</sub></small>
+            <label for="lpz1InternalSystems">Internal systems present — include R<sub>C</sub> component
+                <small style="font-weight:400; color:#7f8c8d;">Enables R<sub>C</sub> = N<sub>D</sub> &#215; P<sub>C</sub> &#215; L<sub>C1</sub> — Clause NB.5</small>
             </label>
         </div>
         <div id="spdRow" class="form-row" style="display:none; margin-top:12px;">
             <div class="form-group">
-                <label for="lpz1Spd">SPD protection (P<sub>SPD</sub>) — Table B.7</label>
+                <label for="lpz1Spd">SPD protection (P<sub>SPD</sub>) — Table NB.7
+                    <small>Coordinated SPD set for low-voltage system at LPZ boundary</small>
+                </label>
                 <select id="lpz1Spd"></select>
             </div>
         </div>
     </div>
 
     <!-- ═══════════════════════════════════════════
-         STEP 5: ASSESSMENT COMMENTS
+         STEP 5 — COMMENTS & RECOMMENDATIONS
     ═══════════════════════════════════════════ -->
     <div class="section">
         <h2>Step 5 — Comments &amp; Recommendations</h2>
         <div class="form-group">
             <label for="assessmentComments">Assessor comments, site observations, recommendations</label>
-            <textarea id="assessmentComments" rows="5"
-                placeholder="Enter findings, recommendations, and additional observations..."></textarea>
+            <textarea id="assessmentComments" rows="6"
+                placeholder="Enter findings, recommendations, notes on special hazards, connected services, cultural heritage considerations, DSEAR obligations etc..."></textarea>
         </div>
     </div>
 
@@ -463,10 +485,10 @@
     ═══════════════════════════════════════════ -->
     <div class="action-buttons">
         <button class="btn-generate" onclick="generateRiskAssessmentPDF()">
-            📄 Generate PDF Report
+            &#128196; Generate PDF Report
         </button>
         <button class="btn-clear" onclick="clearRiskAssessmentData()">
-            🗑 New Assessment
+            &#128465; New Assessment
         </button>
     </div>
 
